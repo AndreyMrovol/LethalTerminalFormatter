@@ -1,6 +1,10 @@
-# LethalCompanyTemplate
+# TerminalFormatter
 
-A template for a BepInEx 5 Plugin, using the correct .csproj configuration for Lethal Company modding
+changed how terminal displays thingies in store and moons
+
+![Store](https://raw.githubusercontent.com/AndreyMrovol/LethalTerminalFormatter/main/images/store.png)
+
+![Moons](https://raw.githubusercontent.com/AndreyMrovol/LethalTerminalFormatter/main/images/moons.png)
 
 ## Credits
 
