@@ -1,0 +1,7 @@
+{
+	"name": "TerminalFormatter",
+	"version_number": "0.0.3",
+	"website_url": "",
+	"description": "Rework of terminal's moon and store catalogues.",
+	"dependencies": ["BepInEx-BepInExPack-5.4.2100", "IAmBatby-LethalLevelLoader-1.1.6"]
+}
