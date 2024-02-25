@@ -21,6 +21,10 @@
         <Reference Include="LethalLevelLoader" PrivateAssets="All">
             <HintPath>../lib/LethalLevelLoader.dll</HintPath>
         </Reference>
+
+        <Reference Include="AdvancedCompany" PrivateAssets="All">
+            <HintPath>../lib/AdvancedCompany.dll</HintPath>
+        </Reference>
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
