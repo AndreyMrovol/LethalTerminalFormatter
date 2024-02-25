@@ -32,6 +32,10 @@ namespace TerminalFormatter
 
             table.AddRow("[ITEMS]", "", "");
 
+            List<Item> sortedBuyableItemList = Variables
+                .BuyableItemList.OrderBy(x => x.itemName)
+                .ToList();
+
             // [buyableItemsList]
             for (int index = 0; index < terminal.buyableItemsList.Length; ++index)
             {
@@ -80,6 +84,9 @@ namespace TerminalFormatter
                 };
 
             foreach (var upgrade in upgrades)
+            List<UnlockableItem> unlockablesList = Variables
+                .UnlockableItemList.OrderBy(x => x.unlockableName)
+                .ToList();
             {
                 UnlockableItem unlockable = StartOfRound.Instance.unlockablesList.unlockables.Find(
                     unlockable => unlockable.unlockableName == upgrade.Key
@@ -100,7 +107,9 @@ namespace TerminalFormatter
             table.AddRow("[DECORATIONS]", "", "");
 
             // [unlockablesSelectionList]
-            List<TerminalNode> DecorSelection = terminal.ShipDecorSelection;
+            List<TerminalNode> DecorSelection = Variables
+                .DecorationsList.OrderBy(x => x.creatureName)
+                .ToList();
 
             foreach (var decor in DecorSelection)
             {
