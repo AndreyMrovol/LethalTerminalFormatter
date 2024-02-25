@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using HarmonyLib;
 using UnityEngine;
 
 namespace TerminalFormatter
@@ -16,6 +17,10 @@ namespace TerminalFormatter
             var table = new ConsoleTables.ConsoleTable("Name", "Price", "# On ship");
             var adjustedTable = new StringBuilder();
             Plugin.logger.LogDebug("Patching 0_StoreHub");
+
+            var ACServerConfiguration = Variables.IsACActive
+                ? ACCompatibility.ServerConfiguration.GetValue(null)
+                : null;
 
             GameObject ship = GameObject.Find("/Environment/HangarShip");
             var ItemsOnShip = ship.GetComponentsInChildren<GrabbableObject>().ToList();
@@ -37,30 +42,60 @@ namespace TerminalFormatter
                 .ToList();
 
             // [buyableItemsList]
-            for (int index = 0; index < terminal.buyableItemsList.Length; ++index)
+            foreach (var item in sortedBuyableItemList)
             {
-                var item = terminal.buyableItemsList[index];
+                Plugin.logger.LogDebug($"Item: {item.itemName}");
+                var index = terminal.buyableItemsList.ToList().IndexOf(item);
                 var itemName = item.itemName;
                 int howManyOnShip = ItemsOnShip
                     .FindAll(x => x.itemProperties.itemName == item.itemName)
                     .Count;
+
+                if (index == -1)
+                {
+                    Plugin.logger.LogWarning(
+                        $"Item {item.itemName} not found in terminal.buyableItemsList"
+                    );
+                    continue;
+                }
+
+                if (ACCompatibility.Items.ContainsKey(itemName))
+                {
+                    Plugin.logger.LogDebug($"Item {itemName} is in AC config");
+                    if ((bool)ACCompatibility.Items[itemName])
+                    {
+                        Plugin.logger.LogDebug($"Item {itemName} is enabled");
+                    }
+                    else
+                    {
+                        Plugin.logger.LogDebug($"Item {itemName} is disabled");
+                        continue;
+                    }
+                }
 
                 string discountPercent =
                     terminal.itemSalesPercentages[index] != 100
                         ? $"  -{100 - terminal.itemSalesPercentages[index]}%"
                         : "";
 
+                // what i want to do:
+                // itemName [some spaces] ... [discountPercent]
+                // so the discountPercent is padded to the right
+
                 // make itemName length = itemNameWidth
                 if (itemName.Length + discountPercent.Length > itemNameWidth)
                 {
                     itemName =
-                        itemName.Substring(0, itemNameWidth - 3 - discountPercent.Length)
-                        + discountPercent
-                        + "...";
+                        itemName.Substring(0, itemNameWidth - 4 - discountPercent.Length)
+                        + "... "
+                        + discountPercent;
                 }
                 else
                 {
-                    itemName = $"{itemName}{discountPercent}".PadRight(itemNameWidth);
+                    itemName =
+                        $"{itemName.PadRight(itemNameWidth - discountPercent.Length)}{discountPercent}".PadRight(
+                            itemNameWidth
+                        );
                 }
 
                 table.AddRow(
@@ -83,24 +118,51 @@ namespace TerminalFormatter
                     { "Inverse Teleporter", 425 },
                 };
 
-            foreach (var upgrade in upgrades)
             List<UnlockableItem> unlockablesList = Variables
                 .UnlockableItemList.OrderBy(x => x.unlockableName)
                 .ToList();
-            {
-                UnlockableItem unlockable = StartOfRound.Instance.unlockablesList.unlockables.Find(
-                    unlockable => unlockable.unlockableName == upgrade.Key
-                );
-                bool isUnlocked = unlockable.hasBeenUnlockedByPlayer || unlockable.alreadyUnlocked;
 
-                Plugin.logger.LogDebug(
-                    $"{upgrade} isUnlocked: {isUnlocked} unlockable: {unlockable}"
-                );
+            foreach (var unlockable in unlockablesList)
+            {
+                bool isUnlocked = unlockable.hasBeenUnlockedByPlayer || unlockable.alreadyUnlocked;
+                TerminalNode unlockableNode = unlockable.shopSelectionNode;
+
+                if (unlockableNode == null)
+                {
+                    Plugin.logger.LogDebug(
+                        $"UnlockableNode is null for {unlockable.unlockableName}"
+                    );
+                    var index = StartOfRound
+                        .Instance.unlockablesList.unlockables.ToList()
+                        .IndexOf(unlockable);
+
+                    Plugin.logger.LogWarning(
+                        $"Trying to find unlockableNode for {unlockable.unlockableName} with index {index}"
+                    );
+
+                    // get all possible TerminalNode s
+                    var allNodes = GameObject.FindObjectsOfType<TerminalNode>().ToList();
+                    Plugin.logger.LogWarning($"allNodes count: {allNodes.Count}");
+                    unlockableNode = allNodes.Find(x => x.shipUnlockableID == index);
+
+                    if (unlockableNode == null)
+                    {
+                        Plugin.logger.LogWarning(
+                            $"UnlockableNode is still null for {unlockable.unlockableName}"
+                        );
+                    }
+                }
+
+                Plugin.logger.LogDebug($"{unlockable.unlockableName} isUnlocked: {isUnlocked}");
 
                 if (isUnlocked)
                     continue;
 
-                table.AddRow(upgrade.Key.PadRight(itemNameWidth), $"${upgrade.Value}", "");
+                table.AddRow(
+                    unlockable.unlockableName.PadRight(itemNameWidth),
+                    $"${(unlockableNode ? unlockableNode.itemCost : upgrades[unlockable.unlockableName])}",
+                    ""
+                );
             }
 
             table.AddRow("", "", "");

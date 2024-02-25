@@ -17,6 +17,8 @@ namespace TerminalFormatter
 
             ConfigManager.Init(Config);
 
+            ACCompatibility.Init();
+
             // Plugin startup logic
             Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");
         }

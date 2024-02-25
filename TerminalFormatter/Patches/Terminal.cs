@@ -57,5 +57,26 @@ namespace TerminalFormatter
 
             return;
         }
+
+        [HarmonyPostfix]
+        // [HarmonyPriority(Priority.Last)]
+        [HarmonyPatch("LoadNewNode")]
+        public static void StartPostfix(Terminal __instance)
+        {
+            Plugin.logger.LogWarning("Terminal Start");
+
+            Variables.BuyableItemList = __instance.buyableItemsList.ToList();
+            Variables.UnlockableItemList = StartOfRound
+                .Instance.unlockablesList.unlockables.Where(x =>
+                    x.unlockableType == 1 && x.alwaysInStock == true
+                )
+                .ToList();
+            Variables.DecorationsList = __instance.ShipDecorSelection;
+
+            if (Variables.IsACActive)
+            {
+                ACCompatibility.Refresh();
+            }
+        }
     }
 }
