@@ -41,6 +41,11 @@ namespace TerminalFormatter
                 newDisplayText = new Nodes().Moons(node, __instance);
             }
 
+            if (node.name == "ScanInfo")
+            {
+                newDisplayText = new Nodes().Scan(node, __instance);
+            }
+
             if (newDisplayText != null)
             {
                 StringBuilder builder = new StringBuilder();
