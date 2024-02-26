@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using AdvancedCompany.Config;
+using BepInEx.Bootstrap;
 using BepInEx.Logging;
 using HarmonyLib;
 
@@ -18,7 +19,7 @@ namespace TerminalFormatter
 
         public static bool populated = false;
 
-        public static void Init()
+        public static void Init(string assemblyName)
         {
             // We need to access AdvancedCompany.Config.ServerConfiguration.Instance for all future shenanigans
             // this is hacky, amateurish and very bad practice, but it works
@@ -26,9 +27,12 @@ namespace TerminalFormatter
 
             string nspace = "AdvancedCompany.Config";
             string className = "ServerConfiguration";
-            string assemblyName = "AdvancedCompany";
 
-            var type = Type.GetType($"{nspace}.{className}, {assemblyName}");
+            // Get the assembly that contains the class
+            var assembly = Chainloader.PluginInfos[assemblyName].Instance.GetType().Assembly;
+
+            // Get the Type object for the class
+            var type = assembly.GetType($"{nspace}.{className}");
 
             if (type != null)
             {

@@ -1,4 +1,5 @@
 ﻿using BepInEx;
+using BepInEx.Bootstrap;
 using BepInEx.Logging;
 using HarmonyLib;
 
@@ -17,7 +18,14 @@ namespace TerminalFormatter
 
             ConfigManager.Init(Config);
 
-            ACCompatibility.Init();
+            if (Chainloader.PluginInfos.ContainsKey("com.potatoepet.AdvancedCompany"))
+            {
+                ACCompatibility.Init("com.potatoepet.AdvancedCompany");
+            }
+            else
+            {
+                logger.LogInfo("AdvancedCompany not found");
+            }
 
             // Plugin startup logic
             Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");
