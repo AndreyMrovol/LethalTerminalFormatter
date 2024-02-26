@@ -125,7 +125,7 @@ namespace TerminalFormatter
             adjustedTable.Append(moonsHeader);
 
             adjustedTable.Append(
-                $"\nThe Company is buying at {(int)StartOfRound.Instance.companyBuyingRate * 100f}%\n"
+                $"\nThe Company is buying at {Mathf.RoundToInt(StartOfRound.Instance.companyBuyingRate * 100f)}%\n"
             );
 
             adjustedTable.Append(tableString);
