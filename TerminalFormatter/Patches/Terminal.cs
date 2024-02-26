@@ -38,7 +38,16 @@ namespace TerminalFormatter
                 || node.name.Contains("sort")
             )
             {
-                newDisplayText = new Nodes().Moons(node, __instance);
+                if (!Plugin.isLLLPresent)
+                {
+                    Plugin.logger.LogDebug("LethalLevelLoader not found");
+                    newDisplayText = new Nodes().MoonsNoLLL(node, __instance);
+                    // return;
+                }
+                else
+                {
+                    newDisplayText = new Nodes().Moons(node, __instance);
+                }
             }
 
             if (node.name == "ScanInfo")
