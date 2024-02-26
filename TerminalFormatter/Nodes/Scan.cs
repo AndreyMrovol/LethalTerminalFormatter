@@ -17,21 +17,37 @@ namespace TerminalFormatter
             Plugin.logger.LogDebug("Patching ScanForItems");
 
             var adjustedTable = new StringBuilder();
+            bool isShip = StartOfRound.Instance.inShipPhase;
 
             int items = 0;
             int value = 0;
 
-            var objectsInLevel = UnityEngine
-                .Object.FindObjectsOfType<GrabbableObject>()
-                .Where(item =>
-                    item.itemProperties.isScrap && !item.isInShipRoom && !item.isInElevator
-                )
-                .ToList()
-                .OrderBy(item => item.scrapValue);
+            List<GrabbableObject> objectsToScan;
+
+            if (isShip)
+            {
+                objectsToScan = Object
+                    .FindObjectsOfType<GrabbableObject>()
+                    .Where(item =>
+                        item.itemProperties.isScrap && (item.isInElevator || item.isInShipRoom)
+                    )
+                    .ToList();
+            }
+            else
+            {
+                objectsToScan = Object
+                    .FindObjectsOfType<GrabbableObject>()
+                    .Where(item =>
+                        item.itemProperties.isScrap && !item.isInShipRoom && !item.isInElevator
+                    )
+                    .ToList();
+            }
+
+            objectsToScan = objectsToScan.OrderBy(x => x.scrapValue).ToList();
 
             var table = new ConsoleTables.ConsoleTable("Name", "Price", "Two-handed?");
 
-            foreach (var item in objectsInLevel)
+            foreach (var item in objectsToScan)
             {
                 table.AddRow(
                     item.itemProperties.itemName.PadRight(itemNameWidth),
@@ -47,8 +63,9 @@ namespace TerminalFormatter
             Dictionary<int, string> headerInfo =
                 new()
                 {
-                    { 0, $"ITEMS: {items.ToString()}" },
-                    { 1, $"VALUE: ${value.ToString()}" },
+                    { 0, $"SCANNING {(isShip ? "SHIP" : "MOON")}" },
+                    { 1, $"ITEMS: {items.ToString()}" },
+                    { 2, $"VALUE: ${value.ToString()}" },
                 };
             string moonsHeader = new Header().CreateNumberedHeader(headerName, 2, headerInfo);
 
