@@ -1,13 +1,7 @@
 using System.Collections.Generic;
-using System.Collections.Generic;
 using System.Linq;
-using System.Linq;
-using System.Reflection;
 using System.Text;
-using System.Text.RegularExpressions;
-using BepInEx.Logging;
 using HarmonyLib;
-using UnityEngine;
 
 namespace TerminalFormatter
 {
@@ -37,10 +31,6 @@ namespace TerminalFormatter
             List<List<Dictionary<string, int>>> groups =
                 new()
                 {
-                    // new List<string> { "Experimentation", "Assurance", "Vow" },
-                    // new List<string> { "March", "Offense" },
-                    // new List<string> { "Rend", "Dine", "Titan" }
-
                     new List<Dictionary<string, int>>
                     {
                         new Dictionary<string, int> { { "Experimentation", 0 } },
