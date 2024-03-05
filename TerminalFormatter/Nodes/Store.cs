@@ -53,18 +53,15 @@ namespace TerminalFormatter
 
                 if (index == -1)
                 {
-                    Plugin.logger.LogWarning(
-                        $"Item {item.itemName} not found in terminal.buyableItemsList"
-                    );
                     continue;
                 }
 
                 if (ACCompatibility.Items.ContainsKey(itemName))
                 {
-                    Plugin.logger.LogDebug($"Item {itemName} is in AC config");
+                    // Plugin.logger.LogDebug($"Item {itemName} is in AC config");
                     if ((bool)ACCompatibility.Items[itemName])
                     {
-                        Plugin.logger.LogDebug($"Item {itemName} is enabled");
+                        // Plugin.logger.LogDebug($"Item {itemName} is enabled");
                     }
                     else
                     {
@@ -153,7 +150,7 @@ namespace TerminalFormatter
                     }
                 }
 
-                Plugin.logger.LogDebug($"{unlockable.unlockableName} isUnlocked: {isUnlocked}");
+                // Plugin.logger.LogDebug($"{unlockable.unlockableName} isUnlocked: {isUnlocked}");
 
                 if (isUnlocked)
                     continue;

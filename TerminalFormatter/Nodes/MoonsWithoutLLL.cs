@@ -55,8 +55,6 @@ namespace TerminalFormatter
             string headerName = "MOONS CATALOGUE";
             string moonsHeader = new Header().CreateNumberedHeader(headerName, 2);
 
-            logger.LogDebug("MoonsCataloguePage: " + moonCatalogue);
-
             foreach (var group in groups)
             {
                 foreach (var moonDictionary in group)

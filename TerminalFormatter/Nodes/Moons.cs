@@ -104,6 +104,13 @@ namespace TerminalFormatter
                         .ToString()
                         .Replace("(", "")
                         .Replace(")", "");
+                    // substring to planetWeatherWidth
+
+                    if (weatherCondition.Length > planetWeatherWidth - 2)
+                    {
+                        weatherCondition =
+                            $"{weatherCondition.Substring(0, planetWeatherWidth - 2)}..";
+                    }
 
                     string weather = showWeather
                         ? weatherCondition.PadRight(planetWeatherWidth - 2)

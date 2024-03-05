@@ -77,20 +77,17 @@ namespace TerminalFormatter
                         .GetField("Items", BindingFlags.Public | BindingFlags.Instance);
                     if (fieldInfo != null)
                     {
-                        logger.LogInfo($"Property {fieldInfo} found");
+                        // logger.LogInfo($"Property {fieldInfo} found");
                         LobbyConfiguration.ItemsConfig items = (LobbyConfiguration.ItemsConfig)
                             fieldInfo.GetValue(value);
 
                         Dictionary<string, LobbyConfiguration.ItemConfig> ItemsItems = items.Items;
 
-                        Plugin.logger.LogDebug($"Items: {ItemsItems}, count: {ItemsItems.Count}");
+                        // Plugin.logger.LogDebug($"Items: {ItemsItems}, count: {ItemsItems.Count}");
 
                         ItemsItems.Do(x =>
                         {
                             Items.Add(x.Key, x.Value.Active);
-                            logger.LogMessage(
-                                $"Item {x.Key} is {(x.Value.Active ? "enabled" : "disabled")}"
-                            );
                         });
                         // rest of your code
                     }

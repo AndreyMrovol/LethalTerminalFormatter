@@ -1,11 +1,6 @@
-using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Text;
-using System.Text.RegularExpressions;
 using HarmonyLib;
-using LethalLevelLoader;
-using UnityEngine;
 
 namespace TerminalFormatter
 {
@@ -22,7 +17,7 @@ namespace TerminalFormatter
             Terminal __instance
         )
         {
-            Plugin.logger.LogMessage(node.name);
+            Plugin.logger.LogDebug(node.name);
 
             string newDisplayText = null;
 
@@ -40,7 +35,6 @@ namespace TerminalFormatter
             {
                 if (!Plugin.isLLLPresent)
                 {
-                    Plugin.logger.LogDebug("LethalLevelLoader not found");
                     newDisplayText = new Nodes().MoonsNoLLL(node, __instance);
                     // return;
                 }
@@ -77,8 +71,6 @@ namespace TerminalFormatter
         [HarmonyPatch("LoadNewNode")]
         public static void StartPostfix(Terminal __instance)
         {
-            Plugin.logger.LogWarning("Terminal Start");
-
             Variables.BuyableItemList = __instance.buyableItemsList.ToList();
             Variables.UnlockableItemList = StartOfRound
                 .Instance.unlockablesList.unlockables.Where(x =>
