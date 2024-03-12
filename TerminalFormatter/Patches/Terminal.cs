@@ -49,6 +49,19 @@ namespace TerminalFormatter
                 newDisplayText = new Nodes().Scan(node, __instance);
             }
 
+            if (Plugin.isLLLPresent)
+            {
+                if (node.name.ToLower().Contains("route") && node.buyRerouteToMoon == -2)
+                {
+                    newDisplayText = new Nodes().Route(node, __instance);
+                }
+
+                if (node.name.ToLower().Contains("simulate"))
+                {
+                    newDisplayText = new Nodes().Simulate(node, __instance);
+                }
+            }
+
             if (newDisplayText != null)
             {
                 StringBuilder builder = new StringBuilder();
