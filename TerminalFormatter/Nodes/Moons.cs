@@ -93,7 +93,7 @@ namespace TerminalFormatter
                         Settings.levelPreviewInfoType == PreviewInfoType.All
                         || Settings.levelPreviewInfoType == PreviewInfoType.Weather;
 
-                    // use reflection to call TerminalManager.GetWeatherConditions - must invoke the original method cause of other mods' postfixes
+                    // use reflection to call TerminalManager.GetWeatherConditions - must invoke the original method cause of weathertweaks
                     // it's internal static method
                     var weatherCondition = typeof(TerminalManager)
                         .GetMethod(
@@ -132,7 +132,7 @@ namespace TerminalFormatter
             adjustedTable.Append(moonsHeader);
 
             adjustedTable.Append(
-                $"\nThe Company is buying at {Mathf.RoundToInt(StartOfRound.Instance.companyBuyingRate * 100f)}%\n"
+                $"\n The Company // Buying at {Mathf.RoundToInt(StartOfRound.Instance.companyBuyingRate * 100f)}%\n\n"
             );
 
             adjustedTable.Append(tableString);
