@@ -65,9 +65,15 @@ namespace TerminalFormatter
             if (newDisplayText != null)
             {
                 StringBuilder builder = new StringBuilder();
+
+                if (__instance.displayingPersistentImage)
+                {
+                    builder.Append("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+                }
+
                 builder.Append("\n\n");
                 builder.Append(newDisplayText);
-                builder.Append("\n-------------------- \n");
+                builder.Append("\n--------------------\n");
 
                 Plugin.logger.LogMessage("New display text:\n" + newDisplayText);
 
