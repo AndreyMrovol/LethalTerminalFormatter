@@ -8,6 +8,7 @@ namespace TerminalFormatter
     public class TerminalPatches
     {
         public static readonly int terminalWidth = 48;
+        public static bool firstUse = true;
 
         [HarmonyPostfix]
         [HarmonyPatch("TextPostProcess")]
@@ -41,6 +42,7 @@ namespace TerminalFormatter
                 else
                 {
                     newDisplayText = new Nodes().Moons(node, __instance);
+                    firstUse = false;
                 }
             }
 
@@ -101,6 +103,13 @@ namespace TerminalFormatter
             if (Variables.IsACActive)
             {
                 ACCompatibility.Refresh();
+            }
+
+            Plugin.logger.LogDebug("First use: " + firstUse);
+
+            if (firstUse && Variables.ISLLLActive)
+            {
+                LLLCompatibility.Init();
             }
         }
     }

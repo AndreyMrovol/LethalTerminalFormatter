@@ -16,6 +16,10 @@ namespace TerminalFormatter
 
         public static ConfigEntry<bool> ShowDifficultyInAll { get; private set; }
 
+        public static ConfigEntry<string> LastUsedPreview { get; private set; }
+        public static ConfigEntry<string> LastUsedFilter { get; private set; }
+        public static ConfigEntry<string> LastUsedSort { get; private set; }
+
         private ConfigManager(ConfigFile config)
         {
             configFile = config;
@@ -25,6 +29,27 @@ namespace TerminalFormatter
                 "Show Difficulty in All",
                 false,
                 "Show difficulty in `preview all` setting"
+            );
+
+            LastUsedPreview = configFile.Bind(
+                "Last Used LLL Option",
+                "Last Used Preview",
+                "All",
+                "Last used preview setting"
+            );
+
+            LastUsedFilter = configFile.Bind(
+                "Last Used LLL Option",
+                "Last Used Filter",
+                "None",
+                "Last used filter setting"
+            );
+
+            LastUsedSort = configFile.Bind(
+                "Last Used LLL Option",
+                "Last Used Sort",
+                "Price",
+                "Last used sort setting"
             );
         }
     }

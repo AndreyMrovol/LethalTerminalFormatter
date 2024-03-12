@@ -33,6 +33,7 @@ namespace TerminalFormatter
 
             if (Chainloader.PluginInfos.ContainsKey("imabatby.lethallevelloader"))
             {
+                LLLCompatibility.Init();
                 isLLLPresent = true;
             }
             else

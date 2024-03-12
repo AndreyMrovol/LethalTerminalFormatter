@@ -52,6 +52,10 @@ namespace TerminalFormatter
                 };
             string moonsHeader = new Header().CreateNumberedHeader(headerName, 2, headerInfo);
 
+            ConfigManager.LastUsedFilter.Value = Settings.levelPreviewFilterType.ToString();
+            ConfigManager.LastUsedSort.Value = Settings.levelPreviewSortType.ToString();
+            ConfigManager.LastUsedPreview.Value = Settings.levelPreviewInfoType.ToString();
+
             logger.LogDebug("MoonsCataloguePage: " + moonCatalogue);
 
             foreach (ExtendedLevelGroup extendedLevelGroup in moonCatalogue.ExtendedLevelGroups)
