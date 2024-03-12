@@ -19,6 +19,11 @@ namespace TerminalFormatter
             var adjustedTable = new StringBuilder();
             bool isShip = StartOfRound.Instance.inShipPhase;
 
+            if (StartOfRound.Instance.currentLevel.PlanetName.Contains("Gordion"))
+            {
+                isShip = true;
+            }
+
             int items = 0;
             int value = 0;
 
