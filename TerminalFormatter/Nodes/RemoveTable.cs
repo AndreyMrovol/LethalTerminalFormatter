@@ -8,13 +8,23 @@ namespace TerminalFormatter
 {
     partial class Nodes
     {
-        private static string RemoveTable(string input)
+        private static string RemoveTable(string input, bool removeEmptyLines = true)
         {
-            // Plugin.logger.LogWarning("\n" + input);
+            string output = input;
+            Plugin.logger.LogWarning("input:\n" + input);
 
             Regex tableOutline = new(@"(\|)|(\-{2,})", RegexOptions.Multiline);
+            output = tableOutline.Replace(input, "");
 
-            return tableOutline.Replace(input, "");
+            if (removeEmptyLines)
+            {
+                Regex emptyLine = new(@"^\s*\n", RegexOptions.Multiline);
+                output = emptyLine.Replace(output, "");
+            }
+
+            logger.LogWarning("\n" + output);
+
+            return output;
         }
     }
 }
