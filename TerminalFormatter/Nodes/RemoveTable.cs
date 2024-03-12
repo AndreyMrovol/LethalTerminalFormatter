@@ -22,8 +22,6 @@ namespace TerminalFormatter
                 output = emptyLine.Replace(output, "");
             }
 
-            logger.LogWarning("\n" + output);
-
             return output;
         }
     }
