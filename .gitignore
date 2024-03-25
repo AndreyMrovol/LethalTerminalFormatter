@@ -549,3 +549,5 @@ $RECYCLE.BIN/
 *.lnk
 
 lib/*
+*.zip
+Thunderstore/*.dll
