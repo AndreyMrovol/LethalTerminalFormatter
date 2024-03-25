@@ -162,6 +162,21 @@ namespace TerminalFormatter
                 );
             }
 
+            if (Plugin.isLRegenPresent)
+            {
+                if (!LethalRegenCompatibility.IsUpgradeBought())
+                {
+                    table.AddRow("", "", "");
+                    table.AddRow("[REGENERATION]", "", "");
+
+                    table.AddRow(
+                        "Natural Regeneration",
+                        $"${LethalRegenCompatibility.GetCost()}",
+                        ""
+                    );
+                }
+            }
+
             table.AddRow("", "", "");
             table.AddRow("[DECORATIONS]", "", "");
 

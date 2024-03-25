@@ -6,6 +6,15 @@ using HarmonyLib;
 namespace TerminalFormatter
 {
     [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
+    [BepInDependency("imabatby.lethallevelloader", BepInDependency.DependencyFlags.HardDependency)]
+    [BepInDependency(
+        "Toskan4134.LethalRegeneration",
+        BepInDependency.DependencyFlags.SoftDependency
+    )]
+    [BepInDependency(
+        "com.potatoepet.AdvancedCompany",
+        BepInDependency.DependencyFlags.SoftDependency
+    )]
     public class Plugin : BaseUnityPlugin
     {
         internal static ManualLogSource logger;
@@ -13,6 +22,7 @@ namespace TerminalFormatter
 
         internal static bool isACPresent = false;
         internal static bool isLLLPresent = false;
+        internal static bool isLRegenPresent = false;
 
         private void Awake()
         {
@@ -26,19 +36,17 @@ namespace TerminalFormatter
                 ACCompatibility.Init("com.potatoepet.AdvancedCompany");
                 isACPresent = true;
             }
-            else
-            {
-                logger.LogDebug("AdvancedCompany not found");
-            }
 
             if (Chainloader.PluginInfos.ContainsKey("imabatby.lethallevelloader"))
             {
                 LLLCompatibility.Init();
                 isLLLPresent = true;
             }
-            else
+
+            if (Chainloader.PluginInfos.ContainsKey("Toskan4134.LethalRegeneration"))
             {
-                logger.LogDebug("LethalLevelLoader not found");
+                LethalRegenCompatibility.Init();
+                isLRegenPresent = true;
             }
 
             // Plugin startup logic

@@ -25,6 +25,10 @@
         <Reference Include="AdvancedCompany" PrivateAssets="All">
             <HintPath>../lib/AdvancedCompany.dll</HintPath>
         </Reference>
+
+        <Reference Include="LethalRegeneration" PrivateAssets="All">
+            <HintPath>../lib/LethalRegeneration.dll</HintPath>
+        </Reference>
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
