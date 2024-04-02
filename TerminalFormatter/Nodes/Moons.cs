@@ -132,7 +132,7 @@ namespace TerminalFormatter
                 table.AddRow("", "", "");
             }
 
-            string tableString = RemoveTable(table.ToMarkDownString());
+            string tableString = RemoveTable(table.ToMarkDownString(), false);
             adjustedTable.Append(moonsHeader);
 
             adjustedTable.Append(
