@@ -12,22 +12,12 @@ namespace TerminalFormatter
 {
     internal class LethalRegenCompatibility
     {
-        public static void Init(bool start = true)
+        public static void Init()
         {
-            // try casting the configManager entry value to PreviewInfoType enum
-            // if it fails, set the value to the default enum value
-
-            Plugin.logger.LogInfo("Checking for LethalRegeneration");
-            Plugin.logger.LogInfo(
-                $"{LethalRegeneration.config.Configuration.Instance.HealingUpgradeEnabled}"
-            );
-
             if (!LethalRegeneration.config.Configuration.Instance.HealingUpgradeEnabled)
             {
                 return;
             }
-
-            Plugin.logger.LogInfo("Patching LethalRegeneration");
         }
 
         public static int GetCost()
