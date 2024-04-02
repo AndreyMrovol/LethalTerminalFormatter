@@ -8,7 +8,7 @@ namespace TerminalFormatter
 {
     partial class Nodes
     {
-        private static string RemoveTable(string input, bool removeEmptyLines = true)
+        internal static string RemoveTable(string input, bool removeEmptyLines = true)
         {
             string output = input;
             Plugin.logger.LogWarning("input:\n" + input);
