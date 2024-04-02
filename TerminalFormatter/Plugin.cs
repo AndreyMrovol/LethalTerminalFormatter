@@ -15,6 +15,10 @@ namespace TerminalFormatter
         "com.potatoepet.AdvancedCompany",
         BepInDependency.DependencyFlags.SoftDependency
     )]
+    [BepInDependency(
+        "com.malco.lethalcompany.moreshipupgrades",
+        BepInDependency.DependencyFlags.SoftDependency
+    )]
     public class Plugin : BaseUnityPlugin
     {
         internal static ManualLogSource logger;
@@ -23,6 +27,7 @@ namespace TerminalFormatter
         internal static bool isACPresent = false;
         internal static bool isLLLPresent = false;
         internal static bool isLRegenPresent = false;
+        internal static bool isLGUPresent = false;
 
         private void Awake()
         {
@@ -47,6 +52,12 @@ namespace TerminalFormatter
             {
                 LethalRegenCompatibility.Init();
                 isLRegenPresent = true;
+            }
+
+            if (Chainloader.PluginInfos.ContainsKey("com.malco.lethalcompany.moreshipupgrades"))
+            {
+                LategameUpgradesCompatibility.Init();
+                isLGUPresent = true;
             }
 
             // Plugin startup logic
