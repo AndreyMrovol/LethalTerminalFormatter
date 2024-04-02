@@ -71,8 +71,6 @@ namespace TerminalFormatter
 
             var adjustedTable = new StringBuilder();
             adjustedTable.Append(header);
-            // adjustedTable.Append("\n\n");
-            // adjustedTable.Append("Chances of each interior being selected:");
 
             // don't simulate for fucking March
             if (currentLevel.NumberlessPlanetName == "March")
@@ -80,8 +78,8 @@ namespace TerminalFormatter
                 adjustedTable.AppendLine("\nData for March will always be innacurate\n");
             }
 
-            adjustedTable.Append("\n\n");
-            adjustedTable.Append(RemoveTable(table.ToMarkDownString(), false));
+            adjustedTable.Append("\n");
+            adjustedTable.Append(table.ToStringCustomDecoration(header: true));
 
             return adjustedTable.ToString();
         }

@@ -314,6 +314,60 @@ namespace ConsoleTables
             return builder.ToString();
         }
 
+        public string ToStringCustomDecoration(
+            bool header = false,
+            bool divider = false,
+            bool separator = false
+        )
+        {
+            var builder = new StringBuilder();
+
+            // find the longest column by searching each row
+            var columnLengths = ColumnLengths();
+
+            // create the string format with padding
+            _ = Format(columnLengths, '\0');
+
+            // find the longest formatted line
+            var columnHeaders = string.Format(Formats[0].TrimStart(), Columns.ToArray());
+
+            // add each row
+            var results = Rows.Select(
+                    (row, i) =>
+                        string.Format(
+                            separator
+                                ? Formats[i + 1].TrimStart()
+                                : Formats[i + 1].TrimStart().Replace("|", ""),
+                            row
+                        )
+                )
+                .ToList();
+
+            // create the divider
+            var dividerString = Regex.Replace(columnHeaders, "[^|]", "-");
+
+            if (header)
+            {
+                builder.AppendLine(columnHeaders.Replace("|", separator ? "|" : ""));
+            }
+
+            if (divider)
+            {
+                if (separator)
+                {
+                    builder.AppendLine(dividerString);
+                }
+                else
+                {
+                    builder.AppendLine(Regex.Replace(dividerString, @"[|-]", ""));
+                }
+            }
+
+            results.ForEach(row => builder.AppendLine(row));
+
+            return builder.ToString();
+        }
+
         private string Format(List<int> columnLengths, char delimiter = '|')
         {
             // set right alignment if is a number
@@ -433,7 +487,7 @@ namespace ConsoleTables
         Default = 0,
         MarkDown = 1,
         Alternative = 2,
-        Minimal = 3
+        Minimal = 3,
     }
 
     public enum Alignment

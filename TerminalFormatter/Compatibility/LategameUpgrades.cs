@@ -151,7 +151,7 @@ namespace TerminalFormatter
                 table.AddRow("No upgrades available", "", "");
             }
 
-            adjustedTable.Append(Nodes.RemoveTable(table.ToMarkDownString()));
+            adjustedTable.Append(table.ToStringCustomDecoration(header: true));
             modStoreInterface.displayText = adjustedTable.ToString();
 
             __result = modStoreInterface;

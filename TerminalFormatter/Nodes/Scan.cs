@@ -76,20 +76,9 @@ namespace TerminalFormatter
 
             adjustedTable.Append(moonsHeader);
 
-            if (ConfigManager.DetailedScanPage.Value)
+            if (ConfigManager.DetailedScanPage.Value || isShip)
             {
-                adjustedTable.Append(RemoveTable(table.ToMarkDownString()));
-            }
-            else
-            {
-                if (isShip)
-                {
-                    adjustedTable.Append(RemoveTable(table.ToMarkDownString()));
-                }
-                else
-                {
-                    table.AddRow($"{items} items", $"${value}", "");
-                }
+                adjustedTable.Append(table.ToStringCustomDecoration(header: true));
             }
 
             return adjustedTable.ToString();

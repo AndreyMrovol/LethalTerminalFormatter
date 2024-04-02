@@ -75,7 +75,7 @@ namespace TerminalFormatter
             }
 
             adjustedTable.Append(moonsHeader);
-            adjustedTable.Append(RemoveTable(table.ToMarkDownString()));
+            adjustedTable.Append(table.ToStringCustomDecoration());
             return adjustedTable.ToString();
         }
     }

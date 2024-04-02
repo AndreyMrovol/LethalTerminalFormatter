@@ -45,7 +45,7 @@ namespace TerminalFormatter
             adjustedTable.Append("\n\n");
             adjustedTable.Append("Please CONFIRM or DENY routing the autopilot:");
             adjustedTable.Append("\n\n");
-            adjustedTable.Append(RemoveTable(table.ToMarkDownString()));
+            adjustedTable.Append(table.ToStringCustomDecoration());
 
             return adjustedTable.ToString();
         }

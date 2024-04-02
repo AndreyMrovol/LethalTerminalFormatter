@@ -132,11 +132,11 @@ namespace TerminalFormatter
                 table.AddRow("", "", "");
             }
 
-            string tableString = RemoveTable(table.ToMarkDownString(), false);
+            string tableString = table.ToStringCustomDecoration();
             adjustedTable.Append(moonsHeader);
 
             adjustedTable.Append(
-                $"\n The Company // Buying at {Mathf.RoundToInt(StartOfRound.Instance.companyBuyingRate * 100f)}%\n\n"
+                $" The Company // Buying at {Mathf.RoundToInt(StartOfRound.Instance.companyBuyingRate * 100f)}% \n\n"
             );
 
             adjustedTable.Append(tableString);

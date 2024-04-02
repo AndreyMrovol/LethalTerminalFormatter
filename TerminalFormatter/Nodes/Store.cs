@@ -221,7 +221,7 @@ namespace TerminalFormatter
 
             //
 
-            string tableString = RemoveTable(table.ToMarkDownString(), false);
+            string tableString = table.ToStringCustomDecoration(header: true, divider: true);
 
             // Regex replaceHorizontal = new(@"^\|-+\|-+\|-+\|\n");
             // Regex middleLineReplace = new(@"(?:\ |\-)\|(?:\ |\-)");
