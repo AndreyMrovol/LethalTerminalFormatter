@@ -16,6 +16,8 @@ namespace TerminalFormatter
 
         public static ConfigEntry<bool> ShowDifficultyInAll { get; private set; }
 
+        public static ConfigEntry<bool> DetailedScanPage { get; private set; }
+
         public static ConfigEntry<string> LastUsedPreview { get; private set; }
         public static ConfigEntry<string> LastUsedFilter { get; private set; }
         public static ConfigEntry<string> LastUsedSort { get; private set; }
@@ -29,6 +31,13 @@ namespace TerminalFormatter
                 "Show Difficulty in All",
                 false,
                 "Show difficulty in `preview all` setting"
+            );
+
+            DetailedScanPage = configFile.Bind(
+                "General",
+                "Detailed Scan Page",
+                true,
+                "Enable detailed scan page"
             );
 
             LastUsedPreview = configFile.Bind(

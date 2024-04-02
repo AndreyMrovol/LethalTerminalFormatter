@@ -75,7 +75,22 @@ namespace TerminalFormatter
             string moonsHeader = new Header().CreateNumberedHeader(headerName, 2, headerInfo);
 
             adjustedTable.Append(moonsHeader);
-            adjustedTable.Append(RemoveTable(table.ToMarkDownString()));
+
+            if (ConfigManager.DetailedScanPage.Value)
+            {
+                adjustedTable.Append(RemoveTable(table.ToMarkDownString()));
+            }
+            else
+            {
+                if (isShip)
+                {
+                    adjustedTable.Append(RemoveTable(table.ToMarkDownString()));
+                }
+                else
+                {
+                    table.AddRow($"{items} items", $"${value}", "");
+                }
+            }
 
             return adjustedTable.ToString();
         }
