@@ -18,6 +18,8 @@ namespace TerminalFormatter
 
         public static ConfigEntry<bool> DetailedScanPage { get; private set; }
 
+        public static ConfigEntry<int> DivideShopPage { get; private set; }
+
         public static ConfigEntry<string> LastUsedPreview { get; private set; }
         public static ConfigEntry<string> LastUsedFilter { get; private set; }
         public static ConfigEntry<string> LastUsedSort { get; private set; }
@@ -38,6 +40,13 @@ namespace TerminalFormatter
                 "Detailed Scan Page",
                 true,
                 "Enable detailed scan page"
+            );
+
+            DivideShopPage = configFile.Bind(
+                "Store",
+                "Divide shop page into groups",
+                5,
+                "Number of items per shop section (set to 0 to disable)"
             );
 
             LastUsedPreview = configFile.Bind(

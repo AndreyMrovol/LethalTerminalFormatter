@@ -10,7 +10,7 @@ namespace TerminalFormatter
     partial class Nodes
     {
         // Store node
-        private static readonly int itemNameWidth = TerminalPatches.terminalWidth - 9 - 10;
+        internal static readonly int itemNameWidth = TerminalPatches.terminalWidth - 9 - 10;
 
         public string Store(TerminalNode node, Terminal terminal)
         {
@@ -40,6 +40,9 @@ namespace TerminalFormatter
             List<Item> sortedBuyableItemList = Variables
                 .BuyableItemList.OrderBy(x => x.itemName)
                 .ToList();
+
+            int itemCount = 1;
+            // every 3 items make a space
 
             // [buyableItemsList]
             foreach (var item in sortedBuyableItemList)
@@ -101,6 +104,18 @@ namespace TerminalFormatter
                     $"{(howManyOnShip == 0 ? "" : howManyOnShip.ToString())}"
                 // $"{(terminal.itemSalesPercentages[index] != 100 ? 100 - terminal.itemSalesPercentages[index] : "")}"
                 );
+
+                Plugin.logger.LogDebug($"{itemCount}");
+
+                if (itemCount % ConfigManager.DivideShopPage.Value == 0)
+                {
+                    itemCount = 1;
+                    table.AddRow("", "", "");
+                }
+                else
+                {
+                    itemCount++;
+                }
             }
 
             table.AddRow("", "", "");
