@@ -16,8 +16,6 @@ namespace TerminalFormatter
 {
     internal class LategameUpgradesCompatibility
     {
-        internal static List<CustomTerminalNode> LGUNodes = [];
-
         public static void Init()
         {
             Harmony harmony = new Harmony("TerminalFormatter LGU");
@@ -52,8 +50,7 @@ namespace TerminalFormatter
                 return null;
             }
 
-            LGUNodes = (List<CustomTerminalNode>)field.GetValue(upgradeBusInstance);
-            return LGUNodes;
+            return (List<CustomTerminalNode>)field.GetValue(upgradeBusInstance);
         }
 
         internal static void ConstructNodePostfix(
@@ -83,15 +80,19 @@ namespace TerminalFormatter
 
                 int itemNameWidth = Nodes.itemNameWidth;
                 string name = terminalNode.Name.PadRight(itemNameWidth);
-                string discountPercent = salePercent > 0 ? $"  -{salePercent}%" : "";
+                string discountPercent = salePercent > 0 ? $" -{salePercent}%" : "";
 
                 string itemNameWithDiscount = name;
+                string shortenedText = " ... ";
 
                 if (name.Length + discountPercent.Length > itemNameWidth)
                 {
                     itemNameWithDiscount =
-                        name.Substring(0, itemNameWidth - 4 - discountPercent.Length)
-                        + "... "
+                        name.Substring(
+                            0,
+                            itemNameWidth - 4 - discountPercent.Length - shortenedText.Length
+                        )
+                        + shortenedText
                         + discountPercent;
                 }
                 else
@@ -102,16 +103,66 @@ namespace TerminalFormatter
                         );
                 }
 
-                string upgradeDotsDisplay = "";
-                for (int i = 0; i < terminalNode.CurrentUpgrade; i++)
-                {
-                    upgradeDotsDisplay += "●";
-                }
+                // string upgradeDotsDisplay = "";
+                // int upgradeDotsCount = terminalNode.MaxUpgrade;
+                // int upgradeDotsCountCurrent = terminalNode.CurrentUpgrade;
 
-                for (int i = terminalNode.CurrentUpgrade; i <= terminalNode.MaxUpgrade; i++)
-                {
-                    upgradeDotsDisplay += "○";
-                }
+
+
+
+                // after trying to get this shit working for 3 hours, i give up
+                // i still don't understand how it would even work lol
+
+                // for (int i = 0; i < upgradeDotsCount; i++)
+                // {
+                //     // make the code work
+                //     // [Warning:TerminalFormatter] Name: Bigger Lungs, Upgrades: 3/3, Diff: 0, Dots: ○●●●
+                //     // so this doesn't happen
+                //     // we want to create as many dots as MaxUpgrade
+                //     // if MaxUpgrade is 0, make one dot
+                //     // fill as many dots as CurrentUpgrade
+
+
+                //     if (i == terminalNode.MaxUpgrade && i == 0)
+                //     {
+                //         upgradeDotsDisplay += "○";
+                //     }
+
+                //     if (i < terminalNode.CurrentUpgrade)
+                //     {
+                //         upgradeDotsDisplay += "●";
+                //     }
+                //     else
+                //     {
+                //         upgradeDotsDisplay += "○";
+                //     }
+                // }
+
+                // // for every upgrade, add a filled dot
+                // for (int i = 1; i <= terminalNode.CurrentUpgrade; i++)
+                // {
+                //     upgradeDotsDisplay += "●";
+                // }
+
+                // for (int i = 0; i <= terminalNode.MaxUpgrade - terminalNode.CurrentUpgrade; i++)
+                // {
+                //     upgradeDotsDisplay += "○";
+                // }
+
+
+
+                int currentLevel = terminalNode.Unlocked ? terminalNode.CurrentUpgrade + 1 : 0;
+                int remainingLevels = terminalNode.Unlocked ? 0 : 1;
+                remainingLevels +=
+                    terminalNode.MaxUpgrade != 0
+                        ? terminalNode.MaxUpgrade - terminalNode.CurrentUpgrade
+                        : 0;
+                string upgradeDotsDisplay =
+                    new string('●', currentLevel) + new string('○', remainingLevels);
+
+                // Plugin.logger.LogWarning(
+                //     $"Name: {terminalNode.Name}, Upgrades: {terminalNode.CurrentUpgrade}/{terminalNode.MaxUpgrade}, Diff: {terminalNode.MaxUpgrade - terminalNode.CurrentUpgrade}, Dots: {upgradeDotsDisplay}"
+                // );
 
                 if (!terminalNode.Unlocked)
                 {
@@ -143,6 +194,10 @@ namespace TerminalFormatter
                         $"${(int)(terminalNode.Prices[terminalNode.CurrentUpgrade] * terminalNode.salePerc)}",
                         upgradeDotsDisplay
                     );
+                }
+                else if (terminalNode.MaxUpgrade == terminalNode.CurrentUpgrade)
+                {
+                    table.AddRow(itemNameWithDiscount, "", upgradeDotsDisplay);
                 }
             }
 
