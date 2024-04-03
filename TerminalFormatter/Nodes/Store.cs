@@ -179,7 +179,10 @@ namespace TerminalFormatter
 
             if (Plugin.isLRegenPresent)
             {
-                if (!LethalRegenCompatibility.IsUpgradeBought())
+                if (
+                    !LethalRegenCompatibility.IsUpgradeBought()
+                    && LethalRegenCompatibility.IsUpgradeInStore
+                )
                 {
                     table.AddRow("", "", "");
                     table.AddRow("[REGENERATION]", "", "");

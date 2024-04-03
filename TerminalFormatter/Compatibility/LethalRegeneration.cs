@@ -12,12 +12,15 @@ namespace TerminalFormatter
 {
     internal class LethalRegenCompatibility
     {
+        internal static bool IsUpgradeInStore = false;
+
         public static void Init()
         {
-            if (!LethalRegeneration.config.Configuration.Instance.HealingUpgradeEnabled)
-            {
-                return;
-            }
+            IsUpgradeInStore = LethalRegeneration
+                .config
+                .Configuration
+                .Instance
+                .HealingUpgradeEnabled;
         }
 
         public static int GetCost()
