@@ -107,14 +107,17 @@ namespace TerminalFormatter
 
                 Plugin.logger.LogDebug($"{itemCount}");
 
-                if (itemCount % ConfigManager.DivideShopPage.Value == 0)
+                if (ConfigManager.DivideShopPage.Value != 0)
                 {
-                    itemCount = 1;
-                    table.AddRow("", "", "");
-                }
-                else
-                {
-                    itemCount++;
+                    if (itemCount % ConfigManager.DivideShopPage.Value == 0)
+                    {
+                        itemCount = 1;
+                        table.AddRow("", "", "");
+                    }
+                    else
+                    {
+                        itemCount++;
+                    }
                 }
             }
 
