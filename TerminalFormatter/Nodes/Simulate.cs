@@ -26,7 +26,7 @@ namespace TerminalFormatter
                     node.terminalEvent.ToString()
                         .ToLower()
                         .Sanitized()
-                        .Contains(level.NumberlessPlanetName.ToLower().Sanitized())
+                        .Contains(level.NumberlessPlanetName.ToLower().Sanitized().Replace("-", ""))
                 )
                 .FirstOrDefault();
 
