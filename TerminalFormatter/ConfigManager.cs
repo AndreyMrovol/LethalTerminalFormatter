@@ -20,6 +20,8 @@ namespace TerminalFormatter
 
         public static ConfigEntry<int> DivideShopPage { get; private set; }
 
+        public static ConfigEntry<bool> UseShortenedWeathers { get; private set; }
+
         public static ConfigEntry<string> LastUsedPreview { get; private set; }
         public static ConfigEntry<string> LastUsedFilter { get; private set; }
         public static ConfigEntry<string> LastUsedSort { get; private set; }
@@ -40,6 +42,13 @@ namespace TerminalFormatter
                 "Detailed Scan Page",
                 true,
                 "Enable detailed scan page"
+            );
+
+            UseShortenedWeathers = configFile.Bind(
+                "Moons",
+                "Use Shortened Weathers",
+                false,
+                "Use shortened weathers in moons catalogue"
             );
 
             DivideShopPage = configFile.Bind(

@@ -18,6 +18,17 @@ namespace TerminalFormatter
 
         static readonly ManualLogSource logger = Plugin.logger;
 
+        private static Dictionary<string, string> WeathersShortened = new Dictionary<string, string>
+        {
+            { "None", "Non" },
+            { "DustClouds", "Dust" },
+            { "Foggy", "Fog" },
+            { "Rainy", "Rny" },
+            { "Flooded", "Fld" },
+            { "Stormy", "Strm" },
+            { "Eclipsed", "Eclps" }
+        };
+
         public string Moons(TerminalNode node, Terminal terminal)
         {
             Plugin.logger.LogDebug("Patching MoonsCatalogue");
@@ -62,6 +73,11 @@ namespace TerminalFormatter
             {
                 foreach (ExtendedLevel extendedLevel in extendedLevelGroup.extendedLevelsList)
                 {
+                    if (extendedLevel.isHidden)
+                    {
+                        continue;
+                    }
+
                     string planetName = extendedLevel.NumberlessPlanetName;
                     logger.LogDebug($"Planet: {planetName}");
 
@@ -88,6 +104,13 @@ namespace TerminalFormatter
                         ? $" {extendedLevel.selectableLevel.riskLevel.ToString().PadRight(2)}"
                         : "";
 
+                    // int LGUPrice;
+                    // if(Plugin.isLGUPresent){
+                    //     LGUPrice = extendedLevel.LGUPrice;
+                    // } else {
+                    //     LGUPrice = 0;
+                    // }
+
                     bool showPrice =
                         Settings.levelPreviewInfoType == PreviewInfoType.All
                         || Settings.levelPreviewInfoType == PreviewInfoType.Price;
@@ -110,10 +133,22 @@ namespace TerminalFormatter
                         .Replace(")", "");
                     // substring to planetWeatherWidth
 
-                    if (weatherCondition.Length > planetWeatherWidth - 2)
+                    if (
+                        weatherCondition.Length > planetWeatherWidth - 2
+                        || ConfigManager.UseShortenedWeathers.Value
+                    )
                     {
-                        weatherCondition =
-                            $"{weatherCondition.Substring(0, planetWeatherWidth - 2)}..";
+                        // weatherCondition =
+                        //     $"{weatherCondition.Substring(0, planetWeatherWidth - 2)}..";
+
+                        WeathersShortened.Do(pair =>
+                        {
+                            weatherCondition = Regex.Replace(
+                                weatherCondition,
+                                pair.Key,
+                                pair.Value
+                            );
+                        });
                     }
 
                     string weather = showWeather
