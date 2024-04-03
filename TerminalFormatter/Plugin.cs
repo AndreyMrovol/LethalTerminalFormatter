@@ -6,7 +6,7 @@ using HarmonyLib;
 namespace TerminalFormatter
 {
     [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
-    [BepInDependency("imabatby.lethallevelloader", BepInDependency.DependencyFlags.HardDependency)]
+    // [BepInDependency("imabatby.lethallevelloader", BepInDependency.DependencyFlags.HardDependency)]
     [BepInDependency(
         "Toskan4134.LethalRegeneration",
         BepInDependency.DependencyFlags.SoftDependency
@@ -38,24 +38,28 @@ namespace TerminalFormatter
 
             if (Chainloader.PluginInfos.ContainsKey("com.potatoepet.AdvancedCompany"))
             {
+                logger.LogWarning("AC found, setting up compatibility patches");
                 ACCompatibility.Init("com.potatoepet.AdvancedCompany");
                 isACPresent = true;
             }
 
             if (Chainloader.PluginInfos.ContainsKey("imabatby.lethallevelloader"))
             {
+                logger.LogWarning("LLL found, setting up compatibility patches");
                 LLLCompatibility.Init();
                 isLLLPresent = true;
             }
 
             if (Chainloader.PluginInfos.ContainsKey("Toskan4134.LethalRegeneration"))
             {
+                logger.LogWarning("LethalRegeneration found, setting up compatibility patches");
                 LethalRegenCompatibility.Init();
                 isLRegenPresent = true;
             }
 
             if (Chainloader.PluginInfos.ContainsKey("com.malco.lethalcompany.moreshipupgrades"))
             {
+                logger.LogWarning("MoreShipUpgrades found, setting up compatibility patches");
                 LategameUpgradesCompatibility.Init();
                 isLGUPresent = true;
             }
