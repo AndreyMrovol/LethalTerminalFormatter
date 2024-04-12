@@ -35,17 +35,30 @@ namespace TerminalFormatter
                 .Replace("(", "")
                 .Replace(")", "");
 
-            table.AddRow(
-                currentLevel.NumberlessPlanetName.PadRight(planetNameWidth),
-                "$" + currentLevel.RoutePrice,
-                currentWeather == "" ? "Clear" : currentWeather
-            );
+            if (
+                currentWeather.Length > TerminalPatches.terminalWidth - 5
+                || ConfigManager.UseShortenedWeathers.Value
+            )
+            {
+                WeathersShortened.Do(pair =>
+                {
+                    currentWeather = Regex.Replace(currentWeather, pair.Key, pair.Value);
+                });
+            }
 
             adjustedTable.Append(header);
             adjustedTable.Append("\n\n");
             adjustedTable.Append("Please CONFIRM or DENY routing the autopilot:");
             adjustedTable.Append("\n\n");
-            adjustedTable.Append(table.ToStringCustomDecoration());
+            // adjustedTable.Append(table.ToStringCustomDecoration());
+
+            adjustedTable.AppendLine($" PLANET: {currentLevel.NumberlessPlanetName}");
+            adjustedTable.AppendLine(
+                $" PRICE: ${currentLevel.RoutePrice} (${terminal.groupCredits - currentLevel.RoutePrice} after routing)"
+            );
+            adjustedTable.AppendLine(
+                $" WEATHER: {(currentWeather == "" ? "Clear" : currentWeather)}"
+            );
 
             return adjustedTable.ToString();
         }
