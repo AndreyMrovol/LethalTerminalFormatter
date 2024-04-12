@@ -70,7 +70,7 @@ namespace TerminalFormatter
 
                 if (__instance.displayingPersistentImage)
                 {
-                    builder.Append("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+                    builder.Append("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
                 }
 
                 builder.Append("\n\n");
