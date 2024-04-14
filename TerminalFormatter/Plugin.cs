@@ -48,6 +48,13 @@ namespace TerminalFormatter
                 logger.LogWarning("LLL found, setting up compatibility patches");
                 LLLCompatibility.Init();
                 isLLLPresent = true;
+
+                // new Nodes.Moons();
+                // new Nodes.Simulate();
+            }
+            else
+            {
+                new Nodes.MoonsNoLLL();
             }
 
             if (Chainloader.PluginInfos.ContainsKey("Toskan4134.LethalRegeneration"))
@@ -63,6 +70,10 @@ namespace TerminalFormatter
                 LategameUpgradesCompatibility.Init();
                 isLGUPresent = true;
             }
+
+            new Nodes.Route();
+            new Nodes.Scan();
+            new Nodes.Store();
 
             // Plugin startup logic
             Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");
