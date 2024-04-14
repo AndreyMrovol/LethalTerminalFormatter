@@ -8,11 +8,19 @@ using HarmonyLib;
 using LethalLevelLoader;
 using UnityEngine;
 
-namespace TerminalFormatter
+namespace TerminalFormatter.Nodes
 {
-    partial class Nodes
+    public class Scan : TerminalFormatterNode
     {
-        public string Scan(TerminalNode node, Terminal terminal)
+        public Scan()
+            : base("Scan", ["ScanInfo"]) { }
+
+        public override bool IsNodeValid(TerminalNode node, Terminal terminal)
+        {
+            return true;
+        }
+
+        public override string GetNodeText(TerminalNode node, Terminal terminal)
         {
             Plugin.logger.LogDebug("Patching ScanForItems");
 
@@ -55,7 +63,7 @@ namespace TerminalFormatter
             foreach (var item in objectsToScan)
             {
                 table.AddRow(
-                    item.itemProperties.itemName.PadRight(itemNameWidth),
+                    item.itemProperties.itemName.PadRight(Settings.itemNameWidth),
                     $"${item.scrapValue}",
                     item.itemProperties.twoHanded ? "●" : "○"
                 );

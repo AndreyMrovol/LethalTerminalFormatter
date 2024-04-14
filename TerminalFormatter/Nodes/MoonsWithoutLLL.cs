@@ -3,11 +3,19 @@ using System.Linq;
 using System.Text;
 using HarmonyLib;
 
-namespace TerminalFormatter
+namespace TerminalFormatter.Nodes
 {
-    partial class Nodes
+    public class MoonsNoLLL : TerminalFormatterNode
     {
-        public string MoonsNoLLL(TerminalNode node, Terminal terminal)
+        public MoonsNoLLL()
+            : base("Moons", ["MoonsCatalogue"]) { }
+
+        public override bool IsNodeValid(TerminalNode node, Terminal terminal)
+        {
+            return true;
+        }
+
+        public override string GetNodeText(TerminalNode node, Terminal terminal)
         {
             Plugin.logger.LogDebug("Patching MoonsCatalogue");
             Plugin.logger.LogWarning("LethalLevelLoader not found, using a fallback method");
@@ -40,7 +48,8 @@ namespace TerminalFormatter
                     new List<Dictionary<string, int>>
                     {
                         new Dictionary<string, int> { { "March", 0 } },
-                        new Dictionary<string, int> { { "Offense", 0 } }
+                        new Dictionary<string, int> { { "Offense", 0 } },
+                        new Dictionary<string, int> { { "Adamance", 0 } },
                     },
                     new List<Dictionary<string, int>>
                     {
@@ -64,9 +73,9 @@ namespace TerminalFormatter
                         SelectableLevel moon = numberlessMoons[moonInDictionary.Key];
 
                         table.AddRow(
-                            moonInDictionary.Key.PadRight(planetNameWidth),
+                            moonInDictionary.Key.PadRight(Settings.planetNameWidth),
                             $"${moonInDictionary.Value.ToString()}",
-                            moon.currentWeather.ToString().PadRight(planetWeatherWidth)
+                            SharedMethods.GetWeather(moon).PadRight(Settings.planetWeatherWidth)
                         );
                     }
                 }

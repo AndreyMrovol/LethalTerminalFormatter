@@ -7,8 +7,15 @@ namespace TerminalFormatter
     [HarmonyPatch(typeof(Terminal))]
     public class TerminalPatches
     {
-        public static readonly int terminalWidth = 48;
-        public static bool firstUse = true;
+        // [HarmonyPrefix]
+        // [HarmonyPatch(nameof(Terminal.ParsePlayerSentence))]
+        // static void CustomParser(ref Terminal __instance, ref TerminalNode __result)
+        // {
+        //     string text = __instance.screenText.text.Substring(
+        //         __instance.screenText.text.Length - __instance.textAdded
+        //     );
+        //     CommandParser.ParseCommand(text, ref __instance, ref __result);
+        // }
 
         [HarmonyPostfix]
         [HarmonyPatch("TextPostProcess")]
@@ -22,46 +29,39 @@ namespace TerminalFormatter
 
             string newDisplayText = null;
 
-            if (node.name == "0_StoreHub")
+            // Settings.RegisteredNodes.ForEach(terminalnode =>
+            // {
+            //     Plugin.logger.LogDebug($"Node: {terminalnode.name}");
+            //     terminalnode.terminalNode.ForEach(terminalNode =>
+            //     {
+            //         Plugin.logger.LogDebug(
+            //             $"{terminalNode}, contains: {node.name.Contains(terminalNode)} {terminalNode.Contains(node.name)}"
+            //         );
+            //     });
+            // });
+
+            // check if node.name contains any of TerminalFormatterNode.terminalNode strings
+            TerminalFormatterNode currentNode = Settings
+                .RegisteredNodes.Where(formatterNode =>
+                    formatterNode.terminalNode.Any(y => node.name.Contains(y))
+                )
+                .FirstOrDefault();
+
+            if (currentNode != null)
             {
-                newDisplayText = new Nodes().Store(node, __instance);
+                bool shouldRun = currentNode.IsNodeValid(node, __instance);
+                if (!shouldRun)
+                {
+                    return;
+                }
+
+                Plugin.logger.LogWarning($"Found node: {currentNode.name}");
+
+                newDisplayText = currentNode.GetNodeText(node, __instance);
             }
-
-            if (
-                node.name == "MoonsCatalogue"
-                || node.name.Contains("preview")
-                || node.name.Contains("filter")
-                || node.name.Contains("sort")
-            )
+            else
             {
-                if (!Plugin.isLLLPresent)
-                {
-                    newDisplayText = new Nodes().MoonsNoLLL(node, __instance);
-                    // return;
-                }
-                else
-                {
-                    newDisplayText = new Nodes().Moons(node, __instance);
-                    firstUse = false;
-                }
-            }
-
-            if (node.name == "ScanInfo")
-            {
-                newDisplayText = new Nodes().Scan(node, __instance);
-            }
-
-            if (Plugin.isLLLPresent)
-            {
-                if (node.name.ToLower().Contains("route") && node.buyRerouteToMoon == -2)
-                {
-                    newDisplayText = new Nodes().Route(node, __instance);
-                }
-
-                if (node.name.ToLower().Contains("simulate"))
-                {
-                    newDisplayText = new Nodes().Simulate(node, __instance);
-                }
+                return;
             }
 
             if (newDisplayText != null)
@@ -105,9 +105,9 @@ namespace TerminalFormatter
                 ACCompatibility.Refresh();
             }
 
-            Plugin.logger.LogDebug("First use: " + firstUse);
+            Plugin.logger.LogDebug("First use: " + Settings.firstUse);
 
-            if (firstUse && Variables.ISLLLActive)
+            if (Settings.firstUse && Variables.ISLLLActive)
             {
                 LLLCompatibility.Init();
             }

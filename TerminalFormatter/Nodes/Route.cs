@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -8,57 +9,64 @@ using HarmonyLib;
 using LethalLevelLoader;
 using UnityEngine;
 
-namespace TerminalFormatter
+namespace TerminalFormatter.Nodes
 {
-    partial class Nodes
+    public class Route : TerminalFormatterNode
     {
-        public string Route(TerminalNode node, Terminal terminal)
+        public Route()
+            : base("Route", ["route", "Route"]) { }
+
+        public override bool IsNodeValid(TerminalNode node, Terminal terminal)
         {
-            var table = new ConsoleTables.ConsoleTable(
-                "Planet", // Name
-                "Price", // Price
-                "Weather" // Weather
-            );
+            return node.buyRerouteToMoon == -2;
+        }
+
+        public override string GetNodeText(TerminalNode node, Terminal terminal)
+        {
+            var table = new ConsoleTables.ConsoleTable("Title", "Things");
+
+            Plugin.logger.LogInfo("Creating route table");
 
             var header = new Header().CreateHeaderWithoutLines("CONFIRM ROUTE");
             var adjustedTable = new StringBuilder();
 
-            List<ExtendedLevel> levels = LethalLevelLoader.PatchedContent.ExtendedLevels;
-            ExtendedLevel currentLevel = levels
-                .Where(level => level.routeNode == node)
+            List<SelectableLevel> levels = SharedMethods.GetGameLevels();
+            SelectableLevel currentLevel = levels
+                .Where(level =>
+                    node.displayText.Contains(SharedMethods.GetNumberlessPlanetName(level))
+                )
                 .FirstOrDefault();
 
-            string currentWeather = typeof(TerminalManager)
-                .GetMethod("GetWeatherConditions", BindingFlags.NonPublic | BindingFlags.Static)
-                .Invoke(null, [currentLevel.selectableLevel])
-                .ToString()
-                .Replace("(", "")
-                .Replace(")", "");
+            // get all terminal nodes containing `route`, and find the one having numberless planet name in the description
+            // oh god, it's so shit
+
+
+
+            string currentWeather = SharedMethods.GetWeather(currentLevel);
 
             if (
-                currentWeather.Length > TerminalPatches.terminalWidth - 5
+                currentWeather.Length > Settings.terminalWidth - 5
                 || ConfigManager.UseShortenedWeathers.Value
             )
             {
-                WeathersShortened.Do(pair =>
+                Settings.WeathersShortened.Do(pair =>
                 {
                     currentWeather = Regex.Replace(currentWeather, pair.Key, pair.Value);
                 });
             }
 
+            table.AddRow("PLANET:", SharedMethods.GetNumberlessPlanetName(currentLevel));
+            table.AddRow(
+                "PRICE:",
+                $"${node.itemCost} (${terminal.groupCredits - node.itemCost} after routing)"
+            );
+            table.AddRow("WEATHER:", currentWeather == "" ? "Clear" : currentWeather);
+
             adjustedTable.Append(header);
             adjustedTable.Append("\n\n");
             adjustedTable.Append("Please CONFIRM or DENY routing the autopilot:");
             adjustedTable.Append("\n\n");
-            // adjustedTable.Append(table.ToStringCustomDecoration());
-
-            adjustedTable.AppendLine($" PLANET: {currentLevel.NumberlessPlanetName}");
-            adjustedTable.AppendLine(
-                $" PRICE: ${currentLevel.RoutePrice} (${terminal.groupCredits - currentLevel.RoutePrice} after routing)"
-            );
-            adjustedTable.AppendLine(
-                $" WEATHER: {(currentWeather == "" ? "Clear" : currentWeather)}"
-            );
+            adjustedTable.Append(table.ToStringCustomDecoration());
 
             return adjustedTable.ToString();
         }

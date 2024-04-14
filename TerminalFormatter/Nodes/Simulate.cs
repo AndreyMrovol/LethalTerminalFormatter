@@ -8,11 +8,19 @@ using HarmonyLib;
 using LethalLevelLoader;
 using UnityEngine;
 
-namespace TerminalFormatter
+namespace TerminalFormatter.Nodes
 {
-    partial class Nodes
+    public class Simulate : TerminalFormatterNode
     {
-        public string Simulate(TerminalNode node, Terminal terminal)
+        public Simulate()
+            : base("Simulate", ["simulate"]) { }
+
+        public override bool IsNodeValid(TerminalNode node, Terminal terminal)
+        {
+            return true;
+        }
+
+        public override string GetNodeText(TerminalNode node, Terminal terminal)
         {
             var table = new ConsoleTables.ConsoleTable(
                 "Interior", // Name
@@ -21,6 +29,18 @@ namespace TerminalFormatter
             );
 
             List<ExtendedLevel> levels = LethalLevelLoader.PatchedContent.ExtendedLevels;
+
+            // levels.Do(level =>
+            // {
+            //     Plugin.logger.LogWarning(level.NumberlessPlanetName);
+            //     Plugin.logger.LogWarning(node.terminalEvent.ToString().ToLower().Sanitized());
+            //     Plugin.logger.LogWarning(level.NumberlessPlanetName.ToLower().Sanitized());
+            //     Plugin.logger.LogWarning(
+            //         level.NumberlessPlanetName.ToLower().Sanitized().Replace("-", "")
+            //     );
+            //     Plugin.logger.LogDebug("---");
+            // });
+
             ExtendedLevel currentLevel = levels
                 .Where(level =>
                     node.terminalEvent.ToString()
@@ -57,7 +77,9 @@ namespace TerminalFormatter
                 );
 
                 table.AddRow(
-                    dungeonFlow.extendedDungeonFlow.dungeonDisplayName.PadRight(planetNameWidth),
+                    dungeonFlow.extendedDungeonFlow.dungeonDisplayName.PadRight(
+                        Settings.planetNameWidth
+                    ),
                     dungeonFlow.rarity,
                     $"{((float)dungeonFlow.rarity / (float)totalRarityPool * 100).ToString("F2")}%".PadLeft(
                         4

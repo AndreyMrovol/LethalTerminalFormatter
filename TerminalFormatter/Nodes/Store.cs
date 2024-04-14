@@ -5,14 +5,19 @@ using System.Text.RegularExpressions;
 using HarmonyLib;
 using UnityEngine;
 
-namespace TerminalFormatter
+namespace TerminalFormatter.Nodes
 {
-    partial class Nodes
+    public class Store : TerminalFormatterNode
     {
-        // Store node
-        internal static readonly int itemNameWidth = TerminalPatches.terminalWidth - 9 - 10;
+        public Store()
+            : base("Store", ["0_StoreHub"]) { }
 
-        public string Store(TerminalNode node, Terminal terminal)
+        public override bool IsNodeValid(TerminalNode node, Terminal terminal)
+        {
+            return true;
+        }
+
+        public override string GetNodeText(TerminalNode node, Terminal terminal)
         {
             var table = new ConsoleTables.ConsoleTable("Name", "Price", "# On ship");
             var adjustedTable = new StringBuilder();
@@ -83,18 +88,18 @@ namespace TerminalFormatter
                 // so the discountPercent is padded to the right
 
                 // make itemName length = itemNameWidth
-                if (itemName.Length + discountPercent.Length > itemNameWidth)
+                if (itemName.Length + discountPercent.Length > Settings.itemNameWidth)
                 {
                     itemName =
-                        itemName.Substring(0, itemNameWidth - 4 - discountPercent.Length)
+                        itemName.Substring(0, Settings.itemNameWidth - 4 - discountPercent.Length)
                         + "... "
                         + discountPercent;
                 }
                 else
                 {
                     itemName =
-                        $"{itemName.PadRight(itemNameWidth - discountPercent.Length)}{discountPercent}".PadRight(
-                            itemNameWidth
+                        $"{itemName.PadRight(Settings.itemNameWidth - discountPercent.Length)}{discountPercent}".PadRight(
+                            Settings.itemNameWidth
                         );
                 }
 
@@ -174,7 +179,7 @@ namespace TerminalFormatter
                     continue;
 
                 table.AddRow(
-                    unlockable.unlockableName.PadRight(itemNameWidth),
+                    unlockable.unlockableName.PadRight(Settings.itemNameWidth),
                     $"${(unlockableNode ? unlockableNode.itemCost : upgrades[unlockable.unlockableName])}",
                     ""
                 );

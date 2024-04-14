@@ -8,35 +8,30 @@ using HarmonyLib;
 using LethalLevelLoader;
 using UnityEngine;
 
-namespace TerminalFormatter
+namespace TerminalFormatter.Nodes
 {
-    partial class Nodes
+    public class Moons : TerminalFormatterNode
     {
-        private static readonly int planetWeatherWidth = 18;
-        private static readonly int planetNameWidth =
-            TerminalPatches.terminalWidth + 2 - planetWeatherWidth - 9;
+        public Moons()
+            : base("Moons", ["MoonsCatalogue", "preview", "sort", "filter"]) { }
 
-        static readonly ManualLogSource logger = Plugin.logger;
-
-        private static Dictionary<string, string> WeathersShortened = new Dictionary<string, string>
+        public override bool IsNodeValid(TerminalNode node, Terminal terminal)
         {
-            { "None", "Non" },
-            { "DustClouds", "Dust" },
-            { "Foggy", "Fog" },
-            { "Rainy", "Rny" },
-            { "Flooded", "Fld" },
-            { "Stormy", "Strm" },
-            { "Eclipsed", "Eclps" }
-        };
+            return true;
+        }
 
-        public string Moons(TerminalNode node, Terminal terminal)
+        public override string GetNodeText(TerminalNode node, Terminal terminal)
         {
             Plugin.logger.LogDebug("Patching MoonsCatalogue");
 
-            MoonsCataloguePage moonCatalogue = Traverse
-                .Create<TerminalManager>()
-                .Field<MoonsCataloguePage>("currentMoonsCataloguePage")
-                .Value;
+            LethalLevelLoader.MoonsCataloguePage moonCatalogue = LethalLevelLoader
+                .TerminalManager
+                .currentMoonsCataloguePage;
+
+            // MoonsCataloguePage moonCatalogue = Traverse
+            //     .Create<TerminalManager>()
+            //     .Field<MoonsCataloguePage>("currentMoonsCataloguePage")
+            //     .Value;
 
             var table = new ConsoleTables.ConsoleTable(
                 "", // Name
@@ -57,21 +52,37 @@ namespace TerminalFormatter
             Dictionary<int, string> headerInfo =
                 new()
                 {
-                    { 0, $"PREVIEW: {Settings.levelPreviewInfoType.ToString().ToUpper()}" },
-                    { 1, $"SORT: {Settings.levelPreviewSortType.ToString().ToUpper()}" },
-                    { 2, $"FILTER: {Settings.levelPreviewFilterType.ToString().ToUpper()}" },
+                    {
+                        0,
+                        $"PREVIEW: {LethalLevelLoader.Settings.levelPreviewInfoType.ToString().ToUpper()}"
+                    },
+                    {
+                        1,
+                        $"SORT: {LethalLevelLoader.Settings.levelPreviewSortType.ToString().ToUpper()}"
+                    },
+                    {
+                        2,
+                        $"FILTER: {LethalLevelLoader.Settings.levelPreviewFilterType.ToString().ToUpper()}"
+                    },
                 };
             string moonsHeader = new Header().CreateNumberedHeader(headerName, 2, headerInfo);
 
-            ConfigManager.LastUsedFilter.Value = Settings.levelPreviewFilterType.ToString();
-            ConfigManager.LastUsedSort.Value = Settings.levelPreviewSortType.ToString();
-            ConfigManager.LastUsedPreview.Value = Settings.levelPreviewInfoType.ToString();
+            ConfigManager.LastUsedFilter.Value =
+                LethalLevelLoader.Settings.levelPreviewFilterType.ToString();
+            ConfigManager.LastUsedSort.Value =
+                LethalLevelLoader.Settings.levelPreviewSortType.ToString();
+            ConfigManager.LastUsedPreview.Value =
+                LethalLevelLoader.Settings.levelPreviewInfoType.ToString();
 
-            logger.LogDebug("MoonsCataloguePage: " + moonCatalogue);
+            Plugin.logger.LogDebug("MoonsCataloguePage: " + moonCatalogue);
 
-            foreach (ExtendedLevelGroup extendedLevelGroup in moonCatalogue.ExtendedLevelGroups)
+            foreach (
+                LethalLevelLoader.ExtendedLevelGroup extendedLevelGroup in moonCatalogue.ExtendedLevelGroups
+            )
             {
-                foreach (ExtendedLevel extendedLevel in extendedLevelGroup.extendedLevelsList)
+                foreach (
+                    LethalLevelLoader.ExtendedLevel extendedLevel in extendedLevelGroup.extendedLevelsList
+                )
                 {
                     if (extendedLevel.isHidden)
                     {
@@ -79,25 +90,27 @@ namespace TerminalFormatter
                     }
 
                     string planetName = extendedLevel.NumberlessPlanetName;
-                    logger.LogDebug($"Planet: {planetName}");
+                    Plugin.logger.LogDebug($"Planet: {planetName}");
 
                     // make itemName length = itemNameWidth
-                    if (planetName.Length > planetNameWidth)
+                    if (planetName.Length > Settings.planetNameWidth)
                     {
                         // replace last 3 characters with "..."
-                        planetName = $"{planetName.Substring(0, planetNameWidth - 3)}...";
+                        planetName = $"{planetName.Substring(0, Settings.planetNameWidth - 3)}...";
                     }
                     else
                     {
-                        planetName = $"{planetName}".PadRight(planetNameWidth);
+                        planetName = $"{planetName}".PadRight(Settings.planetNameWidth);
                     }
 
                     bool showDifficulty =
                         (
                             ConfigManager.ShowDifficultyInAll.Value
-                            && Settings.levelPreviewInfoType == PreviewInfoType.All
+                            && LethalLevelLoader.Settings.levelPreviewInfoType
+                                == LethalLevelLoader.PreviewInfoType.All
                         )
-                        || Settings.levelPreviewInfoType == PreviewInfoType.Difficulty;
+                        || LethalLevelLoader.Settings.levelPreviewInfoType
+                            == LethalLevelLoader.PreviewInfoType.Difficulty;
 
                     // if longer than 2, trim
                     var difficulty = showDifficulty
@@ -112,36 +125,32 @@ namespace TerminalFormatter
                     // }
 
                     bool showPrice =
-                        Settings.levelPreviewInfoType == PreviewInfoType.All
-                        || Settings.levelPreviewInfoType == PreviewInfoType.Price;
+                        LethalLevelLoader.Settings.levelPreviewInfoType
+                            == LethalLevelLoader.PreviewInfoType.All
+                        || LethalLevelLoader.Settings.levelPreviewInfoType
+                            == LethalLevelLoader.PreviewInfoType.Price;
                     string price = showPrice ? $"${extendedLevel.RoutePrice}" : "";
 
                     bool showWeather =
-                        Settings.levelPreviewInfoType == PreviewInfoType.All
-                        || Settings.levelPreviewInfoType == PreviewInfoType.Weather;
+                        LethalLevelLoader.Settings.levelPreviewInfoType
+                            == LethalLevelLoader.PreviewInfoType.All
+                        || LethalLevelLoader.Settings.levelPreviewInfoType
+                            == LethalLevelLoader.PreviewInfoType.Weather;
 
                     // use reflection to call TerminalManager.GetWeatherConditions - must invoke the original method cause of weathertweaks
                     // it's internal static method
-                    var weatherCondition = typeof(TerminalManager)
-                        .GetMethod(
-                            "GetWeatherConditions",
-                            BindingFlags.NonPublic | BindingFlags.Static
-                        )
-                        .Invoke(null, new object[] { extendedLevel.selectableLevel })
-                        .ToString()
-                        .Replace("(", "")
-                        .Replace(")", "");
-                    // substring to planetWeatherWidth
+                    var weatherCondition = SharedMethods.GetWeather(extendedLevel.selectableLevel);
+                    // substring to Settings.planetWeatherWidth
 
                     if (
-                        weatherCondition.Length > planetWeatherWidth - 2
+                        weatherCondition.Length > Settings.planetWeatherWidth - 2
                         || ConfigManager.UseShortenedWeathers.Value
                     )
                     {
                         // weatherCondition =
-                        //     $"{weatherCondition.Substring(0, planetWeatherWidth - 2)}..";
+                        //     $"{weatherCondition.Substring(0, Settings.planetWeatherWidth - 2)}..";
 
-                        WeathersShortened.Do(pair =>
+                        Settings.WeathersShortened.Do(pair =>
                         {
                             weatherCondition = Regex.Replace(
                                 weatherCondition,
@@ -152,13 +161,13 @@ namespace TerminalFormatter
                     }
 
                     string weather = showWeather
-                        ? weatherCondition.PadRight(planetWeatherWidth - 2)
+                        ? weatherCondition.PadRight(Settings.planetWeatherWidth - 2)
                         : "";
 
                     table.AddRow(
                         planetName,
                         $"{price}",
-                        $"{difficulty}{weather}".PadLeft(planetWeatherWidth)
+                        $"{difficulty}{weather}".PadLeft(Settings.planetWeatherWidth)
                     );
 
                     tableInConsole.AddRow(planetName, price, weather, difficulty);
