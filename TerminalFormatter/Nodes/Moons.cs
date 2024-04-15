@@ -129,7 +129,9 @@ namespace TerminalFormatter.Nodes
                             == LethalLevelLoader.PreviewInfoType.All
                         || LethalLevelLoader.Settings.levelPreviewInfoType
                             == LethalLevelLoader.PreviewInfoType.Price;
-                    string price = showPrice ? $"${extendedLevel.RoutePrice}" : "";
+                    string price = showPrice
+                        ? $"${SharedMethods.GetPrice(extendedLevel.RoutePrice)}"
+                        : "";
 
                     bool showWeather =
                         LethalLevelLoader.Settings.levelPreviewInfoType

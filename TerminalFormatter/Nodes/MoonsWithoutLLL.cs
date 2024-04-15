@@ -72,9 +72,11 @@ namespace TerminalFormatter.Nodes
                     {
                         SelectableLevel moon = numberlessMoons[moonInDictionary.Key];
 
+                        int price = SharedMethods.GetPrice(moonInDictionary.Value);
+
                         table.AddRow(
                             moonInDictionary.Key.PadRight(Settings.planetNameWidth),
-                            $"${moonInDictionary.Value.ToString()}",
+                            $"${price}",
                             SharedMethods.GetWeather(moon).PadRight(Settings.planetWeatherWidth)
                         );
                     }

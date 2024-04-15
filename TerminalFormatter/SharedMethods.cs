@@ -12,9 +12,10 @@ namespace TerminalFormatter
                 return LLLMethods.GetWeather(level);
             }
             // TODO add weathertweaks it's my own fucking mod and i cannot get it to work lol
-            // else if (Plugin.isWTPresent) {
-            //     return WeatherTweaksMethods.GetWeather(level);
-            // }
+            else if (Plugin.isWTPresent)
+            {
+                return WeatherTweaksCompatibility.CurrentWeather(level);
+            }
             else
             {
                 return level.currentWeather.ToString();
@@ -35,6 +36,21 @@ namespace TerminalFormatter
             else
             {
                 return StartOfRound.Instance.levels.ToList();
+            }
+        }
+
+        public static int GetPrice(int beforeDiscountPrice)
+        {
+            Plugin.logger.LogWarning($"price: {beforeDiscountPrice}");
+
+            if (Plugin.isLGUPresent)
+            {
+                Plugin.logger.LogInfo($"LGU is present");
+                return LategameUpgradesCompatibility.GetMoonPrice(beforeDiscountPrice);
+            }
+            else
+            {
+                return beforeDiscountPrice;
             }
         }
     }

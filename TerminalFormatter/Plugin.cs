@@ -19,6 +19,7 @@ namespace TerminalFormatter
         "com.malco.lethalcompany.moreshipupgrades",
         BepInDependency.DependencyFlags.SoftDependency
     )]
+    [BepInDependency("WeatherTweaks", BepInDependency.DependencyFlags.SoftDependency)]
     public class Plugin : BaseUnityPlugin
     {
         internal static ManualLogSource logger;
@@ -28,6 +29,7 @@ namespace TerminalFormatter
         internal static bool isLLLPresent = false;
         internal static bool isLRegenPresent = false;
         internal static bool isLGUPresent = false;
+        internal static bool isWTPresent = false;
 
         private void Awake()
         {
@@ -69,6 +71,13 @@ namespace TerminalFormatter
                 logger.LogWarning("MoreShipUpgrades found, setting up compatibility patches");
                 LategameUpgradesCompatibility.Init();
                 isLGUPresent = true;
+            }
+
+            if (Chainloader.PluginInfos.ContainsKey("WeatherTweaks"))
+            {
+                logger.LogWarning("WeatherTweaks found, setting up compatibility patches");
+                WeatherTweaksCompatibility.Init();
+                isWTPresent = true;
             }
 
             new Nodes.Route();
