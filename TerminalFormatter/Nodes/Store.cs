@@ -64,6 +64,15 @@ namespace TerminalFormatter.Nodes
                     continue;
                 }
 
+                if (Plugin.isLLibPresent)
+                {
+                    if (LethalLibCompatibility.IsLLItemDisabled(item))
+                    {
+                        Plugin.logger.LogDebug($"Item {itemName} is disabled in LethalLib");
+                        continue;
+                    }
+                }
+
                 if (ACCompatibility.Items.ContainsKey(itemName))
                 {
                     // Plugin.logger.LogDebug($"Item {itemName} is in AC config");
@@ -147,6 +156,17 @@ namespace TerminalFormatter.Nodes
                 bool isUnlocked = unlockable.hasBeenUnlockedByPlayer || unlockable.alreadyUnlocked;
                 TerminalNode unlockableNode = unlockable.shopSelectionNode;
 
+                if (Plugin.isLLibPresent)
+                {
+                    if (LethalLibCompatibility.IsLLUpgradeDisabled(unlockable))
+                    {
+                        Plugin.logger.LogDebug(
+                            $"Upgrade {unlockable.unlockableName} is disabled in LethalLib"
+                        );
+                        continue;
+                    }
+                }
+
                 if (unlockableNode == null)
                 {
                     Plugin.logger.LogDebug(
@@ -216,6 +236,17 @@ namespace TerminalFormatter.Nodes
                 UnlockableItem unlockable = StartOfRound.Instance.unlockablesList.unlockables[
                     decor.shipUnlockableID
                 ];
+
+                if (Plugin.isLLibPresent)
+                {
+                    if (LethalLibCompatibility.IsLLUpgradeDisabled(unlockable))
+                    {
+                        Plugin.logger.LogDebug(
+                            $"Upgrade {unlockable.unlockableName} is disabled in LethalLib"
+                        );
+                        continue;
+                    }
+                }
 
                 Plugin.logger.LogDebug(
                     $"{decor.creatureName} isUnlocked: {unlockable.hasBeenUnlockedByPlayer} unlockable: {unlockable}"
