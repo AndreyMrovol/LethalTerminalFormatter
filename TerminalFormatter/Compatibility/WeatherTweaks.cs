@@ -66,7 +66,9 @@ namespace TerminalFormatter
 
             if (GetPlanetCurrentWeather != null)
             {
-                return (string)GetPlanetCurrentWeather.Invoke(null, new object[] { level, true });
+                string weather = (string)
+                    GetPlanetCurrentWeather.Invoke(null, new object[] { level, true });
+                return weather == "None" ? "" : weather;
             }
             else
             {
