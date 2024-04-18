@@ -55,6 +55,11 @@ namespace TerminalFormatter
                     return;
                 }
 
+                if (!currentNode.Enabled.Value)
+                {
+                    return;
+                }
+
                 Plugin.logger.LogWarning($"Found node: {currentNode.name}");
 
                 newDisplayText = currentNode.GetNodeText(node, __instance);
