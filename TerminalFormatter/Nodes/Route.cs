@@ -55,11 +55,10 @@ namespace TerminalFormatter.Nodes
                 });
             }
 
+            int price = SharedMethods.GetPrice(node.itemCost);
+
             table.AddRow("PLANET:", SharedMethods.GetNumberlessPlanetName(currentLevel));
-            table.AddRow(
-                "PRICE:",
-                $"${node.itemCost} (${terminal.groupCredits - node.itemCost} after routing)"
-            );
+            table.AddRow("PRICE:", $"${price} (${terminal.groupCredits - price} after routing)");
             table.AddRow("WEATHER:", currentWeather == "" ? "Clear" : currentWeather);
 
             adjustedTable.Append(header);
