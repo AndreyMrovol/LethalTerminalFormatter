@@ -26,6 +26,7 @@ namespace TerminalFormatter
         internal static Harmony harmony = new(PluginInfo.PLUGIN_GUID);
 
         internal static bool isACPresent = false;
+        internal static bool isLLibPresent = false;
         internal static bool isLLLPresent = false;
         internal static bool isLRegenPresent = false;
         internal static bool isLGUPresent = false;
@@ -57,6 +58,13 @@ namespace TerminalFormatter
             else
             {
                 new Nodes.MoonsNoLLL();
+            }
+
+            if (Chainloader.PluginInfos.ContainsKey("evaisa.lethallib"))
+            {
+                logger.LogWarning("LethalLib found, setting up compatibility patches");
+                // LLLCompatibility.Init();
+                isLLibPresent = true;
             }
 
             if (Chainloader.PluginInfos.ContainsKey("Toskan4134.LethalRegeneration"))
