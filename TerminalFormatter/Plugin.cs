@@ -20,6 +20,7 @@ namespace TerminalFormatter
         BepInDependency.DependencyFlags.SoftDependency
     )]
     [BepInDependency("WeatherTweaks", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("MrovLib", BepInDependency.DependencyFlags.HardDependency)]
     public class Plugin : BaseUnityPlugin
     {
         internal static ManualLogSource logger;
@@ -52,8 +53,8 @@ namespace TerminalFormatter
                 LLLCompatibility.Init();
                 isLLLPresent = true;
 
-                // new Nodes.Moons();
-                // new Nodes.Simulate();
+                new Nodes.Moons();
+                new Nodes.Simulate();
             }
             else
             {

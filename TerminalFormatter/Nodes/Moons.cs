@@ -24,9 +24,9 @@ namespace TerminalFormatter.Nodes
         {
             Plugin.logger.LogDebug("Patching MoonsCatalogue");
 
-            LethalLevelLoader.MoonsCataloguePage moonCatalogue = LethalLevelLoader
-                .TerminalManager
-                .currentMoonsCataloguePage;
+            LethalLevelLoader.MoonsCataloguePage moonCatalogue =
+                (LethalLevelLoader.MoonsCataloguePage)
+                    MrovLib.API.SharedMethods.GetLLLMoonsCataloguePage();
 
             // MoonsCataloguePage moonCatalogue = Traverse
             //     .Create<TerminalManager>()
@@ -84,7 +84,7 @@ namespace TerminalFormatter.Nodes
                     LethalLevelLoader.ExtendedLevel extendedLevel in extendedLevelGroup.extendedLevelsList
                 )
                 {
-                    if (extendedLevel.isHidden)
+                    if (MrovLib.API.SharedMethods.IsMoonHiddenLLL(extendedLevel.selectableLevel))
                     {
                         continue;
                     }

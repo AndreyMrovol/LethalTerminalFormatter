@@ -1,11 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Reflection;
-using AdvancedCompany.Config;
-using BepInEx.Bootstrap;
-using BepInEx.Logging;
-using HarmonyLib;
-using LethalLevelLoader;
 using LethalRegeneration;
 
 namespace TerminalFormatter

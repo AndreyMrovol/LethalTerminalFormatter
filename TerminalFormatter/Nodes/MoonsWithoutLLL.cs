@@ -18,9 +18,8 @@ namespace TerminalFormatter.Nodes
         public override string GetNodeText(TerminalNode node, Terminal terminal)
         {
             Plugin.logger.LogDebug("Patching MoonsCatalogue");
-            Plugin.logger.LogWarning("LethalLevelLoader not found, using a fallback method");
 
-            List<SelectableLevel> moonCatalogue = terminal.moonsCatalogueList.ToList();
+            List<SelectableLevel> moonCatalogue = MrovLib.API.SharedMethods.GetGameLevels();
 
             var table = new ConsoleTables.ConsoleTable(
                 "", // Name
@@ -70,7 +69,15 @@ namespace TerminalFormatter.Nodes
                 {
                     foreach (var moonInDictionary in moonDictionary)
                     {
-                        SelectableLevel moon = numberlessMoons[moonInDictionary.Key];
+                        SelectableLevel moon = numberlessMoons.TryGetValue(
+                            moonInDictionary.Key,
+                            out var value
+                        )
+                            ? value
+                            : null;
+
+                        if (moon == null)
+                            continue;
 
                         int price = SharedMethods.GetPrice(moonInDictionary.Value);
 

@@ -5,7 +5,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using BepInEx.Logging;
 using HarmonyLib;
-using LethalLevelLoader;
 using UnityEngine;
 
 namespace TerminalFormatter.Nodes

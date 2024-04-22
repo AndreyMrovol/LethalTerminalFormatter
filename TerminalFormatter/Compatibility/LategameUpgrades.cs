@@ -6,7 +6,6 @@ using AdvancedCompany.Config;
 using BepInEx.Bootstrap;
 using BepInEx.Logging;
 using HarmonyLib;
-using LethalLevelLoader;
 using MoreShipUpgrades;
 using MoreShipUpgrades.Managers;
 using MoreShipUpgrades.Misc.TerminalNodes;

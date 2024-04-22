@@ -29,6 +29,9 @@
         <Reference Include="LethalRegeneration" PrivateAssets="All">
             <HintPath>../lib/LethalRegeneration.dll</HintPath>
         </Reference>
+        <Reference Include="MrovLib" PrivateAssets="All">
+            <HintPath>../lib/MrovLib.dll</HintPath>
+        </Reference>
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">

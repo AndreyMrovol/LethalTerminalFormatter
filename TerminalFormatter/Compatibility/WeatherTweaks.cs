@@ -58,23 +58,5 @@ namespace TerminalFormatter
                 Plugin.logger.LogDebug($"Type {nspace}.Variables not found");
             }
         }
-
-        public static string CurrentWeather(SelectableLevel level)
-        {
-            // call WeatherTweaks.Variables public static string GetPlanetCurrentWeather(SelectableLevel level, bool uncertain = true) using reflection
-            // return the result
-
-            if (GetPlanetCurrentWeather != null)
-            {
-                string weather = (string)
-                    GetPlanetCurrentWeather.Invoke(null, new object[] { level, true });
-                return weather == "None" ? "" : weather;
-            }
-            else
-            {
-                Plugin.logger.LogError("GetPlanetCurrentWeather method not found");
-                return "";
-            }
-        }
     }
 }

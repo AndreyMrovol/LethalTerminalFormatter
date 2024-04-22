@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using MrovLib;
 
 namespace TerminalFormatter
 {
@@ -7,41 +8,22 @@ namespace TerminalFormatter
     {
         public static string GetWeather(SelectableLevel level)
         {
-            if (Plugin.isLLLPresent)
-            {
-                return LLLMethods.GetWeather(level);
-            }
-            // TODO add weathertweaks it's my own fucking mod and i cannot get it to work lol
-            else if (Plugin.isWTPresent)
-            {
-                return WeatherTweaksCompatibility.CurrentWeather(level);
-            }
-            else
-            {
-                return level.currentWeather.ToString();
-            }
+            return MrovLib.API.SharedMethods.GetWeather(level);
         }
 
         public static string GetNumberlessPlanetName(SelectableLevel level)
         {
-            return new string(level.PlanetName.SkipWhile(c => !char.IsLetter(c)).ToArray());
+            return MrovLib.API.SharedMethods.GetNumberlessPlanetName(level);
         }
 
         public static List<SelectableLevel> GetGameLevels()
         {
-            if (Plugin.isLLLPresent)
-            {
-                return LLLMethods.GetLevels();
-            }
-            else
-            {
-                return StartOfRound.Instance.levels.ToList();
-            }
+            return MrovLib.API.SharedMethods.GetGameLevels();
         }
 
         public static int GetPrice(int beforeDiscountPrice)
         {
-            Plugin.logger.LogWarning($"price: {beforeDiscountPrice}");
+            // Plugin.logger.LogWarning($"price: {beforeDiscountPrice}");
 
             if (Plugin.isLGUPresent)
             {
