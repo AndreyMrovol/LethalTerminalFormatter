@@ -13,8 +13,19 @@ using UnityEngine;
 
 namespace TerminalFormatter
 {
-    internal class LategameUpgradesCompatibility
+    internal class LategameUpgradesCompatibility : MrovLib.Compatibility.CompatibilityBase
     {
+        internal static Assembly LGUAssembly;
+
+        public LategameUpgradesCompatibility(string guid, string version = null)
+            : base(guid, version)
+        {
+            if (this.IsModPresent)
+            {
+                Init();
+            }
+        }
+
         public static void Init()
         {
             Harmony harmony = new Harmony("TerminalFormatter LGU");
@@ -30,6 +41,13 @@ namespace TerminalFormatter
             );
 
             harmony.Patch(original, postfix: new HarmonyMethod(postfix));
+
+            LGUAssembly = Chainloader
+                .PluginInfos["com.malco.lethalcompany.moreshipupgrades"]
+                .Instance.GetType()
+                .Assembly;
+
+            Plugin.isLGUPresent = true;
         }
 
         internal static List<CustomTerminalNode> RefreshNodes(
@@ -77,12 +95,12 @@ namespace TerminalFormatter
                     terminalNode.salePerc < 1f ? (1 - terminalNode.salePerc) * 100 : 0
                 );
 
-                int itemNameWidth = Nodes.itemNameWidth;
+                int itemNameWidth = Settings.itemNameWidth;
                 string name = terminalNode.Name.PadRight(itemNameWidth);
                 string discountPercent = salePercent > 0 ? $" -{salePercent}%" : "";
 
                 string itemNameWithDiscount = name;
-                string shortenedText = " ... ";
+                string shortenedText = "... ";
 
                 if (name.Length + discountPercent.Length > itemNameWidth)
                 {
@@ -101,54 +119,6 @@ namespace TerminalFormatter
                             itemNameWidth
                         );
                 }
-
-                // string upgradeDotsDisplay = "";
-                // int upgradeDotsCount = terminalNode.MaxUpgrade;
-                // int upgradeDotsCountCurrent = terminalNode.CurrentUpgrade;
-
-
-
-
-                // after trying to get this shit working for 3 hours, i give up
-                // i still don't understand how it would even work lol
-
-                // for (int i = 0; i < upgradeDotsCount; i++)
-                // {
-                //     // make the code work
-                //     // [Warning:TerminalFormatter] Name: Bigger Lungs, Upgrades: 3/3, Diff: 0, Dots: ○●●●
-                //     // so this doesn't happen
-                //     // we want to create as many dots as MaxUpgrade
-                //     // if MaxUpgrade is 0, make one dot
-                //     // fill as many dots as CurrentUpgrade
-
-
-                //     if (i == terminalNode.MaxUpgrade && i == 0)
-                //     {
-                //         upgradeDotsDisplay += "○";
-                //     }
-
-                //     if (i < terminalNode.CurrentUpgrade)
-                //     {
-                //         upgradeDotsDisplay += "●";
-                //     }
-                //     else
-                //     {
-                //         upgradeDotsDisplay += "○";
-                //     }
-                // }
-
-                // // for every upgrade, add a filled dot
-                // for (int i = 1; i <= terminalNode.CurrentUpgrade; i++)
-                // {
-                //     upgradeDotsDisplay += "●";
-                // }
-
-                // for (int i = 0; i <= terminalNode.MaxUpgrade - terminalNode.CurrentUpgrade; i++)
-                // {
-                //     upgradeDotsDisplay += "○";
-                // }
-
-
 
                 int currentLevel = terminalNode.Unlocked ? terminalNode.CurrentUpgrade + 1 : 0;
                 int remainingLevels = terminalNode.Unlocked ? 0 : 1;
@@ -209,6 +179,37 @@ namespace TerminalFormatter
             modStoreInterface.displayText = adjustedTable.ToString();
 
             __result = modStoreInterface;
+        }
+
+        internal static int GetMoonPrice(int price)
+        {
+            // access internal class EfficientEngines in type MoreShipUpgrades.UpgradeComponents.TierUpgrades
+
+            var typeName = "MoreShipUpgrades.UpgradeComponents.TierUpgrades.EfficientEngines";
+
+            Type efficientEnginesType = Plugin.LGUCompat.GetModAssembly.GetType($"{typeName}");
+
+            if (efficientEnginesType == null)
+            {
+                Plugin.logger.LogWarning($"Could not find {typeName} type");
+                return price;
+            }
+
+            // run public static int GetDiscountedMoonPrice(int defaultPrice) in the EfficientEngines class
+            MethodInfo getDiscountedMoonPrice = efficientEnginesType.GetMethod(
+                "GetDiscountedMoonPrice",
+                BindingFlags.Public | BindingFlags.Static
+            );
+
+            if (getDiscountedMoonPrice == null)
+            {
+                Plugin.logger.LogWarning(
+                    "Could not find GetDiscountedMoonPrice method in EfficientEngines"
+                );
+                return price;
+            }
+
+            return (int)getDiscountedMoonPrice.Invoke(null, new object[] { price });
         }
     }
 }
