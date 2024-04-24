@@ -191,25 +191,6 @@ namespace TerminalFormatter.Nodes
                     // use reflection to call TerminalManager.GetWeatherConditions - must invoke the original method cause of weathertweaks
                     // it's internal static method
                     var weatherCondition = SharedMethods.GetWeather(extendedLevel.SelectableLevel);
-                    // substring to Settings.planetWeatherWidth
-
-                    if (
-                        weatherCondition.Length > Settings.planetWeatherWidth - 2
-                        || ConfigManager.UseShortenedWeathers.Value
-                    )
-                    {
-                        // weatherCondition =
-                        //     $"{weatherCondition.Substring(0, Settings.planetWeatherWidth - 2)}..";
-
-                        Settings.WeathersShortened.Do(pair =>
-                        {
-                            weatherCondition = Regex.Replace(
-                                weatherCondition,
-                                pair.Key,
-                                pair.Value
-                            );
-                        });
-                    }
 
                     string weather = showWeather
                         ? weatherCondition.PadRight(Settings.planetWeatherWidth - 2)

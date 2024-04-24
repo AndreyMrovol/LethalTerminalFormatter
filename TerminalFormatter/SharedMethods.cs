@@ -23,6 +23,7 @@ namespace TerminalFormatter
                 Settings.WeathersShortened.Do(pair =>
                 {
                     weather = Regex.Replace(weather, pair.Key, pair.Value);
+                    weather = weather.Replace(" ", "");
                 });
             }
 
@@ -41,11 +42,8 @@ namespace TerminalFormatter
 
         public static int GetPrice(int beforeDiscountPrice)
         {
-            // Plugin.logger.LogWarning($"price: {beforeDiscountPrice}");
-
             if (Plugin.isLGUPresent)
             {
-                Plugin.logger.LogInfo($"LGU is present");
                 return LategameUpgradesCompatibility.GetMoonPrice(beforeDiscountPrice);
             }
             else

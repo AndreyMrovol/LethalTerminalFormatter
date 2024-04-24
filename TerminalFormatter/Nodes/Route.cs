@@ -43,17 +43,6 @@ namespace TerminalFormatter.Nodes
 
             string currentWeather = SharedMethods.GetWeather(currentLevel);
 
-            if (
-                currentWeather.Length > Settings.terminalWidth - 5
-                || ConfigManager.UseShortenedWeathers.Value
-            )
-            {
-                Settings.WeathersShortened.Do(pair =>
-                {
-                    currentWeather = Regex.Replace(currentWeather, pair.Key, pair.Value);
-                });
-            }
-
             int price = SharedMethods.GetPrice(node.itemCost);
 
             table.AddRow("PLANET:", SharedMethods.GetNumberlessPlanetName(currentLevel));
