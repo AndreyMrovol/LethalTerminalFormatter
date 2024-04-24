@@ -84,7 +84,7 @@ namespace TerminalFormatter.Nodes
                     LethalLevelLoader.ExtendedLevel extendedLevel in extendedLevelGroup.extendedLevelsList
                 )
                 {
-                    if (MrovLib.API.SharedMethods.IsMoonHiddenLLL(extendedLevel.selectableLevel))
+                    if (MrovLib.API.SharedMethods.IsMoonHiddenLLL(extendedLevel.SelectableLevel))
                     {
                         continue;
                     }
@@ -114,7 +114,7 @@ namespace TerminalFormatter.Nodes
 
                     // if longer than 2, trim
                     var difficulty = showDifficulty
-                        ? $" {extendedLevel.selectableLevel.riskLevel.ToString().PadRight(2)}"
+                        ? $" {extendedLevel.SelectableLevel.riskLevel.ToString().PadRight(2)}"
                         : "";
 
                     // int LGUPrice;
@@ -141,7 +141,7 @@ namespace TerminalFormatter.Nodes
 
                     // use reflection to call TerminalManager.GetWeatherConditions - must invoke the original method cause of weathertweaks
                     // it's internal static method
-                    var weatherCondition = SharedMethods.GetWeather(extendedLevel.selectableLevel);
+                    var weatherCondition = SharedMethods.GetWeather(extendedLevel.SelectableLevel);
                     // substring to Settings.planetWeatherWidth
 
                     if (
