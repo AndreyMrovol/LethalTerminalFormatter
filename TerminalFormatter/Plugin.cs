@@ -93,6 +93,9 @@ namespace TerminalFormatter
             new Nodes.Scan();
             new Nodes.Store();
 
+            new Nodes.Buy();
+            new Nodes.BuyUnlockable();
+
             // Plugin startup logic
             Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");
         }
