@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -24,14 +25,50 @@ namespace TerminalFormatter.Nodes
         {
             Plugin.logger.LogDebug("Patching MoonsCatalogue");
 
+            string currentTagFilter;
+
+            if (
+                node.name.Contains("preview")
+                && Enum.TryParse(
+                    typeof(PreviewInfoType),
+                    TerminalManager.GetTerminalEventEnum(node.terminalEvent),
+                    out object previewEnumValue
+                )
+            )
+                LethalLevelLoader.Settings.levelPreviewInfoType = (PreviewInfoType)previewEnumValue;
+            else if (
+                node.name.Contains("sort")
+                && Enum.TryParse(
+                    typeof(SortInfoType),
+                    TerminalManager.GetTerminalEventEnum(node.terminalEvent),
+                    out object sortEnumValue
+                )
+            )
+                LethalLevelLoader.Settings.levelPreviewSortType = (SortInfoType)sortEnumValue;
+            else if (
+                node.name.Contains("filter")
+                && Enum.TryParse(
+                    typeof(FilterInfoType),
+                    TerminalManager.GetTerminalEventEnum(node.terminalEvent),
+                    out object filterEnumValue
+                )
+            )
+            {
+                LethalLevelLoader.Settings.levelPreviewFilterType = (FilterInfoType)filterEnumValue;
+                currentTagFilter = TerminalManager.GetTerminalEventString(node.terminalEvent);
+            }
+
+            // Call internal static RefreshExtendedLevelGroups through reflection
+            MethodInfo refreshExtendedLevelGroups =
+                typeof(LethalLevelLoader.TerminalManager).GetMethod(
+                    "RefreshExtendedLevelGroups",
+                    BindingFlags.NonPublic | BindingFlags.Static
+                );
+            refreshExtendedLevelGroups.Invoke(null, null);
+
             LethalLevelLoader.MoonsCataloguePage moonCatalogue =
                 (LethalLevelLoader.MoonsCataloguePage)
                     MrovLib.API.SharedMethods.GetLLLMoonsCataloguePage();
-
-            // MoonsCataloguePage moonCatalogue = Traverse
-            //     .Create<TerminalManager>()
-            //     .Field<MoonsCataloguePage>("currentMoonsCataloguePage")
-            //     .Value;
 
             var table = new ConsoleTables.ConsoleTable(
                 "", // Name
@@ -73,6 +110,18 @@ namespace TerminalFormatter.Nodes
                 LethalLevelLoader.Settings.levelPreviewSortType.ToString();
             ConfigManager.LastUsedPreview.Value =
                 LethalLevelLoader.Settings.levelPreviewInfoType.ToString();
+
+            Plugin.logger.LogWarning(
+                $"LLL preview type set to {LethalLevelLoader.Settings.levelPreviewInfoType}"
+            );
+
+            Plugin.logger.LogWarning(
+                $"LLL filter type set to {LethalLevelLoader.Settings.levelPreviewFilterType}"
+            );
+
+            Plugin.logger.LogWarning(
+                $"LLL sort type set to {LethalLevelLoader.Settings.levelPreviewSortType}"
+            );
 
             Plugin.logger.LogDebug("MoonsCataloguePage: " + moonCatalogue);
 

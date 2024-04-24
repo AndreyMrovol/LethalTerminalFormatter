@@ -112,6 +112,7 @@ namespace TerminalFormatter
 
         [HarmonyPostfix]
         // [HarmonyPriority(Priority.Last)]
+        [HarmonyAfter("imabatby.lethallevelloader")]
         [HarmonyPatch("LoadNewNode")]
         public static void StartPostfix(Terminal __instance, ref TerminalNode node)
         {
