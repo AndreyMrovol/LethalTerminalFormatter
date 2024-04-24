@@ -141,17 +141,6 @@ namespace TerminalFormatter.Nodes
                     string planetName = extendedLevel.NumberlessPlanetName;
                     Plugin.logger.LogDebug($"Planet: {planetName}");
 
-                    // make itemName length = itemNameWidth
-                    if (planetName.Length > Settings.planetNameWidth)
-                    {
-                        // replace last 3 characters with "..."
-                        planetName = $"{planetName.Substring(0, Settings.planetNameWidth - 3)}...";
-                    }
-                    else
-                    {
-                        planetName = $"{planetName}".PadRight(Settings.planetNameWidth);
-                    }
-
                     bool showDifficulty =
                         (
                             ConfigManager.ShowDifficultyInAll.Value
@@ -161,17 +150,27 @@ namespace TerminalFormatter.Nodes
                         || LethalLevelLoader.Settings.levelPreviewInfoType
                             == LethalLevelLoader.PreviewInfoType.Difficulty;
 
-                    // if longer than 2, trim
-                    var difficulty = showDifficulty
-                        ? $" {extendedLevel.SelectableLevel.riskLevel.ToString().PadRight(2)}"
-                        : "";
+                    // make itemName length = itemNameWidth
+                    // if showDifficulty, make difficulty length = 4 and display it on the right
 
-                    // int LGUPrice;
-                    // if(Plugin.isLGUPresent){
-                    //     LGUPrice = extendedLevel.LGUPrice;
-                    // } else {
-                    //     LGUPrice = 0;
-                    // }
+                    int planetWidth = showDifficulty
+                        ? Settings.planetNameWidth - 2
+                        : Settings.planetNameWidth;
+
+                    if (planetName.Length > Settings.planetNameWidth)
+                    {
+                        // replace last 3 characters with "..."
+                        planetName = $"{planetName.Substring(0, planetWidth - 3)}...";
+                    }
+                    else
+                    {
+                        planetName = $"{planetName}".PadRight(planetWidth);
+                    }
+
+                    // if longer than 3, trim
+                    var difficulty = showDifficulty
+                        ? $" {extendedLevel.SelectableLevel.riskLevel.ToString().PadRight(3)}"
+                        : "";
 
                     bool showPrice =
                         LethalLevelLoader.Settings.levelPreviewInfoType
@@ -197,9 +196,9 @@ namespace TerminalFormatter.Nodes
                         : "";
 
                     table.AddRow(
-                        planetName,
+                        $"{planetName}{difficulty}",
                         $"{price}",
-                        $"{difficulty}{weather}".PadLeft(Settings.planetWeatherWidth)
+                        $"{weather}".PadLeft(Settings.planetWeatherWidth)
                     );
 
                     tableInConsole.AddRow(planetName, price, weather, difficulty);

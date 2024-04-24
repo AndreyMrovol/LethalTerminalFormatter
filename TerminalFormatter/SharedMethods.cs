@@ -11,11 +11,14 @@ namespace TerminalFormatter
         public static string GetWeather(SelectableLevel level)
         {
             string weather = MrovLib.API.SharedMethods.GetWeather(level);
+            int weatherLength = Settings.planetWeatherWidth - 1;
 
-            if (
-                weather.Length > Settings.planetWeatherWidth - 2
-                || ConfigManager.UseShortenedWeathers.Value
-            )
+            if (ConfigManager.ShowDifficultyInAll.Value)
+            {
+                weatherLength -= 5;
+            }
+
+            if (weather.Length >= weatherLength || ConfigManager.UseShortenedWeathers.Value)
             {
                 // weatherCondition =
                 //     $"{weatherCondition.Substring(0, Settings.planetWeatherWidth - 2)}..";
