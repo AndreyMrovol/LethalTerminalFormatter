@@ -12,7 +12,7 @@ namespace TerminalFormatter
             Instance = new ConfigManager(config);
         }
 
-        private readonly ConfigFile configFile;
+        internal static ConfigFile configFile;
 
         public static ConfigEntry<bool> ShowDifficultyInAll { get; private set; }
 
