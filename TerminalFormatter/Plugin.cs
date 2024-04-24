@@ -52,11 +52,20 @@ namespace TerminalFormatter
             if (Chainloader.PluginInfos.ContainsKey("imabatby.lethallevelloader"))
             {
                 logger.LogWarning("LLL found, setting up compatibility patches");
+
                 LLLCompatibility.Init();
                 isLLLPresent = true;
 
-                new Nodes.Moons();
-                new Nodes.Simulate();
+                if (MrovLib.Compatibility.LLLOldPlugin.IsTheOldLLLActive())
+                {
+                    new Nodes.MoonsOldLLL();
+                    new Nodes.SimulateOldLLL();
+                }
+                else
+                {
+                    new Nodes.Moons();
+                    new Nodes.Simulate();
+                }
 
                 harmony.Unpatch(
                     typeof(Terminal).GetMethod("LoadNewNode"),
