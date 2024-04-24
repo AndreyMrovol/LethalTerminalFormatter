@@ -33,6 +33,8 @@ namespace TerminalFormatter
         internal static bool isLGUPresent = false;
         internal static bool isWTPresent = false;
 
+        internal static MrovLib.Compatibility.CompatibilityBase LGUCompat;
+
         private void Awake()
         {
             logger = Logger;
@@ -75,12 +77,9 @@ namespace TerminalFormatter
                 isLRegenPresent = true;
             }
 
-            if (Chainloader.PluginInfos.ContainsKey("com.malco.lethalcompany.moreshipupgrades"))
-            {
-                logger.LogWarning("MoreShipUpgrades found, setting up compatibility patches");
-                LategameUpgradesCompatibility.Init();
-                isLGUPresent = true;
-            }
+            LGUCompat = new LategameUpgradesCompatibility(
+                "com.malco.lethalcompany.moreshipupgrades"
+            );
 
             if (Chainloader.PluginInfos.ContainsKey("WeatherTweaks"))
             {
