@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
-using AdvancedCompany.Config;
 using BepInEx.Bootstrap;
 using BepInEx.Logging;
 using HarmonyLib;
