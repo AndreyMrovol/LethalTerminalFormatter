@@ -1,6 +1,8 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using HarmonyLib;
+using UnityEngine;
 
 namespace TerminalFormatter
 {
@@ -41,32 +43,44 @@ namespace TerminalFormatter
             // });
 
             // check if node.name contains any of TerminalFormatterNode.terminalNode strings
-            TerminalFormatterNode currentNode = Settings
+            List<TerminalFormatterNode> possibleNodes = Settings
                 .RegisteredNodes.Where(formatterNode =>
                     formatterNode.terminalNode.Any(y => node.name.Contains(y))
                 )
-                .FirstOrDefault();
+                .ToList();
 
-            if (currentNode != null)
+            if (possibleNodes != null)
             {
-                bool shouldRun = currentNode.IsNodeValid(node, __instance);
-                if (!shouldRun)
-                {
-                    return;
-                }
-
-                if (!currentNode.Enabled.Value)
-                {
-                    return;
-                }
-
-                Plugin.logger.LogWarning($"Found node: {currentNode.name}");
-
-                newDisplayText = currentNode.GetNodeText(node, __instance);
+                Plugin.logger.LogWarning($"Possible nodes count: {possibleNodes.Count}");
             }
-            else
+
+            for (int i = 0; i < possibleNodes.Count; i++)
             {
-                return;
+                TerminalFormatterNode currentNode = possibleNodes[i];
+
+                if (currentNode != null)
+                {
+                    bool shouldRun = currentNode.IsNodeValid(node, __instance);
+                    if (!shouldRun)
+                    {
+                        Plugin.logger.LogDebug($"Node {currentNode.name} is not valid");
+                        continue;
+                    }
+
+                    if (!currentNode.Enabled.Value)
+                    {
+                        Plugin.logger.LogDebug($"Node {currentNode.name} is not enabled");
+                        continue;
+                    }
+
+                    Plugin.logger.LogWarning($"Found node: {currentNode.name}");
+
+                    newDisplayText = currentNode.GetNodeText(node, __instance);
+                }
+                else
+                {
+                    continue;
+                }
             }
 
             if (newDisplayText != null)
@@ -86,7 +100,11 @@ namespace TerminalFormatter
 
                 __instance.screenText.text = builder.ToString();
                 __instance.currentText = builder.ToString();
+
+                // __instance.screenText.text = $"<color=#ff0000>{builder.ToString()}</color>";
+                // __instance.currentText = $"<color=#ff0000>{builder.ToString()}</color>";
                 __instance.textAdded = 0;
+                Settings.firstUse = false;
             }
 
             return;
