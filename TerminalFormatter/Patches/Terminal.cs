@@ -95,7 +95,7 @@ namespace TerminalFormatter
         [HarmonyPostfix]
         // [HarmonyPriority(Priority.Last)]
         [HarmonyPatch("LoadNewNode")]
-        public static void StartPostfix(Terminal __instance)
+        public static void StartPostfix(Terminal __instance, ref TerminalNode node)
         {
             Variables.BuyableItemList = __instance.buyableItemsList.ToList();
             Variables.UnlockableItemList = StartOfRound
@@ -116,6 +116,9 @@ namespace TerminalFormatter
             {
                 LLLCompatibility.Init();
             }
+
+            node.clearPreviousText = true;
+        }
         }
     }
 }
