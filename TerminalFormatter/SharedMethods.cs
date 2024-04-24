@@ -12,15 +12,12 @@ namespace TerminalFormatter
         {
             string weather = MrovLib.API.SharedMethods.GetWeather(level);
             int weatherLength = Settings.planetWeatherWidth - 1;
+            bool showDifficulty = false;
 
-            bool showDifficulty =
-                (
-                    ConfigManager.ShowDifficultyInAll.Value
-                    && LethalLevelLoader.Settings.levelPreviewInfoType
-                        == LethalLevelLoader.PreviewInfoType.All
-                )
-                || LethalLevelLoader.Settings.levelPreviewInfoType
-                    == LethalLevelLoader.PreviewInfoType.Difficulty;
+            if (Plugin.isLLLPresent)
+            {
+                showDifficulty = ShouldShowDifficulty(level);
+            }
 
             if (showDifficulty)
             {
@@ -62,6 +59,17 @@ namespace TerminalFormatter
             {
                 return beforeDiscountPrice;
             }
+        }
+
+        public static bool ShouldShowDifficulty(SelectableLevel level)
+        {
+            return (
+                    ConfigManager.ShowDifficultyInAll.Value
+                    && LethalLevelLoader.Settings.levelPreviewInfoType
+                        == LethalLevelLoader.PreviewInfoType.All
+                )
+                || LethalLevelLoader.Settings.levelPreviewInfoType
+                    == LethalLevelLoader.PreviewInfoType.Difficulty;
         }
     }
 }
