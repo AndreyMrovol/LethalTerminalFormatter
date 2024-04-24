@@ -13,9 +13,18 @@ namespace TerminalFormatter
             string weather = MrovLib.API.SharedMethods.GetWeather(level);
             int weatherLength = Settings.planetWeatherWidth - 1;
 
-            if (ConfigManager.ShowDifficultyInAll.Value)
+            bool showDifficulty =
+                (
+                    ConfigManager.ShowDifficultyInAll.Value
+                    && LethalLevelLoader.Settings.levelPreviewInfoType
+                        == LethalLevelLoader.PreviewInfoType.All
+                )
+                || LethalLevelLoader.Settings.levelPreviewInfoType
+                    == LethalLevelLoader.PreviewInfoType.Difficulty;
+
+            if (showDifficulty)
             {
-                weatherLength -= 5;
+                weatherLength -= 7;
             }
 
             if (weather.Length >= weatherLength || ConfigManager.UseShortenedWeathers.Value)
