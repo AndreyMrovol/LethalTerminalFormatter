@@ -56,14 +56,8 @@ namespace TerminalFormatter.Nodes
 
             Plugin.logger.LogWarning("Current Level: " + currentLevel.NumberlessPlanetName);
 
-            var currentPlanetDungeonFlows =
-                (List<ExtendedDungeonFlowWithRarity>)
-                    typeof(DungeonManager)
-                        .GetMethod(
-                            "GetValidExtendedDungeonFlows",
-                            BindingFlags.NonPublic | BindingFlags.Static
-                        )
-                        .Invoke(null, [currentLevel, false]);
+            List<ExtendedDungeonFlowWithRarity> currentPlanetDungeonFlows =
+                LethalLevelLoader.DungeonManager.GetValidExtendedDungeonFlows(currentLevel, false);
 
             currentPlanetDungeonFlows.OrderBy(o => -(o.rarity)).ToList();
 
@@ -73,13 +67,11 @@ namespace TerminalFormatter.Nodes
             foreach (var dungeonFlow in currentPlanetDungeonFlows)
             {
                 Plugin.logger.LogDebug(
-                    $"{dungeonFlow.extendedDungeonFlow.dungeonDisplayName} - {dungeonFlow.rarity} - {totalRarityPool}"
+                    $"{dungeonFlow.extendedDungeonFlow.DungeonName} - {dungeonFlow.rarity} - {totalRarityPool}"
                 );
 
                 table.AddRow(
-                    dungeonFlow.extendedDungeonFlow.dungeonDisplayName.PadRight(
-                        Settings.planetNameWidth
-                    ),
+                    dungeonFlow.extendedDungeonFlow.DungeonName.PadRight(Settings.planetNameWidth),
                     dungeonFlow.rarity,
                     $"{((float)dungeonFlow.rarity / (float)totalRarityPool * 100).ToString("F2")}%".PadLeft(
                         4
