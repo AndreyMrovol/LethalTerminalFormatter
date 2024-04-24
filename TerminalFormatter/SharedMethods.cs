@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
+using HarmonyLib;
 using MrovLib;
 
 namespace TerminalFormatter
@@ -8,7 +10,23 @@ namespace TerminalFormatter
     {
         public static string GetWeather(SelectableLevel level)
         {
-            return MrovLib.API.SharedMethods.GetWeather(level);
+            string weather = MrovLib.API.SharedMethods.GetWeather(level);
+
+            if (
+                weather.Length > Settings.planetWeatherWidth - 2
+                || ConfigManager.UseShortenedWeathers.Value
+            )
+            {
+                // weatherCondition =
+                //     $"{weatherCondition.Substring(0, Settings.planetWeatherWidth - 2)}..";
+
+                Settings.WeathersShortened.Do(pair =>
+                {
+                    weather = Regex.Replace(weather, pair.Key, pair.Value);
+                });
+            }
+
+            return weather;
         }
 
         public static string GetNumberlessPlanetName(SelectableLevel level)
