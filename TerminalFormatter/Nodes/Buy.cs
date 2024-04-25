@@ -19,14 +19,22 @@ namespace TerminalFormatter.Nodes
 
         // Route after: success/failure
 
+        internal BuyableThing LastResolvedBuyable;
+
+        public BuyableThing ResolveNodeIntoBuyable(TerminalNode node)
+        {
+            return Variables
+                .Buyables.Where(x => x.Nodes.Node == node || x.Nodes.Node.name == node.name)
+                .FirstOrDefault();
+        }
+
         public override bool IsNodeValid(TerminalNode node, Terminal terminal)
         {
             // check if that node is registered as Node or NodeConfirm in Buyables
 
-            BuyableThing resolvedItem = Variables
-                .Buyables.Where(x => x.Nodes.Node == node)
-                .ToList()
-                .FirstOrDefault();
+            BuyableThing resolvedItem = ResolveNodeIntoBuyable(node);
+
+            Plugin.logger.LogWarning($"Resolved Item: {resolvedItem}");
 
             return resolvedItem != null;
         }
@@ -37,28 +45,38 @@ namespace TerminalFormatter.Nodes
 
             var table = new ConsoleTables.ConsoleTable("Title", "Things");
 
-            BuyableThing resolvedThing = Variables
-                .Buyables.Where(x => x.Nodes.Node == node)
-                .FirstOrDefault();
+            BuyableThing resolvedThing = ResolveNodeIntoBuyable(node);
+            LastResolvedBuyable = resolvedThing;
 
             var header = new Header().CreateHeaderWithoutLines("CONFIRM PURCHASE");
             var adjustedTable = new StringBuilder();
 
             table.AddRow("ITEM:", resolvedThing.Name);
 
+            int price = resolvedThing.Price;
+            bool isDiscounted = terminal.itemSalesPercentages[node.buyItemIndex] != 100;
+
+            // table.AddRow("AMOUNT:", terminal.playerDefinedAmount.ToString());
+            table.AddRow("PRICE:", $"${resolvedThing.Price}");
+
+            if (terminal.itemSalesPercentages[node.buyItemIndex] != 100)
+            {
+                table.AddRow(
+                    "DISCOUNT:",
+                    $"{100 - terminal.itemSalesPercentages[node.buyItemIndex]}%"
+                );
+            }
+
             if (typeof(BuyableItem) == resolvedThing.GetType())
             {
                 table.AddRow("AMOUNT:", terminal.playerDefinedAmount.ToString());
             }
 
-            // table.AddRow("AMOUNT:", terminal.playerDefinedAmount.ToString());
-            table.AddRow("PRICE:", $"${resolvedThing.Price}");
-
             table.AddRow("", "");
 
             table.AddRow(
                 "TOTAL: ",
-                $"${resolvedThing.Price * terminal.playerDefinedAmount} (${terminal.groupCredits - resolvedThing.Price * terminal.playerDefinedAmount} after purchase)"
+                $"${terminal.totalCostOfItems}  (${terminal.groupCredits - terminal.totalCostOfItems} after purchase)"
             );
 
             adjustedTable.Append(header);

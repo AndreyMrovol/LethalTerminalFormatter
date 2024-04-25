@@ -177,21 +177,24 @@ namespace TerminalFormatter
 
                     if (possibleNodes[i] == null)
                     {
-                        return;
+                        continue;
                     }
                 }
 
-                RelatedNodes relatedNodes = new RelatedNodes
-                {
-                    Node = possibleNodes
-                        .Where(node => node.isConfirmationNode)
-                        .ToList()
-                        .FirstOrDefault(),
-                    NodeConfirm = possibleNodes
-                        .Where(node => !node.isConfirmationNode)
-                        .ToList()
-                        .LastOrDefault()
-                };
+                RelatedNodes relatedNodes =
+                    new()
+                    {
+                        Node = possibleNodes
+                            .Where(node => node.isConfirmationNode)
+                            .Distinct()
+                            .ToList()
+                            .FirstOrDefault(),
+                        NodeConfirm = possibleNodes
+                            .Where(node => !node.isConfirmationNode)
+                            .Distinct()
+                            .ToList()
+                            .LastOrDefault()
+                    };
 
                 Variables.Buyables.Add(new BuyableItem(__instance, relatedNodes));
             });
@@ -212,34 +215,33 @@ namespace TerminalFormatter
 
                 List<TerminalNode> possibleNodes = Nodes
                     .Where(x => x.shipUnlockableID == unlockables.IndexOf(unlockable))
+                    .Distinct()
                     .ToList();
 
-                for (int j = 0; j < possibleNodes.Count; j++)
+                if (CheckPossibleNodeNull(possibleNodes))
                 {
-                    Plugin.logger.LogDebug($"Node: {possibleNodes[j]}");
-
-                    if (possibleNodes[j] == null)
-                    {
-                        return;
-                    }
-
-                    if (possibleNodes[j].itemCost <= 0)
-                    {
-                        return;
-                    }
+                    Plugin.logger.LogDebug("Possible nodes are null");
+                    continue;
                 }
 
                 RelatedNodes relatedNodes = new RelatedNodes
                 {
                     Node = possibleNodes
                         .Where(node => !node.buyUnlockable)
+                        .Distinct()
                         .ToList()
                         .FirstOrDefault(),
                     NodeConfirm = possibleNodes
                         .Where(node => node.buyUnlockable)
+                        .Distinct()
                         .ToList()
                         .LastOrDefault()
                 };
+
+                if (relatedNodes.Node == null || relatedNodes.NodeConfirm == null)
+                {
+                    continue;
+                }
 
                 if (unlockable.unlockableType == 1 && unlockable.alwaysInStock == true)
                 {
@@ -252,7 +254,36 @@ namespace TerminalFormatter
                     Variables.Buyables.Add(new BuyableDecoration(__instance, relatedNodes));
                 }
             }
-            ;
+        }
+
+        internal static bool CheckPossibleNodeNull(List<TerminalNode> possibleNodes)
+        {
+            List<TerminalNode> Nodes = [];
+
+            for (int j = 0; j < possibleNodes.Count; j++)
+            {
+                Plugin.logger.LogDebug($"Node: {possibleNodes[j]}");
+
+                // somehow call continue on the upper loop
+
+                if (possibleNodes[j] == null)
+                {
+                    continue;
+                }
+
+                if (possibleNodes[j].itemCost <= 0)
+                {
+                    continue;
+                }
+
+                Plugin.logger.LogDebug(
+                    $"Is null: {possibleNodes[j] == null}; {possibleNodes[j].itemCost <= 0}"
+                );
+
+                Nodes.Add(possibleNodes[j]);
+            }
+
+            return possibleNodes == Nodes;
         }
     }
 }
