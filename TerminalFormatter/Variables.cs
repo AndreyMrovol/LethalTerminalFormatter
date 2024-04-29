@@ -12,6 +12,8 @@ namespace TerminalFormatter
 
         public static List<BuyableThing> Buyables = [];
 
+        public static Terminal Terminal;
+
         public static bool IsACActive = false;
         public static bool ISLLLActive = false;
 

@@ -145,6 +145,7 @@ namespace TerminalFormatter
         {
             Variables.Buyables.Clear();
             Plugin.logger.LogDebug("Terminal Start");
+            Variables.Terminal = __instance;
 
             // if (Settings.firstUse)
             // {
