@@ -114,6 +114,7 @@ namespace TerminalFormatter
             new Nodes.Store();
 
             new Nodes.Buy();
+            new Nodes.BuyAfter();
             new Nodes.CannotAfford();
 
             // Plugin startup logic
