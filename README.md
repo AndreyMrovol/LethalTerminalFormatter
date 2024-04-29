@@ -8,4 +8,6 @@ changed how terminal displays thingies in store and moons
 
 ## Credits
 
+This mod uses [Major-Scott](https://github.com/Major-Scott)'s [terminal scrollbar logic](https://github.com/Major-Scott/TerminalPlus/blob/master/TerminalPlus/ScrollbarGarbage.cs), licensed under [MIT license](https://github.com/Major-Scott/TerminalPlus/blob/master/LICENSE).
+
 This project uses [LethalCompanyTemplate](https://github.com/LethalCompany/LethalCompanyTemplate), licensed under [MIT License](https://github.com/LethalCompany/LethalCompanyTemplate/blob/main/LICENSE).
