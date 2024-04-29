@@ -33,7 +33,7 @@ namespace TerminalFormatter
                 }
                 else
                 {
-                    Plugin.logger.LogError($"Method {GetPlanetCurrentWeather} not found");
+                    Plugin.logger.LogWarning($"Method {GetPlanetCurrentWeather} not found");
 
                     // check if the method is internal static string GetPlanetCurrentWeather(SelectableLevel level)
                     // if not, log an error
@@ -49,7 +49,7 @@ namespace TerminalFormatter
                     }
                     else
                     {
-                        Plugin.logger.LogError($"Method {GetPlanetCurrentWeather} not found");
+                        Plugin.logger.LogWarning($"Method {GetPlanetCurrentWeather} not found");
                     }
                 }
             }
