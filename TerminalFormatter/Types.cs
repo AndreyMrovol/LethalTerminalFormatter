@@ -69,7 +69,20 @@ namespace TerminalFormatter
 
                 if (Nodes.Node.itemCost <= 0)
                 {
-                    price = Variables.upgrades[Unlockable.unlockableName];
+                    if (Variables.upgrades.ContainsKey(Unlockable.unlockableName))
+                    {
+                        Plugin.logger.LogWarning(
+                            $"Unlockable {Unlockable.unlockableName} has an upgrade price of {Variables.upgrades[Unlockable.unlockableName]}"
+                        );
+                        price = Variables.upgrades[Unlockable.unlockableName];
+                    }
+                    else
+                    {
+                        Plugin.logger.LogWarning(
+                            $"Unlockable {Unlockable.unlockableName} does not have an upgrade price"
+                        );
+                        price = Nodes.Node.itemCost;
+                    }
                 }
                 else
                 {
