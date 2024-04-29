@@ -34,7 +34,12 @@ namespace TerminalFormatter.Nodes
 
             BuyableThing resolvedItem = ResolveNodeIntoBuyable(node);
 
-            Plugin.logger.LogWarning($"Resolved Item: {resolvedItem}");
+            if (resolvedItem != null)
+            {
+                Plugin.logger.LogWarning(
+                    $"Resolved Item: {resolvedItem.Name}({resolvedItem.Type})"
+                );
+            }
 
             return resolvedItem != null;
         }
@@ -53,21 +58,27 @@ namespace TerminalFormatter.Nodes
 
             table.AddRow("ITEM:", resolvedThing.Name);
 
-            int price = resolvedThing.Price;
-            bool isDiscounted = terminal.itemSalesPercentages[node.buyItemIndex] != 100;
-
             // table.AddRow("AMOUNT:", terminal.playerDefinedAmount.ToString());
-            table.AddRow("PRICE:", $"${resolvedThing.Price}");
 
-            if (terminal.itemSalesPercentages[node.buyItemIndex] != 100)
+            bool isItem = typeof(BuyableItem) == resolvedThing.GetType();
+
+            if (isItem)
             {
-                table.AddRow(
-                    "DISCOUNT:",
-                    $"{100 - terminal.itemSalesPercentages[node.buyItemIndex]}%"
-                );
+                table.AddRow("PRICE:", $"${resolvedThing.Price}");
             }
 
-            if (typeof(BuyableItem) == resolvedThing.GetType())
+            if (node.buyItemIndex >= 0)
+            {
+                if (terminal.itemSalesPercentages[node.buyItemIndex] != 100)
+                {
+                    table.AddRow(
+                        "DISCOUNT:",
+                        $"{100 - terminal.itemSalesPercentages[node.buyItemIndex]}%"
+                    );
+                }
+            }
+
+            if (isItem)
             {
                 table.AddRow("AMOUNT:", terminal.playerDefinedAmount.ToString());
             }

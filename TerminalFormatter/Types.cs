@@ -60,10 +60,24 @@ namespace TerminalFormatter
             Unlockable = StartOfRound.Instance.unlockablesList.unlockables[
                 Nodes.Node.shipUnlockableID
             ];
-            Price =
-                Nodes.Node != null
-                    ? Nodes.Node.buyItemIndex
-                    : Variables.upgrades[Unlockable.unlockableName];
+
+            int price = 0;
+
+            if (Nodes.Node != null)
+            {
+                // price = Nodes.Node.itemCost;
+
+                if (Nodes.Node.itemCost <= 0)
+                {
+                    price = Variables.upgrades[Unlockable.unlockableName];
+                }
+                else
+                {
+                    price = Nodes.Node.itemCost;
+                }
+            }
+
+            Price = price;
             Name = Unlockable.unlockableName;
         }
     }
