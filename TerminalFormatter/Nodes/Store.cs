@@ -231,6 +231,8 @@ namespace TerminalFormatter.Nodes
                 .DecorationsList.OrderBy(x => x.creatureName)
                 .ToList();
 
+            itemCount = 1;
+
             foreach (var decor in DecorSelection)
             {
                 UnlockableItem unlockable = StartOfRound.Instance.unlockablesList.unlockables[
@@ -257,6 +259,19 @@ namespace TerminalFormatter.Nodes
                 }
 
                 table.AddRow(decor.creatureName, $"${decor.itemCost}", "");
+
+                if (ConfigManager.DivideShopPage.Value != 0)
+                {
+                    if (itemCount % ConfigManager.DivideShopPage.Value == 0)
+                    {
+                        itemCount = 1;
+                        table.AddRow("", "", "");
+                    }
+                    else
+                    {
+                        itemCount++;
+                    }
+                }
             }
 
             table.AddRow("", "", "");
