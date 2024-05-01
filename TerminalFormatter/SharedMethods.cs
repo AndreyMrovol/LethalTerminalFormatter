@@ -71,5 +71,18 @@ namespace TerminalFormatter
                 || LethalLevelLoader.Settings.levelPreviewInfoType
                     == LethalLevelLoader.PreviewInfoType.Difficulty;
         }
+
+        public static string GetLevelRiskLevel(SelectableLevel level)
+        {
+            if (Plugin.LQCompat.IsModPresent)
+            {
+                string LQRiskLevel = LethalQuantitiesCompatibility.GetLevelRiskLevel(level);
+                return LQRiskLevel == null ? level.riskLevel : LQRiskLevel;
+            }
+            else
+            {
+                return level.riskLevel;
+            }
+        }
     }
 }

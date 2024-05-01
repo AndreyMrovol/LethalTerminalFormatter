@@ -32,8 +32,10 @@ namespace TerminalFormatter
         internal static bool isLRegenPresent = false;
         internal static bool isLGUPresent = false;
         internal static bool isWTPresent = false;
+        internal static bool isLQPresent = false;
 
         internal static MrovLib.Compatibility.CompatibilityBase LGUCompat;
+        internal static MrovLib.Compatibility.CompatibilityBase LQCompat;
 
         private void Awake()
         {
@@ -101,6 +103,7 @@ namespace TerminalFormatter
             LGUCompat = new LategameUpgradesCompatibility(
                 "com.malco.lethalcompany.moreshipupgrades"
             );
+            LQCompat = new LethalQuantitiesCompatibility("LethalQuantities");
 
             if (Chainloader.PluginInfos.ContainsKey("WeatherTweaks"))
             {

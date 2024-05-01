@@ -169,7 +169,7 @@ namespace TerminalFormatter.Nodes
 
                     // if longer than 3, trim
                     var difficulty = showDifficulty
-                        ? $" {extendedLevel.SelectableLevel.riskLevel.ToString().PadRight(3)}"
+                        ? $" {SharedMethods.GetLevelRiskLevel(extendedLevel.SelectableLevel).PadRight(3)}"
                         : "";
 
                     bool showPrice =
