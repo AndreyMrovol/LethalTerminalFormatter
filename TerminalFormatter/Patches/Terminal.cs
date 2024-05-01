@@ -186,12 +186,16 @@ namespace TerminalFormatter
                     new()
                     {
                         Node = possibleNodes
-                            .Where(node => node.isConfirmationNode)
+                            .Where(node =>
+                                node.isConfirmationNode && !node.name.ToLower().Contains("mapper")
+                            )
                             .Distinct()
                             .ToList()
                             .FirstOrDefault(),
                         NodeConfirm = possibleNodes
-                            .Where(node => !node.isConfirmationNode)
+                            .Where(node =>
+                                !node.isConfirmationNode && !node.name.ToLower().Contains("mapper")
+                            )
                             .Distinct()
                             .ToList()
                             .LastOrDefault()
