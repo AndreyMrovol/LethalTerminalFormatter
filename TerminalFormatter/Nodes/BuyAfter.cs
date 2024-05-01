@@ -55,7 +55,7 @@ namespace TerminalFormatter.Nodes
             BuyableThing resolvedThing = ResolveNodeIntoBuyable(node);
             LastResolvedBuyable = resolvedThing;
 
-            var header = new Header().CreateHeaderWithoutLines("THANK YOU");
+            var header = new Header().CreateHeaderWithoutLines("SUCCESS!");
             var adjustedTable = new StringBuilder();
 
             table.AddRow("ITEM:", resolvedThing.Name);
