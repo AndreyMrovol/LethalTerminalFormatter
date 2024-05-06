@@ -25,7 +25,7 @@ namespace TerminalFormatter.Nodes
         {
             Plugin.logger.LogDebug("Patching MoonsCatalogue");
 
-            string currentTagFilter;
+            string currentTagFilter = "";
 
             if (
                 node.name.Contains("preview")
@@ -55,7 +55,25 @@ namespace TerminalFormatter.Nodes
             )
             {
                 LethalLevelLoader.Settings.levelPreviewFilterType = (FilterInfoType)filterEnumValue;
-                currentTagFilter = TerminalManager.GetTerminalEventString(node.terminalEvent);
+
+                if (LethalLevelLoader.Settings.levelPreviewFilterType == FilterInfoType.Tag)
+                {
+                    currentTagFilter = TerminalManager.GetTerminalEventString(node.terminalEvent);
+                    // set internal static string currentTagFilter through reflection
+
+                    FieldInfo setTagFilter = typeof(LethalLevelLoader.TerminalManager).GetField(
+                        "currentTagFilter",
+                        BindingFlags.NonPublic | BindingFlags.Static
+                    );
+
+                    if (setTagFilter != null)
+                    {
+                        setTagFilter.SetValue(
+                            null,
+                            TerminalManager.GetTerminalEventString(node.terminalEvent)
+                        );
+                    }
+                }
             }
 
             // Call internal static RefreshExtendedLevelGroups through reflection
@@ -99,7 +117,7 @@ namespace TerminalFormatter.Nodes
                     },
                     {
                         2,
-                        $"FILTER: {LethalLevelLoader.Settings.levelPreviewFilterType.ToString().ToUpper()}"
+                        $"FILTER: {(LethalLevelLoader.Settings.levelPreviewFilterType == FilterInfoType.Tag ? $"<color=#0be697>TAG</color> ({currentTagFilter})" : LethalLevelLoader.Settings.levelPreviewFilterType.ToString().ToUpper())}"
                     },
                 };
             string moonsHeader = new Header().CreateNumberedHeader(headerName, 2, headerInfo);
@@ -111,15 +129,15 @@ namespace TerminalFormatter.Nodes
             ConfigManager.LastUsedPreview.Value =
                 LethalLevelLoader.Settings.levelPreviewInfoType.ToString();
 
-            Plugin.logger.LogWarning(
+            Plugin.logger.LogInfo(
                 $"LLL preview type set to {LethalLevelLoader.Settings.levelPreviewInfoType}"
             );
 
-            Plugin.logger.LogWarning(
+            Plugin.logger.LogInfo(
                 $"LLL filter type set to {LethalLevelLoader.Settings.levelPreviewFilterType}"
             );
 
-            Plugin.logger.LogWarning(
+            Plugin.logger.LogInfo(
                 $"LLL sort type set to {LethalLevelLoader.Settings.levelPreviewSortType}"
             );
 
@@ -209,6 +227,12 @@ namespace TerminalFormatter.Nodes
 
             string tableString = table.ToStringCustomDecoration();
             adjustedTable.Append(moonsHeader);
+
+            adjustedTable.Append(
+                LethalLevelLoader.Settings.levelPreviewFilterType == FilterInfoType.Tag
+                    ? "If you enabled tag filtering by accident, use the <color=#0be697>filter none</color> command to disable it.\n\n"
+                    : ""
+            );
 
             adjustedTable.Append(
                 $" The Company // Buying at {Mathf.RoundToInt(StartOfRound.Instance.companyBuyingRate * 100f)}% \n\n"
