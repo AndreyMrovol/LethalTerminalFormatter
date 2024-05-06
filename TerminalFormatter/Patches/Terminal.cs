@@ -157,6 +157,48 @@ namespace TerminalFormatter
             Plugin.logger.LogWarning($"Nodes count: {Nodes.Count}");
             Variables.Nodes = Nodes;
 
+            List<SelectableLevel> levels = StartOfRound.Instance.levels.ToList();
+
+            for (int i = 0; i < levels.Count; i++)
+            {
+                SelectableLevel level = levels[i];
+
+                Plugin.logger.LogDebug($"Level: {level.PlanetName}");
+
+                List<TerminalNode> possibleNodes = Nodes
+                    .Where(x => x.buyRerouteToMoon == i || x.displayPlanetInfo == i)
+                    .Distinct()
+                    .ToList();
+
+                Plugin.logger.LogDebug($"Possible nodes count: {possibleNodes.Count}");
+
+                for (int j = 0; j < possibleNodes.Count; j++)
+                {
+                    Plugin.logger.LogDebug($"Node: {possibleNodes[j]}");
+
+                    if (possibleNodes[j] == null)
+                    {
+                        continue;
+                    }
+                }
+
+                RelatedNodes relatedNodes = new RelatedNodes
+                {
+                    Node = possibleNodes
+                        .Where(node => node.buyRerouteToMoon == -2)
+                        .Distinct()
+                        .ToList()
+                        .FirstOrDefault(),
+                    NodeConfirm = possibleNodes
+                        .Where(node => node.buyRerouteToMoon != -2)
+                        .Distinct()
+                        .ToList()
+                        .LastOrDefault()
+                };
+
+                Variables.Routes.Add(new Route(level, relatedNodes));
+            }
+
             List<Item> buyableItems = __instance.buyableItemsList.ToList();
 
             buyableItems.ForEach(item =>

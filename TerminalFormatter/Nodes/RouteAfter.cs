@@ -10,14 +10,14 @@ using UnityEngine;
 
 namespace TerminalFormatter.Nodes
 {
-    public class Route : TerminalFormatterNode
+    public class RouteAfter : TerminalFormatterNode
     {
-        public Route()
-            : base("Route", ["route", "Route"]) { }
+        public RouteAfter()
+            : base("RouteAfter", ["route", "Route"]) { }
 
         public TerminalFormatter.Route ResolveNodeIntoRoute(TerminalNode node)
         {
-            return Variables.Routes.Where(x => x.Nodes.Node == node).FirstOrDefault();
+            return Variables.Routes.Where(x => x.Nodes.NodeConfirm == node).FirstOrDefault();
         }
 
         public override bool IsNodeValid(TerminalNode node, Terminal terminal)
@@ -40,7 +40,7 @@ namespace TerminalFormatter.Nodes
 
             TerminalFormatter.Route resolvedRoute = ResolveNodeIntoRoute(node);
 
-            var header = new Header().CreateHeaderWithoutLines("CONFIRM ROUTE");
+            var header = new Header().CreateHeaderWithoutLines("SUCCESS!");
             var adjustedTable = new StringBuilder();
 
             SelectableLevel currentLevel = resolvedRoute.Level;
@@ -49,20 +49,12 @@ namespace TerminalFormatter.Nodes
             int price = SharedMethods.GetPrice(node.itemCost);
 
             table.AddRow("PLANET:", SharedMethods.GetNumberlessPlanetName(currentLevel));
-            table.AddRow("PRICE:", $"${price} (${terminal.groupCredits - price} after routing)");
             table.AddRow("WEATHER:", currentWeather == "" ? "Clear" : currentWeather);
-
-            // table.AddRow("", "");
-
-            // table.AddRow("SIZE:", $"{currentLevel.factorySizeMultiplier}x");
-            // table.AddRow(
-            //     "SCRAP:",
-            //     $"${currentLevel.minTotalScrapValue} ({currentLevel.minScrap}) - ${currentLevel.maxTotalScrapValue} ({currentLevel.maxScrap})"
-            // );
 
             adjustedTable.Append(header);
             adjustedTable.Append("\n\n");
-            adjustedTable.Append("Please CONFIRM or DENY routing the autopilot:");
+            adjustedTable.Append("Thank you for your purchase!\n");
+            adjustedTable.Append("You're currently headed to:");
             adjustedTable.Append("\n\n");
             adjustedTable.Append(table.ToStringCustomDecoration());
 

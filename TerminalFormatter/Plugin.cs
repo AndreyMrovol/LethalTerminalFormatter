@@ -113,6 +113,8 @@ namespace TerminalFormatter
             }
 
             new Nodes.Route();
+            new Nodes.RouteAfter();
+
             new Nodes.Scan();
             new Nodes.Store();
 

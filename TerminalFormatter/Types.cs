@@ -113,4 +113,16 @@ namespace TerminalFormatter
             Name = Decoration.unlockableName;
         }
     }
+
+    public class Route
+    {
+        public SelectableLevel Level;
+        public RelatedNodes Nodes;
+
+        public Route(SelectableLevel level, RelatedNodes nodes)
+        {
+            Level = level;
+            Nodes = nodes;
+        }
+    }
 }

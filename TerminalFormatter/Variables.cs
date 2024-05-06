@@ -11,6 +11,7 @@ namespace TerminalFormatter
         public static List<TerminalNode> Nodes = [];
 
         public static List<BuyableThing> Buyables = [];
+        public static List<Route> Routes = [];
 
         public static Terminal Terminal;
 
