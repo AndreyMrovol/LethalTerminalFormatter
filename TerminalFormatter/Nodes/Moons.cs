@@ -143,6 +143,8 @@ namespace TerminalFormatter.Nodes
 
             Plugin.logger.LogDebug("MoonsCataloguePage: " + moonCatalogue);
 
+            List<ExtendedLevel> extendedLevelsList = [];
+
             foreach (
                 LethalLevelLoader.ExtendedLevelGroup extendedLevelGroup in moonCatalogue.ExtendedLevelGroups
             )
@@ -156,73 +158,93 @@ namespace TerminalFormatter.Nodes
                         continue;
                     }
 
-                    string planetName = extendedLevel.NumberlessPlanetName;
-                    Plugin.logger.LogDebug($"Planet: {planetName}");
+                    extendedLevelsList.Add(extendedLevel);
+                }
+            }
 
-                    bool showDifficulty =
-                        (
-                            ConfigManager.ShowDifficultyInAll.Value
-                            && LethalLevelLoader.Settings.levelPreviewInfoType
-                                == LethalLevelLoader.PreviewInfoType.All
-                        )
-                        || LethalLevelLoader.Settings.levelPreviewInfoType
-                            == LethalLevelLoader.PreviewInfoType.Difficulty;
+            int itemCount = 1;
 
-                    // make itemName length = itemNameWidth
-                    // if showDifficulty, make difficulty length = 4 and display it on the right
+            foreach (ExtendedLevel extendedLevel in extendedLevelsList)
+            {
+                string planetName = extendedLevel.NumberlessPlanetName;
+                Plugin.logger.LogDebug($"Planet: {planetName}");
 
-                    int planetWidth = showDifficulty
-                        ? Settings.planetNameWidth - 2
-                        : Settings.planetNameWidth;
+                bool showDifficulty =
+                    (
+                        ConfigManager.ShowDifficultyInAll.Value
+                        && LethalLevelLoader.Settings.levelPreviewInfoType
+                            == LethalLevelLoader.PreviewInfoType.All
+                    )
+                    || LethalLevelLoader.Settings.levelPreviewInfoType
+                        == LethalLevelLoader.PreviewInfoType.Difficulty;
 
-                    if (planetName.Length > Settings.planetNameWidth)
+                // make itemName length = itemNameWidth
+                // if showDifficulty, make difficulty length = 4 and display it on the right
+
+                int planetWidth = showDifficulty
+                    ? Settings.planetNameWidth - 2
+                    : Settings.planetNameWidth;
+
+                if (planetName.Length > Settings.planetNameWidth)
+                {
+                    // replace last 3 characters with "..."
+                    planetName = $"{planetName.Substring(0, planetWidth - 3)}...";
+                }
+                else
+                {
+                    planetName = $"{planetName}".PadRight(planetWidth);
+                }
+
+                // if longer than 3, trim
+                var difficulty = showDifficulty
+                    ? $" {SharedMethods.GetLevelRiskLevel(extendedLevel.SelectableLevel).PadRight(3)}"
+                    : "";
+
+                bool showPrice =
+                    LethalLevelLoader.Settings.levelPreviewInfoType
+                        == LethalLevelLoader.PreviewInfoType.All
+                    || LethalLevelLoader.Settings.levelPreviewInfoType
+                        == LethalLevelLoader.PreviewInfoType.Price;
+                string price = showPrice
+                    ? $"${SharedMethods.GetPrice(extendedLevel.RoutePrice)}"
+                    : "";
+
+                bool showWeather =
+                    LethalLevelLoader.Settings.levelPreviewInfoType
+                        == LethalLevelLoader.PreviewInfoType.All
+                    || LethalLevelLoader.Settings.levelPreviewInfoType
+                        == LethalLevelLoader.PreviewInfoType.Weather;
+
+                // use reflection to call TerminalManager.GetWeatherConditions - must invoke the original method cause of weathertweaks
+                // it's internal static method
+                var weatherCondition = SharedMethods.GetWeather(extendedLevel.SelectableLevel);
+
+                string weather = showWeather
+                    ? weatherCondition.PadRight(Settings.planetWeatherWidth - 2)
+                    : "";
+
+                table.AddRow(
+                    $"{planetName}{difficulty}",
+                    $"{price}",
+                    $"{weather}".PadLeft(Settings.planetWeatherWidth)
+                );
+
+                tableInConsole.AddRow(planetName, price, weather, difficulty);
+
+                Plugin.logger.LogDebug($"{itemCount}");
+
+                if (LethalLevelLoader.Settings.moonsCatalogueSplitCount != 0)
+                {
+                    if (itemCount % LethalLevelLoader.Settings.moonsCatalogueSplitCount == 0)
                     {
-                        // replace last 3 characters with "..."
-                        planetName = $"{planetName.Substring(0, planetWidth - 3)}...";
+                        itemCount = 1;
+                        table.AddRow("", "", "");
                     }
                     else
                     {
-                        planetName = $"{planetName}".PadRight(planetWidth);
+                        itemCount++;
                     }
-
-                    // if longer than 3, trim
-                    var difficulty = showDifficulty
-                        ? $" {SharedMethods.GetLevelRiskLevel(extendedLevel.SelectableLevel).PadRight(3)}"
-                        : "";
-
-                    bool showPrice =
-                        LethalLevelLoader.Settings.levelPreviewInfoType
-                            == LethalLevelLoader.PreviewInfoType.All
-                        || LethalLevelLoader.Settings.levelPreviewInfoType
-                            == LethalLevelLoader.PreviewInfoType.Price;
-                    string price = showPrice
-                        ? $"${SharedMethods.GetPrice(extendedLevel.RoutePrice)}"
-                        : "";
-
-                    bool showWeather =
-                        LethalLevelLoader.Settings.levelPreviewInfoType
-                            == LethalLevelLoader.PreviewInfoType.All
-                        || LethalLevelLoader.Settings.levelPreviewInfoType
-                            == LethalLevelLoader.PreviewInfoType.Weather;
-
-                    // use reflection to call TerminalManager.GetWeatherConditions - must invoke the original method cause of weathertweaks
-                    // it's internal static method
-                    var weatherCondition = SharedMethods.GetWeather(extendedLevel.SelectableLevel);
-
-                    string weather = showWeather
-                        ? weatherCondition.PadRight(Settings.planetWeatherWidth - 2)
-                        : "";
-
-                    table.AddRow(
-                        $"{planetName}{difficulty}",
-                        $"{price}",
-                        $"{weather}".PadLeft(Settings.planetWeatherWidth)
-                    );
-
-                    tableInConsole.AddRow(planetName, price, weather, difficulty);
                 }
-
-                table.AddRow("", "", "");
             }
 
             string tableString = table.ToStringCustomDecoration();
@@ -241,7 +263,7 @@ namespace TerminalFormatter.Nodes
             adjustedTable.Append(tableString);
 
             string finalString = adjustedTable.ToString().TrimEnd();
-            Plugin.logger.LogInfo("All strings:\n" + tableInConsole.ToMinimalString());
+            Plugin.logger.LogDebug("All strings:\n" + tableInConsole.ToMinimalString());
 
             return finalString;
         }
