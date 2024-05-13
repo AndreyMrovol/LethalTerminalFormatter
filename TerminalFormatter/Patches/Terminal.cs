@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using HarmonyLib;
+using LethalLib.Extras;
+using TerminalFormatter.Nodes;
 using UnityEngine;
 
 namespace TerminalFormatter
@@ -9,15 +11,7 @@ namespace TerminalFormatter
     [HarmonyPatch(typeof(Terminal))]
     public class TerminalPatches
     {
-        // [HarmonyPrefix]
-        // [HarmonyPatch(nameof(Terminal.ParsePlayerSentence))]
-        // static void CustomParser(ref Terminal __instance, ref TerminalNode __result)
-        // {
-        //     string text = __instance.screenText.text.Substring(
-        //         __instance.screenText.text.Length - __instance.textAdded
-        //     );
-        //     CommandParser.ParseCommand(text, ref __instance, ref __result);
-        // }
+        private static TerminalNode lastNode;
 
         [HarmonyPostfix]
         [HarmonyPatch("TextPostProcess")]
@@ -30,17 +24,6 @@ namespace TerminalFormatter
             Plugin.logger.LogDebug(node.name);
 
             string newDisplayText = null;
-
-            // Settings.RegisteredNodes.ForEach(terminalnode =>
-            // {
-            //     Plugin.logger.LogDebug($"Node: {terminalnode.name}");
-            //     terminalnode.terminalNode.ForEach(terminalNode =>
-            //     {
-            //         Plugin.logger.LogDebug(
-            //             $"{terminalNode}, contains: {node.name.Contains(terminalNode)} {terminalNode.Contains(node.name)}"
-            //         );
-            //     });
-            // });
 
             // check if node.name contains any of TerminalFormatterNode.terminalNode strings
             List<TerminalFormatterNode> possibleNodes = Settings
@@ -110,6 +93,65 @@ namespace TerminalFormatter
             return;
         }
 
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(Terminal), "LoadNewNode")]
+        [HarmonyPriority(Priority.HigherThanNormal)]
+        public static bool CheckIfLocked(Terminal __instance, TerminalNode node)
+        {
+            Plugin.logger.LogDebug($"Checking if route {node.name} is locked");
+            lastNode = node;
+
+            if (!MrovLib.Plugin.LLL.IsModPresent)
+            {
+                return true;
+            }
+
+            if (!node.name.ToLower().Contains("route") && !node.buyRerouteToMoon.Equals(-2))
+            {
+                return true;
+            }
+
+            if (node.name == "RouteLocked")
+            {
+                Plugin.logger.LogDebug("Node is RouteLocked");
+                return true;
+            }
+
+            Route level = TerminalFormatter
+                .Variables.Routes.Where(x => x.Nodes.Node == node)
+                .FirstOrDefault();
+
+            if (level == null)
+            {
+                Plugin.logger.LogDebug("Level is null");
+                return true;
+            }
+
+            Plugin.logger.LogWarning(level);
+
+            Plugin.logger.LogWarning(level.Level.PlanetName);
+
+            if (level.Level == null)
+            {
+                return true;
+            }
+
+            bool isLocked = MrovLib.API.SharedMethods.IsMoonLockedLLL(level.Level);
+
+            if (isLocked)
+            {
+                Plugin.logger.LogWarning("Node is locked!!");
+
+                __instance.LoadNewNode(Plugin.LockedNode);
+
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
         [HarmonyPostfix]
         // [HarmonyPriority(Priority.Last)]
         [HarmonyAfter("imabatby.lethallevelloader")]
@@ -157,7 +199,7 @@ namespace TerminalFormatter
             Plugin.logger.LogWarning($"Nodes count: {Nodes.Count}");
             Variables.Nodes = Nodes;
 
-            List<SelectableLevel> levels = StartOfRound.Instance.levels.ToList();
+            List<SelectableLevel> levels = MrovLib.API.SharedMethods.GetGameLevels();
 
             for (int i = 0; i < levels.Count; i++)
             {
@@ -169,6 +211,15 @@ namespace TerminalFormatter
                     .Where(x => x.buyRerouteToMoon == i || x.displayPlanetInfo == i)
                     .Distinct()
                     .ToList();
+
+                if (MrovLib.Plugin.LLL.IsModPresent && possibleNodes.Count > 2)
+                {
+                    List<TerminalNode> LLLNodes = MrovLib.API.SharedMethods.GetLevelTerminalNodes(
+                        level
+                    );
+
+                    possibleNodes.RemoveAll(node => !LLLNodes.Contains(node));
+                }
 
                 Plugin.logger.LogDebug($"Possible nodes count: {possibleNodes.Count}");
 

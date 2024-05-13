@@ -26,6 +26,8 @@ namespace TerminalFormatter
         internal static ManualLogSource logger;
         internal static Harmony harmony = new(PluginInfo.PLUGIN_GUID);
 
+        internal static TerminalNode LockedNode;
+
         internal static bool isACPresent = false;
         internal static bool isLLibPresent = false;
         internal static bool isLLLPresent = false;
@@ -66,6 +68,7 @@ namespace TerminalFormatter
                 else
                 {
                     new Nodes.Moons();
+                    new Nodes.RouteLocked();
                     new Nodes.Simulate();
                 }
 
@@ -103,6 +106,7 @@ namespace TerminalFormatter
             LGUCompat = new LategameUpgradesCompatibility(
                 "com.malco.lethalcompany.moreshipupgrades"
             );
+
             LQCompat = new LethalQuantitiesCompatibility("LethalQuantities");
 
             if (Chainloader.PluginInfos.ContainsKey("WeatherTweaks"))
@@ -121,6 +125,15 @@ namespace TerminalFormatter
             new Nodes.Buy();
             new Nodes.BuyAfter();
             new Nodes.CannotAfford();
+
+            LockedNode = new TerminalNode
+            {
+                name = "RouteLocked",
+                clearPreviousText = true,
+                acceptAnything = true,
+                displayText = $"You cannot route to the selected moon. The route is locked.",
+                terminalOptions = []
+            };
 
             // Plugin startup logic
             Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");
