@@ -1,4 +1,5 @@
-﻿using BepInEx;
+﻿using System.Linq;
+using BepInEx;
 using BepInEx.Bootstrap;
 using BepInEx.Logging;
 using HarmonyLib;
@@ -6,7 +7,6 @@ using HarmonyLib;
 namespace TerminalFormatter
 {
     [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
-    // [BepInDependency("imabatby.lethallevelloader", BepInDependency.DependencyFlags.HardDependency)]
     [BepInDependency(
         "Toskan4134.LethalRegeneration",
         BepInDependency.DependencyFlags.SoftDependency
