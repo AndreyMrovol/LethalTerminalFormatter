@@ -124,7 +124,9 @@ namespace TerminalFormatter
             Level = level;
             Nodes = nodes;
 
-            Plugin.logger.LogWarning($"Route constructor: {level}, {nodes}");
+            Plugin.logger.LogWarning(
+                $"Route constructor: {level}; {nodes.Node}, {nodes.NodeConfirm}"
+            );
         }
     }
 }
