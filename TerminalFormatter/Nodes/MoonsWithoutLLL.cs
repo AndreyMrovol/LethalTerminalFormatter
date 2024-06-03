@@ -31,7 +31,17 @@ namespace TerminalFormatter.Nodes
             string headerName = "MOONS CATALOGUE";
             string moonsHeader = new Header().CreateNumberedHeader(headerName, 2);
 
-            List<TerminalFormatter.Route> routes = Variables.Routes;
+            List<TerminalFormatter.Route> routes = Variables
+                .Routes.Where(keyval => keyval.Nodes.Node != null)
+                .ToList()
+                // order routes by Settings.MoonsOrderVanilla names
+                .OrderBy(keyval =>
+                    Settings.MoonsOrderVanilla.IndexOf(
+                        MrovLib.API.SharedMethods.GetNumberlessPlanetName(keyval.Level)
+                    )
+                )
+                .ToList();
+
             int itemCount = 1;
 
             foreach (TerminalFormatter.Route route in routes)

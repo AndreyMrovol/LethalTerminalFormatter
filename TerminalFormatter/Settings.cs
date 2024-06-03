@@ -27,6 +27,27 @@ namespace TerminalFormatter
                 { "Eclipsed", "Eclps" }
             };
 
+        internal static List<string> MoonsToIgnore =
+        [
+            "71 Gordion",
+            "44 Liquidation",
+            "5 Embrion",
+            "68 Artifice"
+        ];
+
+        internal static List<string> MoonsOrderVanilla =
+        [
+            "Experimentation",
+            "Assurance",
+            "Vow",
+            "March",
+            "Offense",
+            "Adamance",
+            "Rend",
+            "Dine",
+            "Titan"
+        ];
+
         internal static readonly ManualLogSource logger = Plugin.logger;
     }
 }
