@@ -84,8 +84,6 @@ namespace TerminalFormatter
                 __instance.screenText.text = builder.ToString();
                 __instance.currentText = builder.ToString();
 
-                // __instance.screenText.text = $"<color=#ff0000>{builder.ToString()}</color>";
-                // __instance.currentText = $"<color=#ff0000>{builder.ToString()}</color>";
                 __instance.textAdded = 0;
                 Settings.firstUse = false;
             }
