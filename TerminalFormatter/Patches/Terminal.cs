@@ -184,6 +184,9 @@ namespace TerminalFormatter
         public static void StartPostfix2(Terminal __instance)
         {
             Variables.Buyables.Clear();
+            Variables.Routes.Clear();
+            Variables.Nodes.Clear();
+
             Plugin.logger.LogDebug("Terminal Start");
             Variables.Terminal = __instance;
 
