@@ -48,9 +48,22 @@ namespace TerminalFormatter.Nodes
             {
                 SelectableLevel level = route.Level;
 
-                if (Settings.MoonsToIgnore.Contains(level.PlanetName))
+                if (ConfigManager.AlwaysDisplayHiddenMoons.Value == false)
                 {
-                    continue;
+                    if (
+                        Settings.HiddenMoons.Contains(level.PlanetName)
+                        || Settings.MoonsToIgnore.Contains(level.PlanetName)
+                    )
+                    {
+                        continue;
+                    }
+                }
+                else
+                {
+                    if (Settings.MoonsToIgnore.Contains(level.PlanetName))
+                    {
+                        continue;
+                    }
                 }
 
                 int price = SharedMethods.GetPrice(route.Nodes.Node.itemCost);

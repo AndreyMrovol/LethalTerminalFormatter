@@ -27,13 +27,9 @@ namespace TerminalFormatter
                 { "Eclipsed", "Eclps" }
             };
 
-        internal static List<string> MoonsToIgnore =
-        [
-            "71 Gordion",
-            "44 Liquidation",
-            "5 Embrion",
-            "68 Artifice"
-        ];
+        internal static List<string> MoonsToIgnore = ["71 Gordion", "44 Liquidation",];
+
+        internal static List<string> HiddenMoons = ["5 Embrion", "68 Artifice"];
 
         internal static List<string> MoonsOrderVanilla =
         [

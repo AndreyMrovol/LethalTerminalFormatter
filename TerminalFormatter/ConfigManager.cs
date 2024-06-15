@@ -21,6 +21,7 @@ namespace TerminalFormatter
         public static ConfigEntry<int> DivideShopPage { get; private set; }
 
         public static ConfigEntry<bool> UseShortenedWeathers { get; private set; }
+        public static ConfigEntry<bool> AlwaysDisplayHiddenMoons { get; private set; }
 
         public static ConfigEntry<string> LastUsedPreview { get; private set; }
         public static ConfigEntry<string> LastUsedFilter { get; private set; }
@@ -49,6 +50,13 @@ namespace TerminalFormatter
                 "Use Shortened Weathers",
                 false,
                 "Use shortened weathers in moons catalogue"
+            );
+
+            AlwaysDisplayHiddenMoons = configFile.Bind(
+                "Moons",
+                "Always Display Hidden Moons",
+                false,
+                "Always display hidden moons in moons catalogue"
             );
 
             DivideShopPage = configFile.Bind(

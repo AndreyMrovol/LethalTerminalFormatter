@@ -153,7 +153,10 @@ namespace TerminalFormatter.Nodes
                     LethalLevelLoader.ExtendedLevel extendedLevel in extendedLevelGroup.extendedLevelsList
                 )
                 {
-                    if (MrovLib.API.SharedMethods.IsMoonHiddenLLL(extendedLevel.SelectableLevel))
+                    if (
+                        MrovLib.API.SharedMethods.IsMoonHiddenLLL(extendedLevel.SelectableLevel)
+                        && !ConfigManager.AlwaysDisplayHiddenMoons.Value
+                    )
                     {
                         continue;
                     }
