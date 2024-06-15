@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace TerminalFormatter
 {
@@ -17,7 +18,7 @@ namespace TerminalFormatter
         // public TerminalNode NodeInfo;
     }
 
-    public class BuyableThing
+    public class BuyableThing : ScriptableObject
     {
         public string Name;
         public int Price;
@@ -45,6 +46,7 @@ namespace TerminalFormatter
             Item = terminal.buyableItemsList[nodes.Node.buyItemIndex];
             Price = Item.creditsWorth;
             Name = Item.itemName;
+            name = Name;
         }
     }
 
@@ -92,6 +94,7 @@ namespace TerminalFormatter
 
             Price = price;
             Name = Unlockable.unlockableName;
+            name = Name;
         }
     }
 
@@ -111,6 +114,7 @@ namespace TerminalFormatter
             Decoration = decor;
             Price = Decoration.shopSelectionNode.itemCost;
             Name = Decoration.unlockableName;
+            name = Name;
         }
     }
 
