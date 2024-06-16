@@ -19,7 +19,7 @@ namespace TerminalFormatter.Nodes
 
         public override string GetNodeText(TerminalNode node, Terminal terminal)
         {
-            var table = new ConsoleTables.ConsoleTable("Name", "Price", "# On ship");
+            var table = new ConsoleTables.ConsoleTable("Name", "Price", "In Storage");
             var adjustedTable = new StringBuilder();
             Plugin.logger.LogDebug("Patching 0_StoreHub");
 
