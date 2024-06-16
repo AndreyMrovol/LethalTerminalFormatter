@@ -30,6 +30,8 @@ namespace TerminalFormatter.Nodes
             GameObject ship = GameObject.Find("/Environment/HangarShip");
             var ItemsOnShip = ship.GetComponentsInChildren<GrabbableObject>().ToList();
 
+            bool decor = ConfigManager.ShowDecorations.Value;
+
             string headerName = "COMPANY STORE";
             string storeHeader = new Header().CreateHeaderWithoutLines(headerName, 4);
             // adjustedTable.Append(
@@ -41,6 +43,10 @@ namespace TerminalFormatter.Nodes
             adjustedTable.Append(storeHeader);
 
             table.AddRow("[ITEMS]", "", "");
+            if (decor)
+            {
+                table.AddRow($"{new string('-', Settings.dividerLength)}", "", "");
+            }
 
             List<Item> sortedBuyableItemList = Variables
                 .BuyableItemList.OrderBy(x => x.itemName)
@@ -62,6 +68,11 @@ namespace TerminalFormatter.Nodes
                 if (index == -1)
                 {
                     continue;
+                }
+
+                if (decor)
+                {
+                    itemName = $"* {itemName}";
                 }
 
                 if (Plugin.isLLibPresent)
@@ -89,7 +100,7 @@ namespace TerminalFormatter.Nodes
 
                 string discountPercent =
                     terminal.itemSalesPercentages[index] != 100
-                        ? $"  -{100 - terminal.itemSalesPercentages[index]}%"
+                        ? $" {(decor ? "(" : "")}-{100 - terminal.itemSalesPercentages[index]}%{(decor ? ")" : "")}"
                         : "";
 
                 // what i want to do:
@@ -137,6 +148,10 @@ namespace TerminalFormatter.Nodes
 
             table.AddRow("", "", "");
             table.AddRow("[UPGRADES]", "", "");
+            if (decor)
+            {
+                table.AddRow($"{new string('-', Settings.dividerLength)}", "", "");
+            }
 
             Dictionary<string, int> upgrades =
                 new()
@@ -155,6 +170,11 @@ namespace TerminalFormatter.Nodes
             {
                 bool isUnlocked = unlockable.hasBeenUnlockedByPlayer || unlockable.alreadyUnlocked;
                 TerminalNode unlockableNode = unlockable.shopSelectionNode;
+
+                if (decor)
+                {
+                    unlockableName = $"* {unlockableName}";
+                }
 
                 if (Plugin.isLLibPresent)
                 {
@@ -214,6 +234,10 @@ namespace TerminalFormatter.Nodes
                 {
                     table.AddRow("", "", "");
                     table.AddRow("[REGENERATION]", "", "");
+                    if (decor)
+                    {
+                        table.AddRow($"{new string('-', Settings.dividerLength)}", "", "");
+                    }
 
                     table.AddRow(
                         "Natural Regeneration",
@@ -225,6 +249,10 @@ namespace TerminalFormatter.Nodes
 
             table.AddRow("", "", "");
             table.AddRow("[DECORATIONS]", "", "");
+            if (decor)
+            {
+                table.AddRow($"{new string('-', Settings.dividerLength)}", "", "");
+            }
 
             // [unlockablesSelectionList]
             List<TerminalNode> DecorSelection = Variables
