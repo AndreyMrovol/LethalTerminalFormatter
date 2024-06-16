@@ -10,7 +10,11 @@ namespace TerminalFormatter.Nodes
     public class Store : TerminalFormatterNode
     {
         public Store()
-            : base("Store", ["0_StoreHub"]) { }
+            : base("Store", ["0_StoreHub"])
+        {
+            this.AdditionalInfo =
+                "Welcome to the Company store. Use words BUY and INFO on any item. Order items in bulk by typing a number.";
+        }
 
         public override bool IsNodeValid(TerminalNode node, Terminal terminal)
         {
@@ -41,6 +45,13 @@ namespace TerminalFormatter.Nodes
             // );
 
             adjustedTable.Append(storeHeader);
+
+            if (ConfigManager.ShowHelpText.Value)
+            {
+                adjustedTable.Append(
+                    this.AdditionalInfo != null ? $"\n{this.AdditionalInfo}\n\n" : ""
+                );
+            }
 
             table.AddRow("[ITEMS]", "", "");
             if (decor)
