@@ -23,7 +23,7 @@ namespace TerminalFormatter.Nodes
 
         public override string GetNodeText(TerminalNode node, Terminal terminal)
         {
-            var table = new ConsoleTables.ConsoleTable("Name", "Price", "In Storage");
+            var table = new ConsoleTables.ConsoleTable("Name", "Price", "Owned");
             var adjustedTable = new StringBuilder();
             Plugin.logger.LogDebug("Patching 0_StoreHub");
 
@@ -37,7 +37,7 @@ namespace TerminalFormatter.Nodes
             bool decor = ConfigManager.ShowDecorations.Value;
 
             string headerName = "COMPANY STORE";
-            string storeHeader = new Header().CreateHeaderWithoutLines(headerName, 4);
+            string storeHeader = new Header().CreateHeaderWithoutLines(headerName);
             // adjustedTable.Append(
             //     storeHeader
             //         .Replace("&", new string('─', terminalWidth - 6 - headerName.Length))
@@ -137,7 +137,7 @@ namespace TerminalFormatter.Nodes
                 table.AddRow(
                     itemName,
                     $"${item.creditsWorth * ((float)terminal.itemSalesPercentages[index] / 100f)}",
-                    $"{(howManyOnShip == 0 ? "" : $"{howManyOnShip.ToString("D2")} owned")}"
+                    $"{(howManyOnShip == 0 ? "" : $"×{howManyOnShip.ToString("D2")}")}"
                 // $"{(terminal.itemSalesPercentages[index] != 100 ? 100 - terminal.itemSalesPercentages[index] : "")}"
                 );
 
