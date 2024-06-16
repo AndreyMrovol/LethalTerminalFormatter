@@ -171,6 +171,8 @@ namespace TerminalFormatter.Nodes
                 bool isUnlocked = unlockable.hasBeenUnlockedByPlayer || unlockable.alreadyUnlocked;
                 TerminalNode unlockableNode = unlockable.shopSelectionNode;
 
+                string unlockableName = unlockable.unlockableName;
+
                 if (decor)
                 {
                     unlockableName = $"* {unlockableName}";
@@ -219,7 +221,7 @@ namespace TerminalFormatter.Nodes
                     continue;
 
                 table.AddRow(
-                    unlockable.unlockableName.PadRight(Settings.itemNameWidth),
+                    unlockableName.PadRight(Settings.itemNameWidth),
                     $"${(unlockableNode ? unlockableNode.itemCost : upgrades[unlockable.unlockableName])}",
                     ""
                 );
@@ -261,11 +263,18 @@ namespace TerminalFormatter.Nodes
 
             itemCount = 1;
 
-            foreach (var decor in DecorSelection)
+            foreach (var decoration in DecorSelection)
             {
                 UnlockableItem unlockable = StartOfRound.Instance.unlockablesList.unlockables[
-                    decor.shipUnlockableID
+                    decoration.shipUnlockableID
                 ];
+
+                string decorationName = decoration.creatureName;
+
+                if (decor)
+                {
+                    decorationName = $"* {decorationName}";
+                }
 
                 if (Plugin.isLLibPresent)
                 {
@@ -279,14 +288,14 @@ namespace TerminalFormatter.Nodes
                 }
 
                 Plugin.logger.LogDebug(
-                    $"{decor.creatureName} isUnlocked: {unlockable.hasBeenUnlockedByPlayer} unlockable: {unlockable}"
+                    $"{decoration.creatureName} isUnlocked: {unlockable.hasBeenUnlockedByPlayer} unlockable: {unlockable}"
                 );
                 if (unlockable.hasBeenUnlockedByPlayer || unlockable.alreadyUnlocked)
                 {
                     continue;
                 }
 
-                table.AddRow(decor.creatureName, $"${decor.itemCost}", "");
+                table.AddRow(decorationName, $"${decoration.itemCost}", "");
 
                 if (ConfigManager.DivideShopPage.Value != 0)
                 {
