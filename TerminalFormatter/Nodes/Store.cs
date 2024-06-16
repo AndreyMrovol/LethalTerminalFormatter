@@ -126,7 +126,7 @@ namespace TerminalFormatter.Nodes
                 table.AddRow(
                     itemName,
                     $"${item.creditsWorth * ((float)terminal.itemSalesPercentages[index] / 100f)}",
-                    $"{(howManyOnShip == 0 ? "" : howManyOnShip.ToString())}"
+                    $"{(howManyOnShip == 0 ? "" : $"{howManyOnShip.ToString("D2")} owned")}"
                 // $"{(terminal.itemSalesPercentages[index] != 100 ? 100 - terminal.itemSalesPercentages[index] : "")}"
                 );
 
