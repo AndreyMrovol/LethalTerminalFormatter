@@ -22,6 +22,7 @@ namespace TerminalFormatter
 
         public static ConfigEntry<bool> UseShortenedWeathers { get; private set; }
         public static ConfigEntry<bool> AlwaysDisplayHiddenMoons { get; private set; }
+        public static ConfigEntry<bool> ShowNumberedPlanetNames { get; private set; }
 
         public static ConfigEntry<bool> ShowDecorations { get; private set; }
         public static ConfigEntry<bool> ShowHelpText { get; private set; }
@@ -53,6 +54,13 @@ namespace TerminalFormatter
                 "Use Shortened Weathers",
                 false,
                 "Use shortened weathers in moons catalogue"
+            );
+
+            ShowNumberedPlanetNames = configFile.Bind(
+                "General",
+                "Show Numbered Planet Names",
+                false,
+                "Show numbered planet names in terminal"
             );
 
             AlwaysDisplayHiddenMoons = configFile.Bind(

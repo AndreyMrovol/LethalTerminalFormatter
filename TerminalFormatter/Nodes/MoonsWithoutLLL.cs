@@ -68,10 +68,12 @@ namespace TerminalFormatter.Nodes
 
                 int price = SharedMethods.GetPrice(route.Nodes.Node.itemCost);
 
+                string moonName = ConfigManager.ShowNumberedPlanetNames.Value
+                    ? level.PlanetName
+                    : MrovLib.API.SharedMethods.GetNumberlessPlanetName(level);
+
                 table.AddRow(
-                    MrovLib
-                        .API.SharedMethods.GetNumberlessPlanetName(level)
-                        .PadRight(Settings.planetNameWidth),
+                    moonName,
                     $"${price}",
                     SharedMethods.GetWeather(level).PadRight(Settings.planetWeatherWidth)
                 );
