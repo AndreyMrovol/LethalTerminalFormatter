@@ -73,7 +73,7 @@ namespace TerminalFormatter
             ShowDecorations = configFile.Bind(
                 "General",
                 "Show Decorations",
-                true,
+                false,
                 "Show decorations in terminal"
             );
 
