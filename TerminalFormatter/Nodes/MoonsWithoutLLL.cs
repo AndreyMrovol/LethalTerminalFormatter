@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using HarmonyLib;
 using UnityEngine;
 
@@ -9,7 +10,11 @@ namespace TerminalFormatter.Nodes
     public class MoonsNoLLL : TerminalFormatterNode
     {
         public MoonsNoLLL()
-            : base("Moons", ["MoonsCatalogue"]) { }
+            : base("Moons", ["MoonsCatalogue"])
+        {
+            this.AdditionalInfo =
+                " Welcome to the exomoons catalogue! \n Use ROUTE to set the autopilot. \n Use INFO to learn about a moon.";
+        }
 
         public override bool IsNodeValid(TerminalNode node, Terminal terminal)
         {
@@ -21,15 +26,17 @@ namespace TerminalFormatter.Nodes
             Plugin.logger.LogDebug("Patching MoonsCatalogue");
 
             var table = new ConsoleTables.ConsoleTable(
-                "", // Name
-                "", // Price
-                "" // Weather
+                "Name", // Name
+                "Price", // Price
+                "Weather" // Weather
             );
 
             var adjustedTable = new StringBuilder();
 
             string headerName = "MOONS CATALOGUE";
             string moonsHeader = new Header().CreateNumberedHeader(headerName, 2);
+
+            bool decor = ConfigManager.ShowDecorations.Value;
 
             List<TerminalFormatter.Route> routes = Variables
                 .Routes.Where(keyval => keyval.Nodes.Node != null)
@@ -43,6 +50,11 @@ namespace TerminalFormatter.Nodes
                 .ToList();
 
             int itemCount = 1;
+
+            if (decor)
+            {
+                table.AddRow("", "", "");
+            }
 
             foreach (TerminalFormatter.Route route in routes)
             {
@@ -72,6 +84,11 @@ namespace TerminalFormatter.Nodes
                     ? level.PlanetName
                     : MrovLib.API.SharedMethods.GetNumberlessPlanetName(level);
 
+                if (decor)
+                {
+                    moonName = $"* {moonName}";
+                }
+
                 table.AddRow(
                     moonName,
                     $"${price}",
@@ -90,10 +107,15 @@ namespace TerminalFormatter.Nodes
             }
 
             adjustedTable.Append(moonsHeader);
+
+            adjustedTable.Append(this.AdditionalInfo != null ? $"{this.AdditionalInfo}\n\n" : "");
+
             adjustedTable.Append(
-                $" The Company // Buying at {Mathf.RoundToInt(StartOfRound.Instance.companyBuyingRate * 100f)}% \n\n"
+                $" The Company is buying at {Mathf.RoundToInt(StartOfRound.Instance.companyBuyingRate * 100f)}%. \n\n"
             );
-            adjustedTable.Append(table.ToStringCustomDecoration());
+
+            adjustedTable.Append(table.ToStringCustomDecoration(header: true));
+
             return adjustedTable.ToString();
         }
     }
