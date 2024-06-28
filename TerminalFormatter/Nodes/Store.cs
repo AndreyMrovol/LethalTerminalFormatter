@@ -13,7 +13,7 @@ namespace TerminalFormatter.Nodes
             : base("Store", ["0_StoreHub"])
         {
             this.AdditionalInfo =
-                "Welcome to the Company store. Use words BUY and INFO on any item. Order items in bulk by typing a number.";
+                " Welcome to the Company store. \n Use words BUY and INFO on any item. \n Order items in bulk by typing a number.";
         }
 
         public override bool IsNodeValid(TerminalNode node, Terminal terminal)
