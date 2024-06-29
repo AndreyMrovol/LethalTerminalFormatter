@@ -31,6 +31,8 @@ namespace TerminalFormatter
         public static ConfigEntry<string> LastUsedFilter { get; private set; }
         public static ConfigEntry<string> LastUsedSort { get; private set; }
 
+        public static ConfigEntry<int> LinesToScroll { get; private set; }
+
         private ConfigManager(ConfigFile config)
         {
             configFile = config;
@@ -110,6 +112,13 @@ namespace TerminalFormatter
                 "Last Used Sort",
                 "Price",
                 "Last used sort setting"
+            );
+
+            LinesToScroll = configFile.Bind(
+                "Scrolling",
+                "Lines to Scroll",
+                20,
+                "Number of lines to scroll per mouse wheel tick"
             );
         }
     }
