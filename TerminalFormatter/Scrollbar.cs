@@ -57,8 +57,6 @@ namespace TerminalFormatter.Patches
         /// <param name="scrollDirection">Direction to move the scrollbar, determined by the mouse wheel input.</param>
         private static void ScrollMouse_performed(Scrollbar scrollbar, float scrollDirection)
         {
-            Plugin.logger.LogFatal("ScrollMouse_performed called");
-
             // Check if text currently shown in the terminal has changed, to avoid calculating the scroll amount more than once.
             if (string.CompareOrdinal(Variables.Terminal.currentText, CurrentText) != 0)
             {
