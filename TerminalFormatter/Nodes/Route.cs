@@ -24,19 +24,12 @@ namespace TerminalFormatter.Nodes
         {
             TerminalFormatter.Route resolvedRoute = ResolveNodeIntoRoute(node);
 
-            if (resolvedRoute != null)
-            {
-                Plugin.logger.LogWarning($"Resolved Item: {resolvedRoute.Level.PlanetName}");
-            }
-
             return resolvedRoute != null;
         }
 
         public override string GetNodeText(TerminalNode node, Terminal terminal)
         {
             var table = new ConsoleTables.ConsoleTable("Title", "Things");
-
-            Plugin.logger.LogInfo("Creating route table");
 
             TerminalFormatter.Route resolvedRoute = ResolveNodeIntoRoute(node);
 

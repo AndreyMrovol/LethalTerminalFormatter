@@ -22,8 +22,6 @@ namespace TerminalFormatter
             Terminal __instance
         )
         {
-            Plugin.logger.LogDebug(node.name);
-
             string newDisplayText = null;
 
             // check if node.name contains any of TerminalFormatterNode.terminalNode strings
@@ -35,7 +33,7 @@ namespace TerminalFormatter
 
             if (possibleNodes != null)
             {
-                Plugin.logger.LogWarning($"Possible nodes count: {possibleNodes.Count}");
+                // Plugin.logger.LogDebug($"Possible nodes count: {possibleNodes.Count}");
             }
 
             for (int i = 0; i < possibleNodes.Count; i++)
@@ -56,8 +54,6 @@ namespace TerminalFormatter
                         Plugin.logger.LogDebug($"Node {currentNode.name} is not enabled");
                         continue;
                     }
-
-                    Plugin.logger.LogWarning($"Found node: {currentNode.name}");
 
                     newDisplayText = currentNode.GetNodeText(node, __instance);
                 }
@@ -80,7 +76,8 @@ namespace TerminalFormatter
                 builder.Append(newDisplayText);
                 builder.Append($"\n{new string('-', Settings.dividerLength)}\n");
 
-                Plugin.logger.LogMessage("New display text:\n" + newDisplayText);
+                // TODO replace all the logger shit with the MrovLib future abstracted solution
+                // Plugin.logger.LogMessage("New display text:\n" + newDisplayText);
 
                 __instance.screenText.text = builder.ToString();
                 __instance.currentText = builder.ToString();
@@ -97,7 +94,6 @@ namespace TerminalFormatter
         [HarmonyPriority(Priority.HigherThanNormal)]
         public static bool CheckIfLocked(Terminal __instance, TerminalNode node)
         {
-            Plugin.logger.LogDebug($"Checking if route {node.name} is locked");
             lastNode = node;
 
             if (!MrovLib.Plugin.LLL.IsModPresent)
@@ -126,10 +122,6 @@ namespace TerminalFormatter
                 return true;
             }
 
-            Plugin.logger.LogWarning(level);
-
-            Plugin.logger.LogWarning(level.Level.PlanetName);
-
             if (level.Level == null)
             {
                 return true;
@@ -139,7 +131,7 @@ namespace TerminalFormatter
 
             if (isLocked)
             {
-                Plugin.logger.LogWarning("Node is locked!!");
+                Plugin.logger.LogInfo("Node is locked!!");
 
                 __instance.LoadNewNode(Plugin.LockedNode);
 
@@ -170,8 +162,6 @@ namespace TerminalFormatter
                 ACCompatibility.Refresh();
             }
 
-            Plugin.logger.LogDebug("First use: " + Settings.firstUse);
-
             if (Settings.firstUse && Variables.ISLLLActive)
             {
                 LLLCompatibility.Init();
@@ -191,6 +181,8 @@ namespace TerminalFormatter
             Plugin.logger.LogDebug("Terminal Start");
             Variables.Terminal = __instance;
 
+            // TODO replace all the logger shit with the MrovLib future abstracted solution
+
             // if (Settings.firstUse)
             // {
             //     Plugin.logger.LogDebug("First use: " + Settings.firstUse);
@@ -198,7 +190,7 @@ namespace TerminalFormatter
             // }
 
             List<TerminalNode> Nodes = Resources.FindObjectsOfTypeAll<TerminalNode>().ToList();
-            Plugin.logger.LogWarning($"Nodes count: {Nodes.Count}");
+            // Plugin.logger.LogWarning($"Nodes count: {Nodes.Count}");
             Variables.Nodes = Nodes;
 
             List<SelectableLevel> levels = MrovLib.API.SharedMethods.GetGameLevels();
@@ -207,7 +199,7 @@ namespace TerminalFormatter
             {
                 SelectableLevel level = levels[i];
 
-                Plugin.logger.LogDebug($"Level: {level.PlanetName}");
+                // Plugin.logger.LogDebug($"Level: {level.PlanetName}");
 
                 List<TerminalNode> possibleNodes = Nodes
                     .Where(x => x.buyRerouteToMoon == i || x.displayPlanetInfo == i)
@@ -223,11 +215,11 @@ namespace TerminalFormatter
                     possibleNodes.RemoveAll(node => !LLLNodes.Contains(node));
                 }
 
-                Plugin.logger.LogDebug($"Possible nodes count: {possibleNodes.Count}");
+                // Plugin.logger.LogDebug($"Possible nodes count: {possibleNodes.Count}");
 
                 for (int j = 0; j < possibleNodes.Count; j++)
                 {
-                    Plugin.logger.LogDebug($"Node: {possibleNodes[j]}");
+                    // Plugin.logger.LogDebug($"Node: {possibleNodes[j]}");
 
                     if (possibleNodes[j] == null)
                     {
@@ -256,20 +248,20 @@ namespace TerminalFormatter
 
             buyableItems.ForEach(item =>
             {
-                Plugin.logger.LogDebug($"Item: {item.itemName}");
+                // Plugin.logger.LogDebug($"Item: {item.itemName}");
 
-                Plugin.logger.LogDebug($"Item index: {buyableItems.IndexOf(item)}");
-                Plugin.logger.LogDebug($"Is terminal null: {__instance == null}");
+                // Plugin.logger.LogDebug($"Item index: {buyableItems.IndexOf(item)}");
+                // Plugin.logger.LogDebug($"Is terminal null: {__instance == null}");
 
                 List<TerminalNode> possibleNodes = Nodes
                     .Where(x => x.buyItemIndex == buyableItems.IndexOf(item))
                     .ToList();
 
-                Plugin.logger.LogDebug($"Possible nodes count: {possibleNodes.Count}");
+                // Plugin.logger.LogDebug($"Possible nodes count: {possibleNodes.Count}");
 
                 for (int i = 0; i < possibleNodes.Count; i++)
                 {
-                    Plugin.logger.LogDebug($"Node: {possibleNodes[i]}");
+                    // Plugin.logger.LogDebug($"Node: {possibleNodes[i]}");
 
                     if (possibleNodes[i] == null)
                     {
@@ -306,7 +298,7 @@ namespace TerminalFormatter
             {
                 UnlockableItem unlockable = unlockables[i];
 
-                Plugin.logger.LogDebug($"Unlockable: {unlockable.unlockableName}");
+                // Plugin.logger.LogDebug($"Unlockable: {unlockable.unlockableName}");
 
                 if (unlockable.suitMaterial != null)
                 {
@@ -320,7 +312,7 @@ namespace TerminalFormatter
 
                 if (CheckPossibleNodeNull(possibleNodes))
                 {
-                    Plugin.logger.LogDebug("Possible nodes are null");
+                    // Plugin.logger.LogDebug("Possible nodes are null");
                     continue;
                 }
 
@@ -345,12 +337,12 @@ namespace TerminalFormatter
 
                 if (unlockable.unlockableType == 1 && unlockable.alwaysInStock == true)
                 {
-                    Plugin.logger.LogDebug($"Unlockable, id{unlockables.IndexOf(unlockable)}");
+                    // Plugin.logger.LogDebug($"Unlockable, id{unlockables.IndexOf(unlockable)}");
                     Variables.Buyables.Add(new BuyableUnlockable(__instance, relatedNodes));
                 }
                 else
                 {
-                    Plugin.logger.LogDebug($"Decoration, id{unlockables.IndexOf(unlockable)}");
+                    // Plugin.logger.LogDebug($"Decoration, id{unlockables.IndexOf(unlockable)}");
                     Variables.Buyables.Add(new BuyableDecoration(__instance, relatedNodes));
                 }
             }
@@ -362,7 +354,7 @@ namespace TerminalFormatter
 
             for (int j = 0; j < possibleNodes.Count; j++)
             {
-                Plugin.logger.LogDebug($"Node: {possibleNodes[j]}");
+                // Plugin.logger.LogDebug($"Node: {possibleNodes[j]}");
 
                 // somehow call continue on the upper loop
 
@@ -376,9 +368,9 @@ namespace TerminalFormatter
                     continue;
                 }
 
-                Plugin.logger.LogDebug(
-                    $"Is null: {possibleNodes[j] == null}; {possibleNodes[j].itemCost <= 0}"
-                );
+                // Plugin.logger.LogDebug(
+                //     $"Is null: {possibleNodes[j] == null}; {possibleNodes[j].itemCost <= 0}"
+                // );
 
                 Nodes.Add(possibleNodes[j]);
             }

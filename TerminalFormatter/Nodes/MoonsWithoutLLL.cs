@@ -23,8 +23,6 @@ namespace TerminalFormatter.Nodes
 
         public override string GetNodeText(TerminalNode node, Terminal terminal)
         {
-            Plugin.logger.LogDebug("Patching MoonsCatalogue");
-
             var table = new ConsoleTables.ConsoleTable(
                 "Name", // Name
                 "Price", // Price

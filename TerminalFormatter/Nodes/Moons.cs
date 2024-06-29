@@ -27,8 +27,6 @@ namespace TerminalFormatter.Nodes
 
         public override string GetNodeText(TerminalNode node, Terminal terminal)
         {
-            Plugin.logger.LogDebug("Patching MoonsCatalogue");
-
             string currentTagFilter = "";
 
             bool decor = ConfigManager.ShowDecorations.Value;
@@ -135,20 +133,6 @@ namespace TerminalFormatter.Nodes
             ConfigManager.LastUsedPreview.Value =
                 LethalLevelLoader.Settings.levelPreviewInfoType.ToString();
 
-            Plugin.logger.LogInfo(
-                $"LLL preview type set to {LethalLevelLoader.Settings.levelPreviewInfoType}"
-            );
-
-            Plugin.logger.LogInfo(
-                $"LLL filter type set to {LethalLevelLoader.Settings.levelPreviewFilterType}"
-            );
-
-            Plugin.logger.LogInfo(
-                $"LLL sort type set to {LethalLevelLoader.Settings.levelPreviewSortType}"
-            );
-
-            Plugin.logger.LogDebug("MoonsCataloguePage: " + moonCatalogue);
-
             List<ExtendedLevel> extendedLevelsList = [];
 
             foreach (
@@ -176,7 +160,6 @@ namespace TerminalFormatter.Nodes
             foreach (ExtendedLevel extendedLevel in extendedLevelsList)
             {
                 string planetName = extendedLevel.NumberlessPlanetName;
-                Plugin.logger.LogDebug($"Planet: {planetName}");
 
                 if (ConfigManager.ShowNumberedPlanetNames.Value)
                 {
@@ -187,8 +170,6 @@ namespace TerminalFormatter.Nodes
                 {
                     planetName = $"* {planetName}";
                 }
-
-                Plugin.logger.LogDebug($"Planet: {planetName}");
 
                 bool showDifficulty =
                     (
@@ -252,8 +233,6 @@ namespace TerminalFormatter.Nodes
 
                 tableInConsole.AddRow(planetName, price, weather, difficulty);
 
-                Plugin.logger.LogDebug($"{itemCount}");
-
                 if (LethalLevelLoader.Settings.moonsCatalogueSplitCount != 0)
                 {
                     if (itemCount % LethalLevelLoader.Settings.moonsCatalogueSplitCount == 0)
@@ -291,6 +270,8 @@ namespace TerminalFormatter.Nodes
             adjustedTable.Append(tableString);
 
             string finalString = adjustedTable.ToString().TrimEnd();
+
+            // TODO replace all the logger shit with the MrovLib future abstracted solution
             Plugin.logger.LogDebug("All strings:\n" + tableInConsole.ToMinimalString());
 
             return finalString;

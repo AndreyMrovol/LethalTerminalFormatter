@@ -30,17 +30,6 @@ namespace TerminalFormatter.Nodes
 
             List<ExtendedLevel> levels = LethalLevelLoader.PatchedContent.ExtendedLevels;
 
-            // levels.Do(level =>
-            // {
-            //     Plugin.logger.LogWarning(level.NumberlessPlanetName);
-            //     Plugin.logger.LogWarning(node.terminalEvent.ToString().ToLower().Sanitized());
-            //     Plugin.logger.LogWarning(level.NumberlessPlanetName.ToLower().Sanitized());
-            //     Plugin.logger.LogWarning(
-            //         level.NumberlessPlanetName.ToLower().Sanitized().Replace("-", "")
-            //     );
-            //     Plugin.logger.LogDebug("---");
-            // });
-
             ExtendedLevel currentLevel = levels
                 .Where(level =>
                     node.terminalEvent.ToString()
@@ -53,8 +42,6 @@ namespace TerminalFormatter.Nodes
             Dictionary<int, string> headerInfo =
                 new() { { 1, $"PLANET: {currentLevel.NumberlessPlanetName}" }, };
             var header = new Header().CreateNumberedHeader("SIMULATING ARRIVAL", 2, headerInfo);
-
-            Plugin.logger.LogWarning("Current Level: " + currentLevel.NumberlessPlanetName);
 
             var currentPlanetDungeonFlows =
                 (List<ExtendedDungeonFlowWithRarity>)
@@ -72,10 +59,6 @@ namespace TerminalFormatter.Nodes
 
             foreach (var dungeonFlow in currentPlanetDungeonFlows)
             {
-                Plugin.logger.LogDebug(
-                    $"{dungeonFlow.extendedDungeonFlow.dungeonDisplayName} - {dungeonFlow.rarity} - {totalRarityPool}"
-                );
-
                 table.AddRow(
                     dungeonFlow.extendedDungeonFlow.dungeonDisplayName.PadRight(
                         Settings.planetNameWidth

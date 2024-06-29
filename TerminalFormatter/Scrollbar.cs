@@ -66,8 +66,6 @@ namespace TerminalFormatter.Patches
                 // Calculate relative scroll amount using the number of lines in the current terminal page.
                 int numLines = CurrentText.Count(c => c.Equals('\n')) + 1;
                 scrollAmount = ConfigManager.LinesToScroll.Value / (float)numLines;
-
-                Plugin.logger.LogDebug($"Setting terminal scroll amount to '{scrollAmount}'!");
             }
 
             // Increment terminal scrollbar value by the relative scroll amount, in the direction given by the mouse wheel input.

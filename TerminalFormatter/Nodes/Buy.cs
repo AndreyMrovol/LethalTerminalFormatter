@@ -36,9 +36,7 @@ namespace TerminalFormatter.Nodes
 
             if (resolvedItem != null)
             {
-                Plugin.logger.LogWarning(
-                    $"Resolved Item: {resolvedItem.Name}({resolvedItem.Type})"
-                );
+                Plugin.logger.LogDebug($"Resolved Item: {resolvedItem.Name}({resolvedItem.Type})");
             }
 
             return resolvedItem != null;
@@ -46,8 +44,6 @@ namespace TerminalFormatter.Nodes
 
         public override string GetNodeText(TerminalNode node, Terminal terminal)
         {
-            Plugin.logger.LogDebug("Patching BuyNode");
-
             var table = new ConsoleTables.ConsoleTable("Title", "Things");
 
             BuyableThing resolvedThing = ResolveNodeIntoBuyable(node);

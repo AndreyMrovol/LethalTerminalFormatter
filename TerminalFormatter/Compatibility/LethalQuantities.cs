@@ -41,23 +41,23 @@ namespace TerminalFormatter
                 BindingFlags.NonPublic | BindingFlags.Instance
             );
 
-            Plugin.logger.LogDebug("Got FieldInfo");
+            // Plugin.logger.LogDebug("Got FieldInfo");
 
             Dictionary<Guid, LevelPreset> presets =
                 (Dictionary<Guid, LevelPreset>)
                     presetsField.GetValue(LethalQuantities.Plugin.INSTANCE);
 
-            Plugin.logger.LogDebug("Got presets");
+            // Plugin.logger.LogDebug("Got presets");
 
             // get the LevelPreset for the level
             LevelPreset preset = presets.TryGetValue(level.getGuid(), out LevelPreset value)
                 ? value
                 : null;
 
-            Plugin.logger.LogDebug("Got preset");
+            // Plugin.logger.LogDebug("Got preset");
 
             if (preset == null)
-          {
+            {
                 return null;
             }
 

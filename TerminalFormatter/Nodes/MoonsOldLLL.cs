@@ -22,8 +22,6 @@ namespace TerminalFormatter.Nodes
 
         public override string GetNodeText(TerminalNode node, Terminal terminal)
         {
-            Plugin.logger.LogDebug("Patching MoonsCatalogue - OldLLL");
-
             LethalLevelLoader.MoonsCataloguePage moonCatalogue =
                 (LethalLevelLoader.MoonsCataloguePage)
                     MrovLib.API.SharedMethods.GetLLLMoonsCataloguePage();
@@ -74,8 +72,6 @@ namespace TerminalFormatter.Nodes
             ConfigManager.LastUsedPreview.Value =
                 LethalLevelLoader.Settings.levelPreviewInfoType.ToString();
 
-            Plugin.logger.LogDebug("MoonsCataloguePage: " + moonCatalogue);
-
             foreach (
                 LethalLevelLoader.ExtendedLevelGroup extendedLevelGroup in moonCatalogue.ExtendedLevelGroups
             )
@@ -90,7 +86,6 @@ namespace TerminalFormatter.Nodes
                     }
 
                     string planetName = extendedLevel.NumberlessPlanetName;
-                    Plugin.logger.LogDebug($"Planet: {planetName}");
 
                     bool showDifficulty =
                         (
@@ -202,7 +197,8 @@ namespace TerminalFormatter.Nodes
             adjustedTable.Append(tableString);
 
             string finalString = adjustedTable.ToString().TrimEnd();
-            Plugin.logger.LogInfo("All strings:\n" + tableInConsole.ToMinimalString());
+            // TODO replace all the logger shit with the MrovLib future abstracted solution
+            Plugin.logger.LogDebug("All strings:\n" + tableInConsole.ToMinimalString());
 
             return finalString;
         }

@@ -21,8 +21,6 @@ namespace TerminalFormatter.Nodes
 
         public override string GetNodeText(TerminalNode node, Terminal terminal)
         {
-            Plugin.logger.LogDebug("Patching ScanForItems");
-
             var adjustedTable = new StringBuilder();
             bool isShip = StartOfRound.Instance.inShipPhase;
 

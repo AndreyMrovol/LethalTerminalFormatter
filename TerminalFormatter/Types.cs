@@ -24,11 +24,13 @@ namespace TerminalFormatter
         public int Price;
         public PurchaseType Type;
 
+        // TODO replace all the logger shit with the MrovLib future abstracted solution
+
         public RelatedNodes Nodes;
 
         public BuyableThing(Terminal terminal, RelatedNodes nodes)
         {
-            Plugin.logger.LogWarning($"BuyableThing constructor: {terminal}, {nodes}");
+            // Plugin.logger.LogWarning($"BuyableThing constructor: {terminal}, {nodes}");
 
             Nodes = nodes;
         }
@@ -73,14 +75,14 @@ namespace TerminalFormatter
                 {
                     if (Variables.upgrades.ContainsKey(Unlockable.unlockableName))
                     {
-                        Plugin.logger.LogWarning(
-                            $"Unlockable {Unlockable.unlockableName} has an upgrade price of {Variables.upgrades[Unlockable.unlockableName]}"
-                        );
+                        // Plugin.logger.LogWarning(
+                        //     $"Unlockable {Unlockable.unlockableName} has an upgrade price of {Variables.upgrades[Unlockable.unlockableName]}"
+                        // );
                         price = Variables.upgrades[Unlockable.unlockableName];
                     }
                     else
                     {
-                        Plugin.logger.LogWarning(
+                        Plugin.logger.LogDebug(
                             $"Unlockable {Unlockable.unlockableName} does not have an upgrade price"
                         );
                         price = Nodes.Node.itemCost;
@@ -128,9 +130,9 @@ namespace TerminalFormatter
             Level = level;
             Nodes = nodes;
 
-            Plugin.logger.LogWarning(
-                $"Route constructor: {level}; {nodes.Node}, {nodes.NodeConfirm}"
-            );
+            // Plugin.logger.LogWarning(
+            //     $"Route constructor: {level}; {nodes.Node}, {nodes.NodeConfirm}"
+            // );
         }
     }
 }

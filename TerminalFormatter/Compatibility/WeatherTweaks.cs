@@ -18,7 +18,7 @@ namespace TerminalFormatter
 
             if (type != null)
             {
-                Plugin.logger.LogInfo($"Type {type} found");
+                // Plugin.logger.LogInfo($"Type {type} found");
 
                 GetPlanetCurrentWeather = type.GetMethod(
                     "GetPlanetCurrentWeather",
@@ -33,7 +33,7 @@ namespace TerminalFormatter
                 }
                 else
                 {
-                    Plugin.logger.LogWarning($"Method {GetPlanetCurrentWeather} not found");
+                    // Plugin.logger.LogWarning($"Method {GetPlanetCurrentWeather} not found");
 
                     // check if the method is internal static string GetPlanetCurrentWeather(SelectableLevel level)
                     // if not, log an error
@@ -49,13 +49,13 @@ namespace TerminalFormatter
                     }
                     else
                     {
-                        Plugin.logger.LogWarning($"Method {GetPlanetCurrentWeather} not found");
+                        // Plugin.logger.LogWarning($"Method {GetPlanetCurrentWeather} not found");
                     }
                 }
             }
             else
             {
-                Plugin.logger.LogDebug($"Type {nspace}.Variables not found");
+                // Plugin.logger.LogDebug($"Type {nspace}.Variables not found");
             }
         }
     }

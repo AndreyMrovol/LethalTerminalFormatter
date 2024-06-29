@@ -25,7 +25,6 @@ namespace TerminalFormatter.Nodes
         {
             var table = new ConsoleTables.ConsoleTable("Name", "Price", "Owned");
             var adjustedTable = new StringBuilder();
-            Plugin.logger.LogDebug("Patching 0_StoreHub");
 
             var ACServerConfiguration = Variables.IsACActive
                 ? ACCompatibility.ServerConfiguration.GetValue(null)
@@ -69,7 +68,6 @@ namespace TerminalFormatter.Nodes
             // [buyableItemsList]
             foreach (var item in sortedBuyableItemList)
             {
-                Plugin.logger.LogDebug($"Item: {item.itemName}");
                 var index = terminal.buyableItemsList.ToList().IndexOf(item);
                 var itemName = item.itemName;
                 int howManyOnShip = ItemsOnShip
@@ -90,19 +88,13 @@ namespace TerminalFormatter.Nodes
                 {
                     if (LethalLibCompatibility.IsLLItemDisabled(item))
                     {
-                        Plugin.logger.LogDebug($"Item {itemName} is disabled in LethalLib");
                         continue;
                     }
                 }
 
                 if (ACCompatibility.Items.ContainsKey(itemName))
                 {
-                    // Plugin.logger.LogDebug($"Item {itemName} is in AC config");
-                    if ((bool)ACCompatibility.Items[itemName])
-                    {
-                        // Plugin.logger.LogDebug($"Item {itemName} is enabled");
-                    }
-                    else
+                    if (!(bool)ACCompatibility.Items[itemName])
                     {
                         Plugin.logger.LogDebug($"Item {itemName} is disabled");
                         continue;
@@ -140,8 +132,6 @@ namespace TerminalFormatter.Nodes
                     $"{(howManyOnShip == 0 ? "" : $"×{howManyOnShip.ToString("D2")}")}"
                 // $"{(terminal.itemSalesPercentages[index] != 100 ? 100 - terminal.itemSalesPercentages[index] : "")}"
                 );
-
-                Plugin.logger.LogDebug($"{itemCount}");
 
                 if (ConfigManager.DivideShopPage.Value != 0)
                 {
@@ -193,40 +183,20 @@ namespace TerminalFormatter.Nodes
                 {
                     if (LethalLibCompatibility.IsLLUpgradeDisabled(unlockable))
                     {
-                        Plugin.logger.LogDebug(
-                            $"Upgrade {unlockable.unlockableName} is disabled in LethalLib"
-                        );
                         continue;
                     }
                 }
 
                 if (unlockableNode == null)
                 {
-                    Plugin.logger.LogDebug(
-                        $"UnlockableNode is null for {unlockable.unlockableName}"
-                    );
                     var index = StartOfRound
                         .Instance.unlockablesList.unlockables.ToList()
                         .IndexOf(unlockable);
 
-                    Plugin.logger.LogWarning(
-                        $"Trying to find unlockableNode for {unlockable.unlockableName} with index {index}"
-                    );
-
                     // get all possible TerminalNode s
                     var allNodes = GameObject.FindObjectsOfType<TerminalNode>().ToList();
-                    Plugin.logger.LogWarning($"allNodes count: {allNodes.Count}");
                     unlockableNode = allNodes.Find(x => x.shipUnlockableID == index);
-
-                    if (unlockableNode == null)
-                    {
-                        Plugin.logger.LogWarning(
-                            $"UnlockableNode is still null for {unlockable.unlockableName}"
-                        );
-                    }
                 }
-
-                // Plugin.logger.LogDebug($"{unlockable.unlockableName} isUnlocked: {isUnlocked}");
 
                 if (isUnlocked)
                     continue;
@@ -291,16 +261,10 @@ namespace TerminalFormatter.Nodes
                 {
                     if (LethalLibCompatibility.IsLLUpgradeDisabled(unlockable))
                     {
-                        Plugin.logger.LogDebug(
-                            $"Upgrade {unlockable.unlockableName} is disabled in LethalLib"
-                        );
                         continue;
                     }
                 }
 
-                Plugin.logger.LogDebug(
-                    $"{decoration.creatureName} isUnlocked: {unlockable.hasBeenUnlockedByPlayer} unlockable: {unlockable}"
-                );
                 if (unlockable.hasBeenUnlockedByPlayer || unlockable.alreadyUnlocked)
                 {
                     continue;

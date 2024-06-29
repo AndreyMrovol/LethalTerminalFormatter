@@ -23,7 +23,7 @@ namespace TerminalFormatter
             if (isPreviewValueVaild)
             {
                 LethalLevelLoader.Settings.levelPreviewInfoType = result;
-                Plugin.logger.LogInfo($"LLL preview type set to {result}");
+                // Plugin.logger.LogInfo($"LLL preview type set to {result}");
             }
 
             bool isFilterValueVaild = Enum.TryParse(
@@ -33,7 +33,7 @@ namespace TerminalFormatter
             if (isFilterValueVaild)
             {
                 LethalLevelLoader.Settings.levelPreviewFilterType = resultFilter;
-                Plugin.logger.LogInfo($"LLL filter type set to {resultFilter}");
+                // Plugin.logger.LogInfo($"LLL filter type set to {resultFilter}");
             }
 
             bool isSortValueVaild = Enum.TryParse(
@@ -43,7 +43,7 @@ namespace TerminalFormatter
             if (isSortValueVaild)
             {
                 LethalLevelLoader.Settings.levelPreviewSortType = resultSort;
-                Plugin.logger.LogInfo($"LLL sort type set to {resultSort}");
+                // Plugin.logger.LogInfo($"LLL sort type set to {resultSort}");
             }
 
             Variables.ISLLLActive = true;
