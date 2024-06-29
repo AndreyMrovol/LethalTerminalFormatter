@@ -82,7 +82,7 @@ namespace TerminalFormatter
             ShowHelpText = configFile.Bind(
                 "General",
                 "Show Help Text",
-                true,
+                false,
                 "Show help text in terminal"
             );
 
@@ -115,9 +115,9 @@ namespace TerminalFormatter
             );
 
             LinesToScroll = configFile.Bind(
-                "Scrolling",
+                "General",
                 "Lines to Scroll",
-                20,
+                15,
                 "Number of lines to scroll per mouse wheel tick"
             );
         }
