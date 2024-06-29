@@ -1,6 +1,6 @@
 # TerminalFormatter
 
-changed how terminal displays thingies in store and moons
+changed how terminal displays thingies in store, moons, scan and others
 
 ![Store](https://raw.githubusercontent.com/AndreyMrovol/LethalTerminalFormatter/main/images/store.png)
 
@@ -8,6 +8,6 @@ changed how terminal displays thingies in store and moons
 
 ## Credits
 
-This mod uses [Major-Scott](https://github.com/Major-Scott)'s [terminal scrollbar logic](https://github.com/Major-Scott/TerminalPlus/blob/master/TerminalPlus/ScrollbarGarbage.cs), licensed under [MIT license](https://github.com/Major-Scott/TerminalPlus/blob/master/LICENSE).
+This mod uses [pacoito123](https://github.com/pacoito123)'s [terminal scrollbar logic](https://github.com/pacoito123/LC_StoreRotationConfig/blob/main/StoreRotationConfig/Patches/TerminalScrollMousePatch.cs), licensed under [MIT license](https://github.com/pacoito123/LC_StoreRotationConfig/blob/main/LICENSE).
 
 This project uses [LethalCompanyTemplate](https://github.com/LethalCompany/LethalCompanyTemplate), licensed under [MIT License](https://github.com/LethalCompany/LethalCompanyTemplate/blob/main/LICENSE).

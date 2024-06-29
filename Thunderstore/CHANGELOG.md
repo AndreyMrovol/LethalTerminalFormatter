@@ -1,6 +1,56 @@
+# 0.2.14
+
+- added a working scroll mechanic (thank you, pacoito123! )
+- added optional decorations to the output
+- added an option to display moon numbers
+- implemented changes proposed in [#13](https://github.com/AndreyMrovol/LethalTerminalFormatter/issues/13) and [#21](https://github.com/AndreyMrovol/LethalTerminalFormatter/issues/21)
+- fixed an issue with `new TerminalNode()` (thanks, diffoz)
+- changed some logs
+
+# 0.2.13
+
+- fixed an issue with routes showing up multiple times after reloading lobby (thanks, monty!)
+
+# 0.2.12
+
+- fixed an issue with no-LLL moon list not using LQ values (thanks, monty!)
+
+# 0.2.11
+
+- fixed an issue with latest LateGameUpgrades compatibility patch
+
+# 0.2.10
+
+- changed the displaying format of LLl's `Moons` node to avoid leaving 1-item groups
+- fixed an issue with displaying moon groups when there aren't many moons present
+- added a support for LLL's `RouteLocked` option
+
+# 0.2.9
+
+- added a warning to be displayed when filtering by TAG
+
+# 0.2.8
+
+- added `RouteAfter` node: the success screen after routing
+- changed `Route` node to use the same system as `RouteAfter`
+
+# 0.2.7
+
+- hopefully finally fixed all buynode-related issues
+- LethalQuantities risk level is now displayed correctly ([#15](https://github.com/AndreyMrovol/LethalTerminalFormatter/issues/15))
+
+# 0.2.6
+
+- fixed a missing `BuyAfter` node (thanks, [mari0no1](https://github.com/Mari0no1))
+- store's Decorations section is divided into groups (same as Items)
+
+# 0.2.5
+
+- fixed an issue with BuyableThing constructor crashing when price of modded item is 0 (thanks, [mari0no1](https://github.com/Mari0no1))
+
 # 0.2.4
 
-- fixed issues with `Buy` nodes not displaying correctly (or at all) (again)
+- fixed issues with `Buy` nodes not displaying correctly (or at all) (again) ([#12](https://github.com/AndreyMrovol/LethalTerminalFormatter/issues/12))
 - fixed vanilla scrollbar being a variable mess (thank you, [Major-Scott](https://github.com/Major-Scott/TerminalPlus))
 
 # 0.2.3
