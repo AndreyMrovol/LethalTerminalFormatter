@@ -1,13 +1,18 @@
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Linq;
+using System.Reflection.Emit;
+using GameNetcodeStuff;
 using HarmonyLib;
-using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
-using static UnityEngine.UI.ScrollRect;
+
+// https://github.com/pacoito123/LC_StoreRotationConfig/blob/main/StoreRotationConfig/Patches/TerminalScrollMousePatch.cs
+
+// i'm not sure if the original creator forgot to add their own license, that's the one in the repo:
 
 // MIT License
 
-// Copyright (c) 2024 Major-Scott
+// Copyright (c) 2023 Lethal Company Community
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -27,152 +32,98 @@ using static UnityEngine.UI.ScrollRect;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-// https://github.com/Major-Scott/TerminalPlus/blob/master/TerminalPlus/ScrollbarGarbage.cs
-
-namespace TerminalFormatter
+namespace TerminalFormatter.Patches
 {
-    class ScrollbarFix
+    /// <summary>
+    ///     Patch for 'PlayerControllerB.ScrollMouse_performed()' method; overrides vanilla scroll amount if the 'relativeScroll' setting is enabled.
+    /// </summary>
+    [HarmonyPatch(
+        typeof(PlayerControllerB),
+        "ScrollMouse_performed",
+        typeof(InputAction.CallbackContext)
+    )]
+    internal class TerminalScrollMousePatch
     {
-        public static int customSens = 136;
-        public static bool terminalKeyPressed = false;
-        public static float currentScrollPosition = 1f;
-        public static int currentStep = 0;
-        public static float stepValue = 0f;
-        public static int loopCount = 0;
-        public static List<TerminalNode> testNodes = new List<TerminalNode>();
+        // Text shown in the current terminal page, to determine if scroll amount needs to be updated.
+        public static string CurrentText { get; internal set; } = "";
 
-        public static float timeSinceSubmit = 0f;
+        // Amount to add/subtract from the terminal scrollbar, relative to the number of lines in the current terminal page.
+        private static float scrollAmount = 1 / 3f;
 
-        [HarmonyPatch(typeof(Terminal))]
-        [HarmonyPatch("OnSubmit")]
-        [HarmonyPostfix]
-        [HarmonyPriority(Priority.Last)]
-        public static void NodeConsoleInfo(Terminal __instance)
+        /// <summary>
+        ///     Handles mouse scrolling while the terminal is open.
+        /// </summary>
+        /// <param name="scrollbar">Scrollbar instance used by the terminal.</param>
+        /// <param name="scrollDirection">Direction to move the scrollbar, determined by the mouse wheel input.</param>
+        private static void ScrollMouse_performed(Scrollbar scrollbar, float scrollDirection)
         {
-            timeSinceSubmit = 0f;
-            __instance.scrollBarVertical.value = 1f;
+            Plugin.logger.LogFatal("ScrollMouse_performed called");
 
-            //if (__instance.currentNode != null)
-            //{
-            //    mls.LogWarning("CURRENT NODE: " + __instance.currentNode);
-            //    mls.LogWarning("CURRENT NAME: " + __instance.currentNode.name);
-            //    mls.LogMessage("NODE CNAME: " + __instance.currentNode.creatureName);
-            //    mls.LogMessage("  NODE CID: " + __instance.currentNode.creatureFileID);
-            //    if (__instance.currentNode.displayVideo != null) mls.LogMessage("NODE VIDEO: " + __instance.currentNode.displayVideo.name);
-            //}
-        }
-
-        //----------------------------------------------------------------------------
-
-        [HarmonyPatch(typeof(Scrollbar), "Set")]
-        [HarmonyPostfix]
-        public static void Ssdfdwesasd(float input, bool sendCallback)
-        {
-            if (Variables.Terminal != null && Variables.Terminal.terminalInUse)
+            // Check if text currently shown in the terminal has changed, to avoid calculating the scroll amount more than once.
+            if (string.CompareOrdinal(Variables.Terminal.currentText, CurrentText) != 0)
             {
-                StackTrace stackTrace = new StackTrace();
+                // Cache text currently shown in the terminal.
+                CurrentText = Variables.Terminal.currentText;
 
-                if (stackTrace.GetFrame(3).GetMethod().Name == "MoveNext")
-                    loopCount++;
-                else if (loopCount >= 4)
-                    loopCount = 0;
+                // Calculate relative scroll amount using the number of lines in the current terminal page.
+                int numLines = CurrentText.Count(c => c.Equals('\n')) + 1;
+                scrollAmount = ConfigManager.LinesToScroll.Value / (float)numLines;
+
+                Plugin.logger.LogDebug($"Setting terminal scroll amount to '{scrollAmount}'!");
             }
+
+            // Increment terminal scrollbar value by the relative scroll amount, in the direction given by the mouse wheel input.
+            scrollbar.value += scrollDirection * scrollAmount;
         }
 
-        // ----------------------------------------------------------------------------
-
-        [HarmonyPatch(typeof(Terminal), "Update")]
-        [HarmonyPostfix]
-        public static void TUPatch(ref float ___timeSinceLastKeyboardPress, Terminal __instance)
-        {
-            if (__instance.terminalInUse)
-            {
-                __instance.scrollBarCanvasGroup.alpha = 1;
-                terminalKeyPressed = ___timeSinceLastKeyboardPress < 0.08;
-                if (timeSinceSubmit < 0.07)
-                    __instance.scrollBarVertical.value = 1f;
-            }
-            timeSinceSubmit += Time.deltaTime;
-        }
-
-        [HarmonyPatch(typeof(Terminal), "QuitTerminal")]
-        [HarmonyPostfix]
-        public static void QTPatch(Terminal __instance)
-        {
-            __instance.scrollBarVertical.value = currentScrollPosition = 1f;
-        }
-
-        [HarmonyPatch(typeof(Terminal), "BeginUsingTerminal")]
-        [HarmonyPrefix]
-        public static void ResetSubmitPatch()
-        {
-            timeSinceSubmit = 0f;
-        }
-
-        // ----------------------------------------------------------------------------
-
-        [HarmonyPatch(typeof(ScrollRect), "UpdateScrollbars")]
-        [HarmonyPostfix]
-        public static void ScrollTest(
-            Vector2 offset,
-            ref Bounds ___m_ContentBounds,
-            ref Bounds ___m_ViewBounds,
-            ref RectTransform ___m_Content,
-            ref Vector2 ___m_PrevPosition,
-            ScrollRect __instance
+        /// <summary>
+        ///     Inserts a call to 'TerminalScrollMousePatch.ScrollMouse_performed()', followed by a return instruction.
+        /// </summary>
+        ///     ... (GameNetcodeStuff.PlayerControllerB:1263)
+        ///     float num = context.ReadValue();
+        ///
+        ///     -> StoreRotationConfig.Patches.TerminalScrollMousePatch.ScrollMouse_performed(this.terminalScrollVertical, num);
+        ///     -> return;
+        ///
+        ///     this.terminalScrollVertical.value += num / 3f;
+        /// <param name="instructions">Iterator with original IL instructions.</param>
+        /// <returns>Iterator with modified IL instructions.</returns>
+        private static IEnumerable<CodeInstruction> Transpiler(
+            IEnumerable<CodeInstruction> instructions
         )
         {
-            if (Variables.Terminal != null && Variables.Terminal.terminalInUse)
-            {
-                __instance.verticalScrollbarVisibility =
-                    ScrollbarVisibility.AutoHideAndExpandViewport;
-
-                float scrollbarSize = ___m_ContentBounds.size.y - ___m_ViewBounds.size.y;
-
-                int totalSteps =
-                    customSens != 0 && Mathf.RoundToInt(scrollbarSize / Mathf.Abs(customSens)) > 1
-                        ? Mathf.CeilToInt(scrollbarSize / Mathf.Abs(customSens))
-                        : 1;
-
-                if (scrollbarSize < 200f && scrollbarSize > 0f)
-                    totalSteps = Mathf.CeilToInt(scrollbarSize / 65);
-                else if (totalSteps <= 1 && scrollbarSize > 0f)
-                    totalSteps = 2;
-                if (totalSteps < 1)
-                    totalSteps = 1;
-
-                if (
-                    ___m_PrevPosition != null
-                    && Mathf.RoundToInt(___m_PrevPosition.y)
-                        != Mathf.RoundToInt(___m_Content.anchoredPosition.y)
+            return new CodeMatcher(instructions)
+                .MatchForward(
+                    false,
+                    new(OpCodes.Ldarg_0),
+                    new(
+                        OpCodes.Ldfld,
+                        AccessTools.Field(
+                            typeof(PlayerControllerB),
+                            nameof(PlayerControllerB.terminalScrollVertical)
+                        )
+                    )
                 )
-                {
-                    if ((___m_Content.anchoredPosition.y - ___m_PrevPosition.y) > 0)
-                        currentStep++;
-                    else if ((___m_Content.anchoredPosition.y - ___m_PrevPosition.y) < 0)
-                        currentStep--;
-                }
-
-                Mathf.Clamp(currentStep, 0, totalSteps);
-
-                if (timeSinceSubmit <= 0.08f || loopCount > 0)
-                {
-                    currentScrollPosition = 1f;
-                    currentStep = loopCount = 0;
-                    ___m_Content.anchoredPosition = Vector2.zero;
-                }
-                else if (terminalKeyPressed)
-                {
-                    currentScrollPosition = 0f;
-                    currentStep = totalSteps;
-                }
-                else
-                {
-                    currentScrollPosition = Mathf.Clamp01(1f - ((float)currentStep / totalSteps));
-                }
-
-                __instance.verticalNormalizedPosition = currentScrollPosition;
-            }
+                .Insert(
+                    new(OpCodes.Ldarg_0),
+                    new(
+                        OpCodes.Ldfld,
+                        AccessTools.Field(
+                            typeof(PlayerControllerB),
+                            nameof(PlayerControllerB.terminalScrollVertical)
+                        )
+                    ),
+                    new(OpCodes.Ldloc_0),
+                    new(
+                        OpCodes.Call,
+                        AccessTools.Method(
+                            typeof(TerminalScrollMousePatch),
+                            nameof(ScrollMouse_performed)
+                        )
+                    ),
+                    new(OpCodes.Ret)
+                )
+                .InstructionEnumeration();
         }
     }
 }
