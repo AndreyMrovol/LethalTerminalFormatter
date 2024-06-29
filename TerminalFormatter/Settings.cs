@@ -15,6 +15,8 @@ namespace TerminalFormatter
 
         internal static readonly int itemNameWidth = terminalWidth - 9 - 10;
 
+        internal static readonly int dividerLength = 17;
+
         internal static Dictionary<string, string> WeathersShortened =
             new()
             {

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -77,7 +78,7 @@ namespace TerminalFormatter
 
                 builder.Append("\n\n");
                 builder.Append(newDisplayText);
-                builder.Append("\n--------------------\n");
+                builder.Append($"\n{new string('-', Settings.dividerLength)}\n");
 
                 Plugin.logger.LogMessage("New display text:\n" + newDisplayText);
 

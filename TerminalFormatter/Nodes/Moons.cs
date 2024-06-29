@@ -14,7 +14,11 @@ namespace TerminalFormatter.Nodes
     public class Moons : TerminalFormatterNode
     {
         public Moons()
-            : base("Moons", ["MoonsCatalogue", "preview", "sort", "filter"]) { }
+            : base("Moons", ["MoonsCatalogue", "preview", "sort", "filter"])
+        {
+            this.AdditionalInfo =
+                " Welcome to the exomoons catalogue! \n Use ROUTE to to set the autopilot route. \n Use INFO to learn about any moon.";
+        }
 
         public override bool IsNodeValid(TerminalNode node, Terminal terminal)
         {
@@ -26,6 +30,8 @@ namespace TerminalFormatter.Nodes
             Plugin.logger.LogDebug("Patching MoonsCatalogue");
 
             string currentTagFilter = "";
+
+            bool decor = ConfigManager.ShowDecorations.Value;
 
             if (
                 node.name.Contains("preview")
@@ -172,6 +178,18 @@ namespace TerminalFormatter.Nodes
                 string planetName = extendedLevel.NumberlessPlanetName;
                 Plugin.logger.LogDebug($"Planet: {planetName}");
 
+                if (ConfigManager.ShowNumberedPlanetNames.Value)
+                {
+                    planetName = extendedLevel.SelectableLevel.PlanetName;
+                }
+
+                if (decor)
+                {
+                    planetName = $"* {planetName}";
+                }
+
+                Plugin.logger.LogDebug($"Planet: {planetName}");
+
                 bool showDifficulty =
                     (
                         ConfigManager.ShowDifficultyInAll.Value
@@ -253,9 +271,16 @@ namespace TerminalFormatter.Nodes
             string tableString = table.ToStringCustomDecoration();
             adjustedTable.Append(moonsHeader);
 
+            if (ConfigManager.ShowHelpText.Value)
+            {
+                adjustedTable.Append(
+                    this.AdditionalInfo != null ? $"\n{this.AdditionalInfo}\n\n" : ""
+                );
+            }
+
             adjustedTable.Append(
                 LethalLevelLoader.Settings.levelPreviewFilterType == FilterInfoType.Tag
-                    ? "If you enabled tag filtering by accident, use the <color=#0be697>filter none</color> command to disable it.\n\n"
+                    ? " If you enabled tag filtering by accident: \n Use the <color=#0be697>filter none</color> command to disable it.\n\n"
                     : ""
             );
 

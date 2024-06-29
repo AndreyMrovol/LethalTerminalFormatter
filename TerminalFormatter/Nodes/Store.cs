@@ -10,7 +10,11 @@ namespace TerminalFormatter.Nodes
     public class Store : TerminalFormatterNode
     {
         public Store()
-            : base("Store", ["0_StoreHub"]) { }
+            : base("Store", ["0_StoreHub"])
+        {
+            this.AdditionalInfo =
+                " Welcome to the Company store. \n Use words BUY and INFO on any item. \n Order items in bulk by typing a number.";
+        }
 
         public override bool IsNodeValid(TerminalNode node, Terminal terminal)
         {
@@ -19,7 +23,7 @@ namespace TerminalFormatter.Nodes
 
         public override string GetNodeText(TerminalNode node, Terminal terminal)
         {
-            var table = new ConsoleTables.ConsoleTable("Name", "Price", "# On ship");
+            var table = new ConsoleTables.ConsoleTable("Name", "Price", "Owned");
             var adjustedTable = new StringBuilder();
             Plugin.logger.LogDebug("Patching 0_StoreHub");
 
@@ -30,8 +34,10 @@ namespace TerminalFormatter.Nodes
             GameObject ship = GameObject.Find("/Environment/HangarShip");
             var ItemsOnShip = ship.GetComponentsInChildren<GrabbableObject>().ToList();
 
+            bool decor = ConfigManager.ShowDecorations.Value;
+
             string headerName = "COMPANY STORE";
-            string storeHeader = new Header().CreateHeaderWithoutLines(headerName, 4);
+            string storeHeader = new Header().CreateHeaderWithoutLines(headerName);
             // adjustedTable.Append(
             //     storeHeader
             //         .Replace("&", new string('─', terminalWidth - 6 - headerName.Length))
@@ -40,7 +46,18 @@ namespace TerminalFormatter.Nodes
 
             adjustedTable.Append(storeHeader);
 
+            if (ConfigManager.ShowHelpText.Value)
+            {
+                adjustedTable.Append(
+                    this.AdditionalInfo != null ? $"\n{this.AdditionalInfo}\n\n" : ""
+                );
+            }
+
             table.AddRow("[ITEMS]", "", "");
+            if (decor)
+            {
+                table.AddRow($"{new string('-', Settings.dividerLength)}", "", "");
+            }
 
             List<Item> sortedBuyableItemList = Variables
                 .BuyableItemList.OrderBy(x => x.itemName)
@@ -62,6 +79,11 @@ namespace TerminalFormatter.Nodes
                 if (index == -1)
                 {
                     continue;
+                }
+
+                if (decor)
+                {
+                    itemName = $"* {itemName}";
                 }
 
                 if (Plugin.isLLibPresent)
@@ -89,7 +111,7 @@ namespace TerminalFormatter.Nodes
 
                 string discountPercent =
                     terminal.itemSalesPercentages[index] != 100
-                        ? $"  -{100 - terminal.itemSalesPercentages[index]}%"
+                        ? $" {(decor ? "(" : "")}-{100 - terminal.itemSalesPercentages[index]}%{(decor ? ")" : "")}"
                         : "";
 
                 // what i want to do:
@@ -115,7 +137,7 @@ namespace TerminalFormatter.Nodes
                 table.AddRow(
                     itemName,
                     $"${item.creditsWorth * ((float)terminal.itemSalesPercentages[index] / 100f)}",
-                    $"{(howManyOnShip == 0 ? "" : howManyOnShip.ToString())}"
+                    $"{(howManyOnShip == 0 ? "" : $"×{howManyOnShip.ToString("D2")}")}"
                 // $"{(terminal.itemSalesPercentages[index] != 100 ? 100 - terminal.itemSalesPercentages[index] : "")}"
                 );
 
@@ -137,6 +159,10 @@ namespace TerminalFormatter.Nodes
 
             table.AddRow("", "", "");
             table.AddRow("[UPGRADES]", "", "");
+            if (decor)
+            {
+                table.AddRow($"{new string('-', Settings.dividerLength)}", "", "");
+            }
 
             Dictionary<string, int> upgrades =
                 new()
@@ -155,6 +181,13 @@ namespace TerminalFormatter.Nodes
             {
                 bool isUnlocked = unlockable.hasBeenUnlockedByPlayer || unlockable.alreadyUnlocked;
                 TerminalNode unlockableNode = unlockable.shopSelectionNode;
+
+                string unlockableName = unlockable.unlockableName;
+
+                if (decor)
+                {
+                    unlockableName = $"* {unlockableName}";
+                }
 
                 if (Plugin.isLLibPresent)
                 {
@@ -199,7 +232,7 @@ namespace TerminalFormatter.Nodes
                     continue;
 
                 table.AddRow(
-                    unlockable.unlockableName.PadRight(Settings.itemNameWidth),
+                    unlockableName.PadRight(Settings.itemNameWidth),
                     $"${(unlockableNode ? unlockableNode.itemCost : upgrades[unlockable.unlockableName])}",
                     ""
                 );
@@ -214,6 +247,10 @@ namespace TerminalFormatter.Nodes
                 {
                     table.AddRow("", "", "");
                     table.AddRow("[REGENERATION]", "", "");
+                    if (decor)
+                    {
+                        table.AddRow($"{new string('-', Settings.dividerLength)}", "", "");
+                    }
 
                     table.AddRow(
                         "Natural Regeneration",
@@ -225,6 +262,10 @@ namespace TerminalFormatter.Nodes
 
             table.AddRow("", "", "");
             table.AddRow("[DECORATIONS]", "", "");
+            if (decor)
+            {
+                table.AddRow($"{new string('-', Settings.dividerLength)}", "", "");
+            }
 
             // [unlockablesSelectionList]
             List<TerminalNode> DecorSelection = Variables
@@ -233,11 +274,18 @@ namespace TerminalFormatter.Nodes
 
             itemCount = 1;
 
-            foreach (var decor in DecorSelection)
+            foreach (var decoration in DecorSelection)
             {
                 UnlockableItem unlockable = StartOfRound.Instance.unlockablesList.unlockables[
-                    decor.shipUnlockableID
+                    decoration.shipUnlockableID
                 ];
+
+                string decorationName = decoration.creatureName;
+
+                if (decor)
+                {
+                    decorationName = $"* {decorationName}";
+                }
 
                 if (Plugin.isLLibPresent)
                 {
@@ -251,14 +299,14 @@ namespace TerminalFormatter.Nodes
                 }
 
                 Plugin.logger.LogDebug(
-                    $"{decor.creatureName} isUnlocked: {unlockable.hasBeenUnlockedByPlayer} unlockable: {unlockable}"
+                    $"{decoration.creatureName} isUnlocked: {unlockable.hasBeenUnlockedByPlayer} unlockable: {unlockable}"
                 );
                 if (unlockable.hasBeenUnlockedByPlayer || unlockable.alreadyUnlocked)
                 {
                     continue;
                 }
 
-                table.AddRow(decor.creatureName, $"${decor.itemCost}", "");
+                table.AddRow(decorationName, $"${decoration.itemCost}", "");
 
                 if (ConfigManager.DivideShopPage.Value != 0)
                 {

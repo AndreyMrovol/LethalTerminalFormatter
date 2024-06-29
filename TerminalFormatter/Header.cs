@@ -101,7 +101,7 @@ namespace TerminalFormatter
                 builder.Append(lines[i].Trim());
 
                 builder.Append(
-                    $"   {(replaceNumbers != null && replaceNumbers.ContainsKey(i) ? replaceNumbers[i] : "")}"
+                    $"  {(replaceNumbers != null && replaceNumbers.ContainsKey(i) ? replaceNumbers[i] : "")}"
                 );
                 builder.Append("\n");
             }

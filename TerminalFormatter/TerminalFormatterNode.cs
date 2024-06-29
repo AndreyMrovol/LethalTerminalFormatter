@@ -7,6 +7,7 @@ namespace TerminalFormatter
     public abstract class TerminalFormatterNode
     {
         public string name;
+        public string AdditionalInfo = null;
         public List<string> terminalNode;
         public ConfigEntry<bool> Enabled;
 
