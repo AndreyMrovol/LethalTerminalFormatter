@@ -37,6 +37,8 @@
         <PackageReference Include="Xilophor.LethalNetworkAPI" Version="2.1.0" />
 
         <PackageReference Include="Evaisa.LethalLib" Version="0.16.0" />
+
+        <PackageReference Include="mrov.MrovLib" Version="*-*" />
     </ItemGroup>
 
     <ItemGroup>
@@ -59,10 +61,6 @@
 
         <Reference Include="LethalQuantities" PrivateAssets="All">
             <HintPath>$(LibraryDirectory)/LethalQuantities.dll</HintPath>
-        </Reference>
-
-        <Reference Include="MrovLib" PrivateAssets="All">
-            <HintPath>$(LibraryDirectory)/MrovLib.dll</HintPath>
         </Reference>
 
         </ItemGroup>
