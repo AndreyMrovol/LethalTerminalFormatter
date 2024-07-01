@@ -57,6 +57,7 @@ namespace TerminalFormatter
                         continue;
                     }
 
+                    Plugin.logger.LogDebug($"Using node {currentNode.name}");
                     newDisplayText = currentNode.GetNodeText(node, __instance);
                 }
                 else
