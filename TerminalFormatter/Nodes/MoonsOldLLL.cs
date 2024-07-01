@@ -197,8 +197,7 @@ namespace TerminalFormatter.Nodes
             adjustedTable.Append(tableString);
 
             string finalString = adjustedTable.ToString().TrimEnd();
-            // TODO replace all the logger shit with the MrovLib future abstracted solution
-            Plugin.logger.LogDebug("All strings:\n" + tableInConsole.ToMinimalString());
+            Plugin.debugLogger.LogDebug("All strings:\n" + tableInConsole.ToMinimalString());
 
             return finalString;
         }

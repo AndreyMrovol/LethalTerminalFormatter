@@ -33,6 +33,8 @@ namespace TerminalFormatter
 
         public static ConfigEntry<int> LinesToScroll { get; private set; }
 
+        public static ConfigEntry<bool> DebugLogging { get; private set; }
+
         private ConfigManager(ConfigFile config)
         {
             configFile = config;
@@ -119,6 +121,13 @@ namespace TerminalFormatter
                 "Lines to Scroll",
                 15,
                 "Number of lines to scroll per mouse wheel tick"
+            );
+
+            DebugLogging = configFile.Bind(
+                "Logging",
+                "Debug Logging",
+                false,
+                "Enable debug logging"
             );
         }
     }

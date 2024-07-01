@@ -25,6 +25,8 @@ namespace TerminalFormatter
     public class Plugin : BaseUnityPlugin
     {
         internal static ManualLogSource logger;
+        internal static MrovLib.Logger debugLogger =
+            new(PluginInfo.PLUGIN_GUID, ConfigManager.DebugLogging);
         internal static Harmony harmony = new(PluginInfo.PLUGIN_GUID);
 
         internal static TerminalNode LockedNode;
