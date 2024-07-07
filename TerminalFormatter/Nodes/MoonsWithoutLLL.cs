@@ -42,7 +42,7 @@ namespace TerminalFormatter.Nodes
                 // order routes by Settings.MoonsOrderVanilla names
                 .OrderBy(keyval =>
                     Settings.MoonsOrderVanilla.IndexOf(
-                        MrovLib.API.SharedMethods.GetNumberlessPlanetName(keyval.Level)
+                        MrovLib.SharedMethods.GetNumberlessPlanetName(keyval.Level)
                     )
                 )
                 .ToList();
@@ -80,7 +80,7 @@ namespace TerminalFormatter.Nodes
 
                 string moonName = ConfigManager.ShowNumberedPlanetNames.Value
                     ? level.PlanetName
-                    : MrovLib.API.SharedMethods.GetNumberlessPlanetName(level);
+                    : MrovLib.SharedMethods.GetNumberlessPlanetName(level);
 
                 if (decor)
                 {

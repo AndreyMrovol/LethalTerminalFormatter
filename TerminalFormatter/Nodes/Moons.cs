@@ -90,7 +90,7 @@ namespace TerminalFormatter.Nodes
 
             LethalLevelLoader.MoonsCataloguePage moonCatalogue =
                 (LethalLevelLoader.MoonsCataloguePage)
-                    MrovLib.API.SharedMethods.GetLLLMoonsCataloguePage();
+                    MrovLib.SharedMethods.GetLLLMoonsCataloguePage();
 
             var table = new ConsoleTables.ConsoleTable(
                 "", // Name
@@ -144,7 +144,7 @@ namespace TerminalFormatter.Nodes
                 )
                 {
                     if (
-                        MrovLib.API.SharedMethods.IsMoonHiddenLLL(extendedLevel.SelectableLevel)
+                        MrovLib.SharedMethods.IsMoonHiddenLLL(extendedLevel.SelectableLevel)
                         && !ConfigManager.AlwaysDisplayHiddenMoons.Value
                     )
                     {

@@ -152,6 +152,8 @@ namespace TerminalFormatter
             Plugin.debugLogger.LogWarning(
                 $"Route constructor: {level}; {nodes.Node}, {nodes.NodeConfirm}"
             );
+
+            name = Level.PlanetName;
         }
     }
 }

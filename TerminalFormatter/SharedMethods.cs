@@ -10,7 +10,7 @@ namespace TerminalFormatter
     {
         public static string GetWeather(SelectableLevel level)
         {
-            string weather = MrovLib.API.SharedMethods.GetWeather(level);
+            string weather = MrovLib.SharedMethods.GetWeather(level);
             int weatherLength = Settings.planetWeatherWidth - 1;
             bool showDifficulty = false;
 
@@ -41,12 +41,12 @@ namespace TerminalFormatter
 
         public static string GetNumberlessPlanetName(SelectableLevel level)
         {
-            return MrovLib.API.SharedMethods.GetNumberlessPlanetName(level);
+            return MrovLib.SharedMethods.GetNumberlessPlanetName(level);
         }
 
         public static List<SelectableLevel> GetGameLevels()
         {
-            return MrovLib.API.SharedMethods.GetGameLevels();
+            return MrovLib.SharedMethods.GetGameLevels();
         }
 
         public static int GetPrice(int beforeDiscountPrice)

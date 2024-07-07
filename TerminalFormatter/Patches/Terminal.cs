@@ -129,7 +129,7 @@ namespace TerminalFormatter
                 return true;
             }
 
-            bool isLocked = MrovLib.API.SharedMethods.IsMoonLockedLLL(level.Level);
+            bool isLocked = MrovLib.SharedMethods.IsMoonLockedLLL(level.Level);
 
             if (isLocked)
             {
@@ -193,7 +193,7 @@ namespace TerminalFormatter
             // logger.LogWarning($"Nodes count: {Nodes.Count}");
             Variables.Nodes = Nodes;
 
-            List<SelectableLevel> levels = MrovLib.API.SharedMethods.GetGameLevels();
+            List<SelectableLevel> levels = MrovLib.SharedMethods.GetGameLevels();
 
             for (int i = 0; i < levels.Count; i++)
             {
@@ -208,7 +208,7 @@ namespace TerminalFormatter
 
                 if (MrovLib.Plugin.LLL.IsModPresent && possibleNodes.Count > 2)
                 {
-                    List<TerminalNode> LLLNodes = MrovLib.API.SharedMethods.GetLevelTerminalNodes(
+                    List<TerminalNode> LLLNodes = MrovLib.SharedMethods.GetLevelTerminalNodes(
                         level
                     );
 
