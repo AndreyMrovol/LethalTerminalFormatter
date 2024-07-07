@@ -149,6 +149,7 @@ namespace TerminalFormatter.Nodes
 
             table.AddRow("", "", "");
             table.AddRow("[UPGRADES]", "", "");
+            itemCount = 1;
             if (decor)
             {
                 table.AddRow($"{new string('-', Settings.dividerLength)}", "", "");
@@ -206,6 +207,19 @@ namespace TerminalFormatter.Nodes
                     $"${(unlockableNode ? unlockableNode.itemCost : upgrades[unlockable.unlockableName])}",
                     ""
                 );
+
+                if (ConfigManager.DivideShopPage.Value != 0)
+                {
+                    if (itemCount % ConfigManager.DivideShopPage.Value == 0)
+                    {
+                        itemCount = 1;
+                        table.AddRow("", "", "");
+                    }
+                    else
+                    {
+                        itemCount++;
+                    }
+                }
             }
 
             if (Plugin.isLRegenPresent)
@@ -227,6 +241,44 @@ namespace TerminalFormatter.Nodes
                         $"${LethalRegenCompatibility.GetCost()}",
                         ""
                     );
+                }
+            }
+
+            table.AddRow("", "", "");
+            table.AddRow("[VEHICLES]", "", "");
+            itemCount = 1;
+            if (decor)
+            {
+                table.AddRow($"{new string('-', Settings.dividerLength)}", "", "");
+            }
+
+            List<BuyableVehicle> sortedBuyableVehicleList = Variables
+                .Vehicles.OrderBy(x => x.Name)
+                .Select(x => x.Vehicle)
+                .ToList();
+
+            foreach (var vehicle in sortedBuyableVehicleList)
+            {
+                string vehicleName = vehicle.vehicleDisplayName;
+
+                if (decor)
+                {
+                    vehicleName = $"* {vehicleName}";
+                }
+
+                table.AddRow(vehicleName, $"${vehicle.creditsWorth}", "");
+
+                if (ConfigManager.DivideShopPage.Value != 0)
+                {
+                    if (itemCount % ConfigManager.DivideShopPage.Value == 0)
+                    {
+                        itemCount = 1;
+                        table.AddRow("", "", "");
+                    }
+                    else
+                    {
+                        itemCount++;
+                    }
                 }
             }
 

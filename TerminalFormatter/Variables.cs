@@ -12,6 +12,7 @@ namespace TerminalFormatter
 
         public static List<BuyableThing> Buyables = [];
         public static List<Route> Routes = [];
+        public static List<BuyableCar> Vehicles = [];
 
         public static Terminal Terminal;
 

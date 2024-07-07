@@ -8,6 +8,7 @@ namespace TerminalFormatter
         Item,
         Unlockable,
         Decoration,
+        Vehicle,
         Moon
     }
 
@@ -119,6 +120,26 @@ namespace TerminalFormatter
     }
 
     public class Route
+
+    public class BuyableCar : BuyableThing
+    {
+        public BuyableVehicle Vehicle;
+
+        public BuyableCar(Terminal terminal, RelatedNodes nodes)
+            : base(terminal, nodes)
+        {
+            Type = PurchaseType.Vehicle;
+
+            Vehicle = Variables.Terminal.buyableVehicles[nodes.Node.buyVehicleIndex];
+            Price = Vehicle.creditsWorth;
+            Name = Vehicle.vehicleDisplayName;
+            name = Name;
+
+            Variables.Vehicles.Add(this);
+        }
+    }
+
+    public class Route : ScriptableObject
     {
         public SelectableLevel Level;
         public RelatedNodes Nodes;

@@ -346,6 +346,47 @@ namespace TerminalFormatter
                     Variables.Buyables.Add(new BuyableDecoration(__instance, relatedNodes));
                 }
             }
+
+            List<BuyableVehicle> buyableVehicles = __instance.buyableVehicles.ToList();
+
+            for (int i = 0; i < buyableVehicles.Count; i++)
+            {
+                BuyableVehicle vehicle = buyableVehicles[i];
+
+                logger.LogDebug($"Vehicle: {vehicle.vehicleDisplayName}");
+
+                List<TerminalNode> possibleNodes = Nodes
+                    .Where(x => x.buyVehicleIndex == buyableVehicles.IndexOf(vehicle))
+                    .Distinct()
+                    .ToList();
+
+                if (CheckPossibleNodeNull(possibleNodes))
+                {
+                    // logger.LogDebug("Possible nodes are null");
+                    continue;
+                }
+
+                RelatedNodes relatedNodes = new RelatedNodes
+                {
+                    Node = possibleNodes
+                        .Where(node => node.isConfirmationNode)
+                        .Distinct()
+                        .ToList()
+                        .FirstOrDefault(),
+                    NodeConfirm = possibleNodes
+                        .Where(node => !node.isConfirmationNode)
+                        .Distinct()
+                        .ToList()
+                        .LastOrDefault()
+                };
+
+                if (relatedNodes.Node == null || relatedNodes.NodeConfirm == null)
+                {
+                    continue;
+                }
+
+                Variables.Buyables.Add(new BuyableCar(__instance, relatedNodes));
+            }
         }
 
         internal static bool CheckPossibleNodeNull(List<TerminalNode> possibleNodes)
