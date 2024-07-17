@@ -28,6 +28,12 @@ namespace TerminalFormatter
                 { "Inverse Teleporter", 425 },
             };
 
-        // public static List<
+        public static void Reset()
+        {
+            Buyables.Clear();
+            Routes.Clear();
+            Nodes.Clear();
+            Vehicles.Clear();
+        }
     }
 }

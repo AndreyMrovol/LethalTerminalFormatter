@@ -181,9 +181,7 @@ namespace TerminalFormatter
         [HarmonyPatch("Start")]
         public static void StartPostfix2(Terminal __instance)
         {
-            Variables.Buyables.Clear();
-            Variables.Routes.Clear();
-            Variables.Nodes.Clear();
+            Variables.Reset();
 
             logger.LogDebug("Terminal Start");
             Variables.Terminal = __instance;
