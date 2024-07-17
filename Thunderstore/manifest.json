@@ -1,7 +1,0 @@
-{
-	"name": "TerminalFormatter",
-	"version_number": "0.2.14",
-	"website_url": "https://github.com/AndreyMrovol/LethalTerminalFormatter",
-	"description": "Rework of terminal's pages.",
-	"dependencies": ["BepInEx-BepInExPack-5.4.2100", "mrov-MrovLib-0.0.10"]
-}
