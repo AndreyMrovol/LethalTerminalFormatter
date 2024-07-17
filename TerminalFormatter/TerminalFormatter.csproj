@@ -11,7 +11,8 @@
 
     <PropertyGroup>
         <GameDirectory>V:\Steam\steamapps\common\Lethal Company</GameDirectory>
-        <LibraryDirectory>V:\LC-ModLibraries</LibraryDirectory>
+        <LibraryDirectory>../lib</LibraryDirectory>
+        <DebugLibraryDirectory>V:\LC-ModLibraries</DebugLibraryDirectory>
     </PropertyGroup>
 
     <ItemGroup>
@@ -66,6 +67,52 @@
         </Reference>
 
         </ItemGroup>
+
+    <!-- Target to download dependencies -->
+    <Target Name="DownloadDependencies" Condition="'$(Configuration)'=='Release'" BeforeTargets="BeforeBuild">
+        <MakeDir Directories="$(ProjectDir)$(LibraryDirectory)" Condition="!Exists('$(ProjectDir)$(LibraryDirectory)')" />
+        <Exec Command="node $(ProjectDir)../downloader.js $(TomlFile) $(LibraryDirectory)" />
+    </Target>
+
+    <Target Name="CopyLocalDependencies" AfterTargets="DownloadDependencies" Condition="'$(Configuration)'=='Release'">
+        <!-- copy all files from ../assets/lib into ../lib -->
+
+        <ItemGroup>
+            <LibraryFiles Include="$(ProjectDir)../assets/lib/*" />
+        </ItemGroup>
+
+        <Copy SourceFiles="@(LibraryFiles)" DestinationFolder="$(LibraryDirectory)" />
+    </Target>
+
+    <PropertyGroup>
+        <PackageReference Include="MinVer" Version="4.*" PrivateAssets="all" Private="false"/>
+        <MinVerDefaultPreReleaseIdentifiers>dev</MinVerDefaultPreReleaseIdentifiers>
+        <MinVerTagPrefix>v</MinVerTagPrefix>
+    </PropertyGroup>
+
+    <!-- MinVer Set Mod Version from Git -->
+    <Target Name="SetPluginVersion" BeforeTargets="AddGeneratedFile" DependsOnTargets="MinVer">
+        <PropertyGroup>
+            <PlainVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch)</PlainVersion>
+            <BepInExPluginVersion>$(PlainVersion)</BepInExPluginVersion>
+        </PropertyGroup>
+    </Target>
+
+    <!-- save plugin name and version to text files - required by github actions -->
+    <Target Name="SaveVersionAndNameToFiles" DependsOnTargets="SetPluginVersion">
+        <WriteLinesToFile File="$(ProjectDir)dist/name.txt" Lines="$(AssemblyName)" Overwrite="true" />
+        <WriteLinesToFile File="$(ProjectDir)dist/version.txt" Lines="$(PlainVersion)" Overwrite="true" />
+    </Target>
+
+    <Target Name="PackThunderstore" DependsOnTargets="SetPluginVersion;SaveVersionAndNameToFiles" AfterTargets="PostBuildEvent" Condition="$(Configuration) == 'Release'">
+        <MakeDir Directories="$(ProjectDir)../assets/bundles" Condition="!Exists('$(ProjectDir)../assets/bundles')" />
+        
+        <Exec Command="dotnet tcli build --config-path $(ProjectDir)../assets/thunderstore.toml --package-version $(PlainVersion)" />
+        <ItemGroup>
+            <FilesToRename Include="$(ProjectDir)dist/*-$(PlainVersion).zip" />
+        </ItemGroup>
+        <Move SourceFiles="@(FilesToRename)" DestinationFiles="@(FilesToRename -&gt; Replace($(PlainVersion), $(MinVerVersion)))" />
+    </Target>
 
     <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
         <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all"/>

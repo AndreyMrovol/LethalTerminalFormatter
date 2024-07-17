@@ -1,0 +1,21 @@
+[libraries]
+
+[[library]]
+name = "LethalLevelLoader"
+url = "https://thunderstore.io/package/download/IAmBatby/LethalLevelLoader/1.2.4/"
+
+[[library]]
+name = "LethalRegeneration"
+url = "https://thunderstore.io/package/download/Toskan4134/LethalRegeneration/1.3.0/"
+
+[[library]]
+name = "MoreShipUpgrades"
+url = "https://thunderstore.io/package/download/malco/Lategame_Upgrades/3.9.4/"
+
+[[library]]
+name = "LethalQuantities"
+url = "https://thunderstore.io/package/download/BananaPuncher714/LethalQuantities/1.2.9/"
+
+[[library]]
+name = "AdvancedCompany"
+url = "https://cdn.potatoepet.de/package/download/PotatoePet/AdvancedCompany/1.1.29/Archive.zip"
