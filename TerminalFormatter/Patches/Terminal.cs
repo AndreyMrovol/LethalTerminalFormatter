@@ -96,6 +96,11 @@ namespace TerminalFormatter
         [HarmonyPriority(Priority.HigherThanNormal)]
         public static bool CheckIfLocked(Terminal __instance, TerminalNode node)
         {
+            if (node == null)
+            {
+                return true;
+            }
+
             lastNode = node;
 
             if (!MrovLib.Plugin.LLL.IsModPresent)
