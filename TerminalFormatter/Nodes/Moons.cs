@@ -272,6 +272,7 @@ namespace TerminalFormatter.Nodes
             string finalString = adjustedTable.ToString().TrimEnd();
 
             Plugin.debugLogger.LogDebug("All strings:\n" + tableInConsole.ToMinimalString());
+            Plugin.debugLogger.LogDebug("Final string:\n" + finalString);
 
             return finalString;
         }
