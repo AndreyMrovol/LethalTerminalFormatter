@@ -13,6 +13,7 @@
         <GameDirectory>V:\Steam\steamapps\common\Lethal Company</GameDirectory>
         <LibraryDirectory>../lib</LibraryDirectory>
         <DebugLibraryDirectory>V:\LC-ModLibraries</DebugLibraryDirectory>
+        <TomlFile>$(ProjectDir)../assets/libs.toml</TomlFile>
     </PropertyGroup>
 
     <ItemGroup>
@@ -41,7 +42,10 @@
 
         <PackageReference Include="Evaisa.LethalLib" Version="0.16.0" />
 
-        <PackageReference Include="mrov.MrovLib" Version="*-*" />
+        <!-- <PackageReference Include="mrov.WeatherRegistry" Version="*" /> -->
+        <PackageReference Include="mrov.MrovLib" Version="*-*" >
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
     </ItemGroup>
 
     <ItemGroup>
@@ -65,8 +69,9 @@
         <Reference Include="LethalQuantities" PrivateAssets="All">
             <HintPath>$(LibraryDirectory)/LethalQuantities.dll</HintPath>
         </Reference>
-
-        </ItemGroup>
+        
+        <PackageReference Include="MinVer" Version="4.*" PrivateAssets="all" Private="false"/>
+    </ItemGroup>
 
     <!-- Target to download dependencies -->
     <Target Name="DownloadDependencies" Condition="'$(Configuration)'=='Release'" BeforeTargets="BeforeBuild">
@@ -85,7 +90,6 @@
     </Target>
 
     <PropertyGroup>
-        <PackageReference Include="MinVer" Version="4.*" PrivateAssets="all" Private="false"/>
         <MinVerDefaultPreReleaseIdentifiers>dev</MinVerDefaultPreReleaseIdentifiers>
         <MinVerTagPrefix>v</MinVerTagPrefix>
     </PropertyGroup>
