@@ -119,7 +119,6 @@ namespace TerminalFormatter
         }
     }
 
-    public class Route
 
     public class BuyableCar : BuyableThing
     {
