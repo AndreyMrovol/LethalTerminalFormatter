@@ -73,18 +73,6 @@ namespace TerminalFormatter
                     new Nodes.RouteLocked();
                     new Nodes.Simulate();
                 }
-
-                harmony.Unpatch(
-                    typeof(Terminal).GetMethod("LoadNewNode"),
-                    HarmonyPatchType.All,
-                    "imabatby.lethallevelloader"
-                );
-
-                harmony.Unpatch(
-                    typeof(Terminal).GetMethod("RunTerminalEvents"),
-                    HarmonyPatchType.All,
-                    "imabatby.lethallevelloader"
-                );
             }
             else
             {
