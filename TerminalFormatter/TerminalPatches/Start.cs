@@ -11,189 +11,27 @@ using UnityEngine;
 namespace TerminalFormatter
 {
     [HarmonyPatch(typeof(Terminal))]
-    public class TerminalPatches
+    public partial class TerminalPatches
     {
-        private static TerminalNode lastNode;
-        private static MrovLib.Logger logger = Plugin.debugLogger;
-
-        [HarmonyPostfix]
-        [HarmonyPatch("TextPostProcess")]
-        public static void TextPostProcessPrefix(
-            string modifiedDisplayText,
-            TerminalNode node,
-            Terminal __instance
-        )
-        {
-            string newDisplayText = null;
-
-            // check if node.name contains any of TerminalFormatterNode.terminalNode strings
-            List<TerminalFormatterNode> possibleNodes = Settings
-                .RegisteredNodes.Where(formatterNode =>
-                    formatterNode.terminalNode.Any(y => node.name.Contains(y))
-                )
-                .ToList();
-
-            if (possibleNodes != null)
-            {
-                logger.LogDebug($"Possible nodes count: {possibleNodes.Count}");
-            }
-
-            for (int i = 0; i < possibleNodes.Count; i++)
-            {
-                TerminalFormatterNode currentNode = possibleNodes[i];
-
-                if (currentNode != null)
-                {
-                    bool shouldRun = currentNode.IsNodeValid(node, __instance);
-                    if (!shouldRun)
-                    {
-                        logger.LogDebug($"Node {currentNode.name} is not valid");
-                        continue;
-                    }
-
-                    if (!currentNode.Enabled.Value)
-                    {
-                        logger.LogDebug($"Node {currentNode.name} is not enabled");
-                        continue;
-                    }
-
-                    Plugin.logger.LogDebug($"Using node {currentNode.name}");
-                    newDisplayText = currentNode.GetNodeText(node, __instance);
-                }
-                else
-                {
-                    continue;
-                }
-            }
-
-            if (newDisplayText != null)
-            {
-                StringBuilder builder = new StringBuilder();
-
-                if (__instance.displayingPersistentImage)
-                {
-                    builder.Append("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-                }
-
-                builder.Append("\n\n");
-                builder.Append(newDisplayText);
-                builder.Append($"\n{new string('-', Settings.dividerLength)}\n");
-
-                logger.LogMessage("New display text:\n" + newDisplayText);
-
-                __instance.screenText.text = builder.ToString();
-                __instance.currentText = builder.ToString();
-
-                __instance.textAdded = 0;
-                Settings.firstUse = false;
-            }
-
-            return;
-        }
-
-        [HarmonyPrefix]
-        [HarmonyPatch(typeof(Terminal), "LoadNewNode")]
-        [HarmonyPriority(Priority.HigherThanNormal)]
-        public static bool CheckIfLocked(Terminal __instance, TerminalNode node)
-        {
-            if (node == null)
-            {
-                return true;
-            }
-
-            lastNode = node;
-
-            if (!MrovLib.Plugin.LLL.IsModPresent)
-            {
-                return true;
-            }
-
-            if (!node.name.ToLower().Contains("route") && !node.buyRerouteToMoon.Equals(-2))
-            {
-                return true;
-            }
-
-            if (node.name == "RouteLocked")
-            {
-                logger.LogDebug("Node is RouteLocked");
-                return true;
-            }
-
-            Route level = TerminalFormatter
-                .Variables.Routes.Where(x => x.Nodes.Node == node)
-                .FirstOrDefault();
-
-            if (level == null)
-            {
-                logger.LogDebug("Level is null");
-                return true;
-            }
-
-            if (level.Level == null)
-            {
-                return true;
-            }
-
-            bool isLocked = MrovLib.SharedMethods.IsMoonLockedLLL(level.Level);
-
-            if (isLocked)
-            {
-                logger.LogInfo("Node is locked!!");
-
-                __instance.LoadNewNode(Plugin.LockedNode);
-
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-        }
-
-        [HarmonyPostfix]
-        // [HarmonyPriority(Priority.Last)]
-        [HarmonyAfter("imabatby.lethallevelloader")]
-        [HarmonyPatch("LoadNewNode")]
-        public static void StartPostfix(Terminal __instance, ref TerminalNode node)
-        {
-            Variables.BuyableItemList = __instance.buyableItemsList.ToList();
-            Variables.UnlockableItemList = StartOfRound
-                .Instance.unlockablesList.unlockables.Where(x =>
-                    x.unlockableType == 1 && x.alwaysInStock == true
-                )
-                .ToList();
-            Variables.DecorationsList = __instance.ShipDecorSelection;
-
-            if (Variables.IsACActive)
-            {
-                ACCompatibility.Refresh();
-            }
-
-            if (Settings.firstUse && Variables.ISLLLActive)
-            {
-                LLLCompatibility.Init();
-            }
-
-            node.clearPreviousText = true;
-        }
-
         [HarmonyPostfix]
         [HarmonyPatch("Start")]
         public static void StartPostfix2(Terminal __instance)
         {
             Variables.Reset();
 
-            logger.LogDebug("Terminal Start");
+            Plugin.debugLogger.LogDebug("Terminal Start");
             Variables.Terminal = __instance;
+
+            Settings.terminalFontSize = __instance.screenText.textComponent.fontSize;
 
             // if (Settings.firstUse)
             // {
-            //     logger.LogDebug("First use: " + Settings.firstUse);
+            //     Plugin.debugLogger.LogDebug("First use: " + Settings.firstUse);
             //     Settings.firstUse = false;
             // }
 
             List<TerminalNode> Nodes = Resources.FindObjectsOfTypeAll<TerminalNode>().ToList();
-            // logger.LogWarning($"Nodes count: {Nodes.Count}");
+            // Plugin.debugLogger.LogWarning($"Nodes count: {Nodes.Count}");
             Variables.Nodes = Nodes;
 
             List<SelectableLevel> levels = MrovLib.SharedMethods.GetGameLevels();
@@ -202,7 +40,7 @@ namespace TerminalFormatter
             {
                 SelectableLevel level = levels[i];
 
-                // logger.LogDebug($"Level: {level.PlanetName}");
+                // Plugin.debugLogger.LogDebug($"Level: {level.PlanetName}");
 
                 List<TerminalNode> possibleNodes = Nodes
                     .Where(x => x.buyRerouteToMoon == i || x.displayPlanetInfo == i)
@@ -218,11 +56,11 @@ namespace TerminalFormatter
                     possibleNodes.RemoveAll(node => !LLLNodes.Contains(node));
                 }
 
-                // logger.LogDebug($"Possible nodes count: {possibleNodes.Count}");
+                // Plugin.debugLogger.LogDebug($"Possible nodes count: {possibleNodes.Count}");
 
                 for (int j = 0; j < possibleNodes.Count; j++)
                 {
-                    logger.LogDebug($"Node: {possibleNodes[j]}");
+                    Plugin.debugLogger.LogDebug($"Node: {possibleNodes[j]}");
 
                     if (possibleNodes[j] == null)
                     {
@@ -251,20 +89,20 @@ namespace TerminalFormatter
 
             buyableItems.ForEach(item =>
             {
-                logger.LogDebug($"Item: {item.itemName}");
+                Plugin.debugLogger.LogDebug($"Item: {item.itemName}");
 
-                // logger.LogDebug($"Item index: {buyableItems.IndexOf(item)}");
-                // logger.LogDebug($"Is terminal null: {__instance == null}");
+                // Plugin.debugLogger.LogDebug($"Item index: {buyableItems.IndexOf(item)}");
+                // Plugin.debugLogger.LogDebug($"Is terminal null: {__instance == null}");
 
                 List<TerminalNode> possibleNodes = Nodes
                     .Where(x => x.buyItemIndex == buyableItems.IndexOf(item))
                     .ToList();
 
-                // logger.LogDebug($"Possible nodes count: {possibleNodes.Count}");
+                // Plugin.debugLogger.LogDebug($"Possible nodes count: {possibleNodes.Count}");
 
                 for (int i = 0; i < possibleNodes.Count; i++)
                 {
-                    // logger.LogDebug($"Node: {possibleNodes[i]}");
+                    // Plugin.debugLogger.LogDebug($"Node: {possibleNodes[i]}");
 
                     if (possibleNodes[i] == null)
                     {
@@ -301,7 +139,7 @@ namespace TerminalFormatter
             {
                 UnlockableItem unlockable = unlockables[i];
 
-                logger.LogDebug($"Unlockable: {unlockable.unlockableName}");
+                Plugin.debugLogger.LogDebug($"Unlockable: {unlockable.unlockableName}");
 
                 if (unlockable.suitMaterial != null)
                 {
@@ -315,7 +153,7 @@ namespace TerminalFormatter
 
                 if (CheckPossibleNodeNull(possibleNodes))
                 {
-                    // logger.LogDebug("Possible nodes are null");
+                    // Plugin.debugLogger.LogDebug("Possible nodes are null");
                     continue;
                 }
 
@@ -340,12 +178,12 @@ namespace TerminalFormatter
 
                 if (unlockable.unlockableType == 1 && unlockable.alwaysInStock == true)
                 {
-                    // logger.LogDebug($"Unlockable, id{unlockables.IndexOf(unlockable)}");
+                    // Plugin.debugLogger.LogDebug($"Unlockable, id{unlockables.IndexOf(unlockable)}");
                     Variables.Buyables.Add(new BuyableUnlockable(__instance, relatedNodes));
                 }
                 else
                 {
-                    // logger.LogDebug($"Decoration, id{unlockables.IndexOf(unlockable)}");
+                    // Plugin.debugLogger.LogDebug($"Decoration, id{unlockables.IndexOf(unlockable)}");
                     Variables.Buyables.Add(new BuyableDecoration(__instance, relatedNodes));
                 }
             }
@@ -356,7 +194,7 @@ namespace TerminalFormatter
             {
                 BuyableVehicle vehicle = buyableVehicles[i];
 
-                logger.LogDebug($"Vehicle: {vehicle.vehicleDisplayName}");
+                Plugin.debugLogger.LogDebug($"Vehicle: {vehicle.vehicleDisplayName}");
 
                 List<TerminalNode> possibleNodes = Nodes
                     .Where(x => x.buyVehicleIndex == buyableVehicles.IndexOf(vehicle))
@@ -365,7 +203,7 @@ namespace TerminalFormatter
 
                 if (CheckPossibleNodeNull(possibleNodes))
                 {
-                    // logger.LogDebug("Possible nodes are null");
+                    // Plugin.debugLogger.LogDebug("Possible nodes are null");
                     continue;
                 }
 
@@ -398,7 +236,7 @@ namespace TerminalFormatter
 
             for (int j = 0; j < possibleNodes.Count; j++)
             {
-                logger.LogDebug($"Node: {possibleNodes[j]}");
+                Plugin.debugLogger.LogDebug($"Node: {possibleNodes[j]}");
 
                 // somehow call continue on the upper loop
 
@@ -412,7 +250,7 @@ namespace TerminalFormatter
                     continue;
                 }
 
-                // logger.LogDebug(
+                // Plugin.debugLogger.LogDebug(
                 //     $"Is null: {possibleNodes[j] == null}; {possibleNodes[j].itemCost <= 0}"
                 // );
 
