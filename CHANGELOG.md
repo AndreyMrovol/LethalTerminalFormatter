@@ -1,6 +1,7 @@
 # 0.2.21
 
 - fixed an issue where moon numbers were not the same length (thanks, autumnis)
+- added `ShowGroupDividerLines` option (thanks, testaccount666)
 
 # 0.2.20
 

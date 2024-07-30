@@ -25,6 +25,7 @@ namespace TerminalFormatter
         public static ConfigEntry<bool> ShowNumberedPlanetNames { get; private set; }
 
         public static ConfigEntry<bool> ShowDecorations { get; private set; }
+        public static ConfigEntry<bool> ShowGroupDividerLines { get; private set; }
         public static ConfigEntry<bool> ShowHelpText { get; private set; }
 
         public static ConfigEntry<string> LastUsedPreview { get; private set; }
@@ -77,6 +78,13 @@ namespace TerminalFormatter
                 "Show Decorations",
                 false,
                 "Show decorations in terminal"
+            );
+
+            ShowGroupDividerLines = configFile.Bind(
+                "General",
+                "Show Group Divider Lines",
+                false,
+                "Show group divider lines in terminal"
             );
 
             ShowHelpText = configFile.Bind(

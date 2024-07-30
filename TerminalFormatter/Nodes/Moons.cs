@@ -278,7 +278,18 @@ namespace TerminalFormatter.Nodes
                     if (itemCount % LethalLevelLoader.Settings.moonsCatalogueSplitCount == 0)
                     {
                         itemCount = 1;
-                        table.AddRow("", "", "");
+                        if (ConfigManager.ShowGroupDividerLines.Value)
+                        {
+                            table.AddRow(
+                                "".PadRight(planetWidth, '-'),
+                                "".PadRight(5, '-'),
+                                "".PadRight(Settings.planetWeatherWidth - 2, '-')
+                            );
+                        }
+                        else
+                        {
+                            table.AddRow("", "", "");
+                        }
                     }
                     else
                     {

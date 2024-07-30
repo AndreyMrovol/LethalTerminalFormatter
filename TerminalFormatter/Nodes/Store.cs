@@ -138,7 +138,18 @@ namespace TerminalFormatter.Nodes
                     if (itemCount % ConfigManager.DivideShopPage.Value == 0)
                     {
                         itemCount = 1;
-                        table.AddRow("", "", "");
+                        if (ConfigManager.ShowGroupDividerLines.Value)
+                        {
+                            table.AddRow(
+                                "".PadRight(Settings.itemNameWidth, '-'),
+                                "".PadRight(5, '-'),
+                                "".PadRight(5, '-')
+                            );
+                        }
+                        else
+                        {
+                            table.AddRow("", "", "");
+                        }
                     }
                     else
                     {
@@ -213,7 +224,18 @@ namespace TerminalFormatter.Nodes
                     if (itemCount % ConfigManager.DivideShopPage.Value == 0)
                     {
                         itemCount = 1;
-                        table.AddRow("", "", "");
+                        if (ConfigManager.ShowGroupDividerLines.Value)
+                        {
+                            table.AddRow(
+                                "".PadRight(Settings.itemNameWidth, '-'),
+                                "".PadRight(5, '-'),
+                                "".PadRight(5, '-')
+                            );
+                        }
+                        else
+                        {
+                            table.AddRow("", "", "");
+                        }
                     }
                     else
                     {
@@ -273,7 +295,18 @@ namespace TerminalFormatter.Nodes
                     if (itemCount % ConfigManager.DivideShopPage.Value == 0)
                     {
                         itemCount = 1;
-                        table.AddRow("", "", "");
+                        if (ConfigManager.ShowGroupDividerLines.Value)
+                        {
+                            table.AddRow(
+                                "".PadRight(Settings.itemNameWidth, '-'),
+                                "".PadRight(5, '-'),
+                                "".PadRight(5, '-')
+                            );
+                        }
+                        else
+                        {
+                            table.AddRow("", "", "");
+                        }
                     }
                     else
                     {
@@ -329,7 +362,18 @@ namespace TerminalFormatter.Nodes
                     if (itemCount % ConfigManager.DivideShopPage.Value == 0)
                     {
                         itemCount = 1;
-                        table.AddRow("", "", "");
+                        if (ConfigManager.ShowGroupDividerLines.Value)
+                        {
+                            table.AddRow(
+                                "".PadRight(Settings.itemNameWidth, '-'),
+                                "".PadRight(5, '-'),
+                                "".PadRight(5, '-')
+                            );
+                        }
+                        else
+                        {
+                            table.AddRow("", "", "");
+                        }
                     }
                     else
                     {
