@@ -1,4 +1,8 @@
-# 0.2.21
+# 0.2.23
+
+- removed font size changes
+
+# 0.2.22 (i've skipped a version lol)
 
 - fixed an issue where moon numbers were not the same length (thanks, autumnis)
 - added `ShowGroupDividerLines` option (thanks, testaccount666)
