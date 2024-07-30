@@ -1,3 +1,13 @@
+# 0.2.20
+
+- cleaned up some code
+- debug logger will now use MrovLib's settings
+- set terminal's font size to not change in moons catalogue
+- things will be correctly reset on lobby reload (thanks, bbapepsiman)
+- reworked how the nodes are replaced (thanks: impulsivelass, explodingcore)
+- fixed an issue with `Moons` node not displaying LLL's override info (thanks, explodingcore)
+- fixed an issue with moon numbers not being aligned correctly (thanks, autumnis)
+
 # 0.2.19
 
 - fixed an issue with `specialNodes.ToArray()` returning null values (thanks, [darmuh](https://github.com/darmuh))
