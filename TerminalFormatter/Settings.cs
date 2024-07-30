@@ -10,6 +10,8 @@ namespace TerminalFormatter
         public static readonly int terminalWidth = 48;
         public static bool firstUse = true;
 
+        public static float terminalFontSize = 0;
+
         internal static readonly int planetWeatherWidth = 18;
         internal static readonly int planetNameWidth = terminalWidth + 2 - planetWeatherWidth - 9;
 
