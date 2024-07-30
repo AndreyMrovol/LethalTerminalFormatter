@@ -1,3 +1,7 @@
+# 0.2.21
+
+- fixed an issue where moon numbers were not the same length (thanks, autumnis)
+
 # 0.2.20
 
 - cleaned up some code
