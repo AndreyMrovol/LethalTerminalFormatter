@@ -160,10 +160,13 @@ namespace TerminalFormatter.Nodes
             foreach (ExtendedLevel extendedLevel in extendedLevelsList)
             {
                 string planetName = extendedLevel.NumberlessPlanetName;
+                string numbersInPlanetName = Regex
+                    .Match(extendedLevel.SelectableLevel.PlanetName, @"^\d+")
+                    .Value;
 
                 if (ConfigManager.ShowNumberedPlanetNames.Value)
                 {
-                    planetName = extendedLevel.SelectableLevel.PlanetName;
+                    planetName = $"{numbersInPlanetName.PadLeft(3)} {planetName}";
                 }
 
                 if (decor)
@@ -197,10 +200,23 @@ namespace TerminalFormatter.Nodes
                     planetName = $"{planetName}".PadRight(planetWidth);
                 }
 
+                int difficultyWidth = showDifficulty ? 4 : 0;
+
                 // if longer than 3, trim
-                var difficulty = showDifficulty
-                    ? $" {SharedMethods.GetLevelRiskLevel(extendedLevel.SelectableLevel).PadRight(3)}"
-                    : "";
+                var difficultyString = SharedMethods.GetLevelRiskLevel(
+                    extendedLevel.SelectableLevel
+                );
+
+                var difficulty = "";
+
+                if (difficultyString.Length > difficultyWidth)
+                {
+                    difficulty = $"{difficultyString.Substring(0, difficultyWidth)}";
+                }
+                else
+                {
+                    difficulty = difficultyString.PadRight(difficultyWidth);
+                }
 
                 bool showPrice =
                     LethalLevelLoader.Settings.levelPreviewInfoType
@@ -225,13 +241,35 @@ namespace TerminalFormatter.Nodes
                     ? weatherCondition.PadRight(Settings.planetWeatherWidth - 2)
                     : "";
 
-                table.AddRow(
-                    $"{planetName}{difficulty}",
-                    $"{price}",
-                    $"{weather}".PadLeft(Settings.planetWeatherWidth)
+                string overridePreviewInfo = LLLCompatibility.InvokeMoonOverrideInfoEvent(
+                    extendedLevel,
+                    LethalLevelLoader.Settings.levelPreviewInfoType
                 );
 
-                tableInConsole.AddRow(planetName, price, weather, difficulty);
+                if (overridePreviewInfo != null && overridePreviewInfo != string.Empty)
+                {
+                    Plugin.debugLogger.LogWarning(
+                        $"override preview info for {extendedLevel.SelectableLevel.PlanetName}:\n{overridePreviewInfo}"
+                    );
+
+                    Regex removeWhitespace = new(@"\ {2,}");
+
+                    table.AddRow(
+                        $"{planetName} {removeWhitespace.Replace(overridePreviewInfo, "  ")}",
+                        "",
+                        ""
+                    );
+                }
+                else
+                {
+                    table.AddRow(
+                        $"{planetName}{difficulty}",
+                        $"{price}",
+                        $"{weather}".PadLeft(Settings.planetWeatherWidth)
+                    );
+
+                    tableInConsole.AddRow(planetName, price, weather, difficulty);
+                }
 
                 if (LethalLevelLoader.Settings.moonsCatalogueSplitCount != 0)
                 {
