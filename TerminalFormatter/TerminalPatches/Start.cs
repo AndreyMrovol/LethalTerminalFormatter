@@ -22,8 +22,6 @@ namespace TerminalFormatter
             Plugin.debugLogger.LogDebug("Terminal Start");
             Variables.Terminal = __instance;
 
-            Settings.terminalFontSize = __instance.screenText.textComponent.fontSize;
-
             // if (Settings.firstUse)
             // {
             //     Plugin.debugLogger.LogDebug("First use: " + Settings.firstUse);

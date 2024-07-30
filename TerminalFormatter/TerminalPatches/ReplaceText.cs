@@ -105,7 +105,6 @@ namespace TerminalFormatter
                 Settings.firstUse = false;
                 Variables.LastReplacedNode = node;
 
-                __instance.screenText.textComponent.fontSize = Settings.terminalFontSize;
 
                 return false;
             }
