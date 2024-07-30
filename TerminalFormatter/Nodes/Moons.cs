@@ -164,9 +164,11 @@ namespace TerminalFormatter.Nodes
                     .Match(extendedLevel.SelectableLevel.PlanetName, @"^\d+")
                     .Value;
 
+                // if the number is shorter than 3, fill it with 0s from the left
+
                 if (ConfigManager.ShowNumberedPlanetNames.Value)
                 {
-                    planetName = $"{numbersInPlanetName.PadLeft(3)} {planetName}";
+                    planetName = $"{numbersInPlanetName.PadLeft(3, '0')} {planetName}";
                 }
 
                 if (decor)
