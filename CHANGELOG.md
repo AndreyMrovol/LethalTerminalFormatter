@@ -7,7 +7,7 @@
 
 - cleaned up some code
 - debug logger will now use MrovLib's settings
-- set terminal's font size to not change in moons catalogue
+- set terminal's font size to not change in moons catalogue (sorry, darmuh)
 - things will be correctly reset on lobby reload (thanks, bbapepsiman)
 - reworked how the nodes are replaced (thanks: impulsivelass, explodingcore)
 - fixed an issue with `Moons` node not displaying LLL's override info (thanks, explodingcore)
