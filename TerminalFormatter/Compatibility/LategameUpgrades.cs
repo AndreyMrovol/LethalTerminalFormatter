@@ -27,20 +27,6 @@ namespace TerminalFormatter
 
         public static void Init()
         {
-            // Harmony harmony = new Harmony("TerminalFormatter LGU");
-
-            // MethodInfo original = AccessTools.Method(
-            //     typeof(MoreShipUpgrades.Managers.UpgradeBus),
-            //     "ConstructNode"
-            // );
-
-            // MethodInfo postfix = AccessTools.Method(
-            //     typeof(LategameUpgradesCompatibility),
-            //     "ConstructNodePostfix"
-            // );
-
-            // harmony.Patch(original, postfix: new HarmonyMethod(postfix));
-
             LGUAssembly = Chainloader
                 .PluginInfos["com.malco.lethalcompany.moreshipupgrades"]
                 .Instance.GetType()
