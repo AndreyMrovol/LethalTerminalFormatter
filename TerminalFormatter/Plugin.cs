@@ -62,17 +62,9 @@ namespace TerminalFormatter
                 LLLCompatibility.Init();
                 isLLLPresent = true;
 
-                if (MrovLib.Compatibility.LLLOldPlugin.IsTheOldLLLActive())
-                {
-                    new Nodes.MoonsOldLLL();
-                    new Nodes.SimulateOldLLL();
-                }
-                else
-                {
-                    new Nodes.Moons();
-                    new Nodes.RouteLocked();
-                    new Nodes.Simulate();
-                }
+                new Nodes.Moons();
+                new Nodes.RouteLocked();
+                new Nodes.Simulate();
             }
             else
             {
