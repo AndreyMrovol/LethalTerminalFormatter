@@ -1,14 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
-using BepInEx.Bootstrap;
-using BepInEx.Logging;
 using HarmonyLib;
-using LethalQuantities;
 using LethalQuantities.Json;
 using LethalQuantities.Objects;
-using UnityEngine;
 
 namespace TerminalFormatter
 {

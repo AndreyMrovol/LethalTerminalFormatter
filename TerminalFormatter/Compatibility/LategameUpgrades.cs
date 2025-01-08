@@ -1,14 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 using BepInEx.Bootstrap;
-using BepInEx.Logging;
-using HarmonyLib;
-using MoreShipUpgrades;
-using MoreShipUpgrades.Managers;
-using MoreShipUpgrades.Misc.TerminalNodes;
-using UnityEngine;
 
 namespace TerminalFormatter
 {

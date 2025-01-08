@@ -1,5 +1,3 @@
-using LethalRegeneration;
-
 namespace TerminalFormatter
 {
     internal class LethalRegenCompatibility
