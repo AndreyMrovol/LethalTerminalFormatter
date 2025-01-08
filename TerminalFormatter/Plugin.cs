@@ -48,6 +48,10 @@ namespace TerminalFormatter
 
             ConfigManager.Init(Config);
 
+            MrovLib.EventManager.TerminalStart.AddListener(
+                (Terminal terminal) => Variables.Terminal = terminal
+            );
+
             if (Chainloader.PluginInfos.ContainsKey("com.potatoepet.AdvancedCompany"))
             {
                 logger.LogWarning("AC found, setting up compatibility patches");
