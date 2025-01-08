@@ -1,12 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using HarmonyLib;
-using LethalLib.Extras;
-using MrovLib;
-using TerminalFormatter.Nodes;
-using UnityEngine;
 
 namespace TerminalFormatter
 {
@@ -48,6 +43,7 @@ namespace TerminalFormatter
 
                 if (currentNode != null)
                 {
+                    Plugin.debugLogger.LogDebug($"Checking if node {currentNode.name} is valid...");
                     bool shouldRun = currentNode.IsNodeValid(node, __instance);
                     if (!shouldRun)
                     {
@@ -63,6 +59,7 @@ namespace TerminalFormatter
 
                     Plugin.debugLogger.LogDebug($"Using node {currentNode.name}");
                     newDisplayText = currentNode.GetNodeText(node, __instance);
+                    break;
                 }
                 else
                 {
@@ -104,7 +101,6 @@ namespace TerminalFormatter
 
                 Settings.firstUse = false;
                 Variables.LastReplacedNode = node;
-
 
                 return false;
             }

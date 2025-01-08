@@ -1,12 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using HarmonyLib;
-using LethalLib.Extras;
-using MrovLib;
-using TerminalFormatter.Nodes;
-using UnityEngine;
 
 namespace TerminalFormatter
 {
@@ -43,8 +36,8 @@ namespace TerminalFormatter
                 return true;
             }
 
-            Route level = TerminalFormatter
-                .Variables.Routes.Where(x => x.Nodes.Node == node)
+            MrovLib.ItemHelper.Route level = MrovLib
+                .ContentManager.Routes.Where(x => x.Nodes.Node == node)
                 .FirstOrDefault();
 
             if (level == null)
@@ -72,33 +65,6 @@ namespace TerminalFormatter
             {
                 return true;
             }
-        }
-
-        [HarmonyPostfix]
-        // [HarmonyPriority(Priority.Last)]
-        [HarmonyAfter("imabatby.lethallevelloader")]
-        [HarmonyPatch("LoadNewNode")]
-        public static void StartPostfix(Terminal __instance, ref TerminalNode node)
-        {
-            Variables.BuyableItemList = __instance.buyableItemsList.ToList();
-            Variables.UnlockableItemList = StartOfRound
-                .Instance.unlockablesList.unlockables.Where(x =>
-                    x.unlockableType == 1 && x.alwaysInStock == true
-                )
-                .ToList();
-            Variables.DecorationsList = __instance.ShipDecorSelection;
-
-            if (Variables.IsACActive)
-            {
-                ACCompatibility.Refresh();
-            }
-
-            if (Settings.firstUse && Variables.ISLLLActive)
-            {
-                LLLCompatibility.GetLLLSettings();
-            }
-
-            node.clearPreviousText = true;
         }
     }
 }
