@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using BepInEx;
+﻿using BepInEx;
 using BepInEx.Bootstrap;
 using BepInEx.Logging;
 using HarmonyLib;
@@ -112,16 +111,12 @@ namespace TerminalFormatter
             new Nodes.BuyAfter();
             new Nodes.CannotAfford();
 
-            LockedNode = GameObject.Instantiate(
-                new TerminalNode
-                {
-                    name = "RouteLocked",
-                    clearPreviousText = true,
-                    acceptAnything = true,
-                    displayText = $"You cannot route to the selected moon. The route is locked.",
-                    terminalOptions = []
-                }
-            );
+            LockedNode = ScriptableObject.CreateInstance<TerminalNode>();
+            LockedNode.name = "RouteLocked";
+            LockedNode.clearPreviousText = true;
+            LockedNode.acceptAnything = true;
+            LockedNode.displayText = $"You cannot route to the selected moon. The route is locked.";
+            LockedNode.terminalOptions = [];
 
             // Plugin startup logic
             Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");
