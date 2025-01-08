@@ -1,12 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Text;
-using System.Text.RegularExpressions;
-using BepInEx.Logging;
-using HarmonyLib;
-using UnityEngine;
 
 namespace TerminalFormatter.Nodes
 {
@@ -15,14 +8,16 @@ namespace TerminalFormatter.Nodes
         public RouteAfter()
             : base("RouteAfter", ["route", "Route"]) { }
 
-        public TerminalFormatter.Route ResolveNodeIntoRoute(TerminalNode node)
+        public MrovLib.ItemHelper.Route ResolveNodeIntoRoute(TerminalNode node)
         {
-            return Variables.Routes.Where(x => x.Nodes.NodeConfirm == node).FirstOrDefault();
+            return MrovLib
+                .ContentManager.Routes.Where(x => x.Nodes.NodeConfirm == node)
+                .FirstOrDefault();
         }
 
         public override bool IsNodeValid(TerminalNode node, Terminal terminal)
         {
-            TerminalFormatter.Route resolvedRoute = ResolveNodeIntoRoute(node);
+            MrovLib.ItemHelper.Route resolvedRoute = ResolveNodeIntoRoute(node);
 
             return resolvedRoute != null;
         }
@@ -31,7 +26,7 @@ namespace TerminalFormatter.Nodes
         {
             var table = new ConsoleTables.ConsoleTable("Title", "Things");
 
-            TerminalFormatter.Route resolvedRoute = ResolveNodeIntoRoute(node);
+            MrovLib.ItemHelper.Route resolvedRoute = ResolveNodeIntoRoute(node);
 
             var header = new Header().CreateHeaderWithoutLines("SUCCESS!");
             var adjustedTable = new StringBuilder();

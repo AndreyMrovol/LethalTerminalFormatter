@@ -1,11 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Text;
-using System.Text.RegularExpressions;
-using BepInEx.Logging;
-using HarmonyLib;
-using UnityEngine;
+using MrovLib;
+using MrovLib.ItemHelper;
 
 namespace TerminalFormatter.Nodes
 {
@@ -23,16 +20,18 @@ namespace TerminalFormatter.Nodes
 
         public BuyableThing ResolveNodeIntoBuyable(TerminalNode node)
         {
-            return Variables
-                .Buyables.Where(x => x.Nodes.Node == node || x.Nodes.Node.name == node.name)
+            Plugin.logger.LogDebug($"Resolving node {node.name} into Buyable");
+
+            return ContentManager
+                .Buyables.Where(x => x.Nodes != null && x.Nodes.Node != null)
+                .Where(x => x.Nodes.Node == node || x.Nodes.Node.name == node.name)
                 .FirstOrDefault();
         }
 
         public override bool IsNodeValid(TerminalNode node, Terminal terminal)
         {
             // check if that node is registered as Node or NodeConfirm in Buyables
-
-            BuyableThing resolvedItem = ResolveNodeIntoBuyable(node);
+            MrovLib.ItemHelper.BuyableThing resolvedItem = ResolveNodeIntoBuyable(node);
 
             if (resolvedItem != null)
             {
@@ -53,8 +52,6 @@ namespace TerminalFormatter.Nodes
             var adjustedTable = new StringBuilder();
 
             table.AddRow("ITEM:", resolvedThing.Name);
-
-            // table.AddRow("AMOUNT:", terminal.playerDefinedAmount.ToString());
 
             bool isItem = typeof(BuyableItem) == resolvedThing.GetType();
 

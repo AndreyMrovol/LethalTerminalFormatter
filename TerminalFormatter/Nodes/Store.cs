@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
-using HarmonyLib;
+using MrovLib;
+using MrovLib.ItemHelper;
 using UnityEngine;
 
 namespace TerminalFormatter.Nodes
@@ -37,11 +37,6 @@ namespace TerminalFormatter.Nodes
 
             string headerName = "COMPANY STORE";
             string storeHeader = new Header().CreateHeaderWithoutLines(headerName);
-            // adjustedTable.Append(
-            //     storeHeader
-            //         .Replace("&", new string('─', terminalWidth - 6 - headerName.Length))
-            //         .Replace("^", new string(' ', terminalWidth - 6 - headerName.Length))
-            // );
 
             adjustedTable.Append(storeHeader);
 
@@ -58,21 +53,24 @@ namespace TerminalFormatter.Nodes
                 table.AddRow($"{new string('-', Settings.dividerLength)}", "", "");
             }
 
-            List<Item> sortedBuyableItemList = Variables
-                .BuyableItemList.OrderBy(x => x.itemName)
+            List<BuyableItem> sortedBuyableItemList = ContentManager
+                .Items.OrderBy(x => x.Item.itemName)
                 .ToList();
 
             int itemCount = 1;
             // every 3 items make a space
 
             // [buyableItemsList]
-            foreach (var item in sortedBuyableItemList)
+            foreach (var buyable in sortedBuyableItemList)
             {
-                var index = terminal.buyableItemsList.ToList().IndexOf(item);
+                Item item = buyable.Item;
+
+                var index = buyable.Nodes.Node.buyItemIndex;
                 var itemName = item.itemName;
                 int howManyOnShip = ItemsOnShip
                     .FindAll(x => x.itemProperties.itemName == item.itemName)
                     .Count;
+                int discount = buyable.Discount;
 
                 if (index == -1)
                 {
@@ -103,7 +101,7 @@ namespace TerminalFormatter.Nodes
 
                 string discountPercent =
                     terminal.itemSalesPercentages[index] != 100
-                        ? $" {(decor ? "(" : "")}-{100 - terminal.itemSalesPercentages[index]}%{(decor ? ")" : "")}"
+                        ? $" {(decor ? "(" : "")}-{discount}%{(decor ? ")" : "")}"
                         : "";
 
                 // what i want to do:
@@ -128,7 +126,7 @@ namespace TerminalFormatter.Nodes
 
                 table.AddRow(
                     itemName,
-                    $"${item.creditsWorth * ((float)terminal.itemSalesPercentages[index] / 100f)}",
+                    $"${item.creditsWorth * buyable.DiscountPercentage}",
                     $"{(howManyOnShip == 0 ? "" : $"×{howManyOnShip.ToString("D2")}")}"
                 // $"{(terminal.itemSalesPercentages[index] != 100 ? 100 - terminal.itemSalesPercentages[index] : "")}"
                 );
@@ -166,23 +164,15 @@ namespace TerminalFormatter.Nodes
                 table.AddRow($"{new string('-', Settings.dividerLength)}", "", "");
             }
 
-            Dictionary<string, int> upgrades =
-                new()
-                {
-                    { "Teleporter", 375 },
-                    { "Signal translator", 255 },
-                    { "Loud horn", 100 },
-                    { "Inverse Teleporter", 425 },
-                };
-
-            List<UnlockableItem> unlockablesList = Variables
-                .UnlockableItemList.OrderBy(x => x.unlockableName)
+            List<BuyableUnlockable> unlockablesList = ContentManager
+                .Unlockables.OrderBy(x => x.Unlockable.unlockableName)
                 .ToList();
 
-            foreach (var unlockable in unlockablesList)
+            foreach (var buyable in unlockablesList)
             {
+                UnlockableItem unlockable = buyable.Unlockable;
                 bool isUnlocked = unlockable.hasBeenUnlockedByPlayer || unlockable.alreadyUnlocked;
-                TerminalNode unlockableNode = unlockable.shopSelectionNode;
+                TerminalNode unlockableNode = buyable.Nodes.Node;
 
                 string unlockableName = unlockable.unlockableName;
 
@@ -199,23 +189,14 @@ namespace TerminalFormatter.Nodes
                     }
                 }
 
-                if (unlockableNode == null)
-                {
-                    var index = StartOfRound
-                        .Instance.unlockablesList.unlockables.ToList()
-                        .IndexOf(unlockable);
-
-                    // get all possible TerminalNode s
-                    var allNodes = GameObject.FindObjectsOfType<TerminalNode>().ToList();
-                    unlockableNode = allNodes.Find(x => x.shipUnlockableID == index);
-                }
-
                 if (isUnlocked)
+                {
                     continue;
+                }
 
                 table.AddRow(
                     unlockableName.PadRight(Settings.itemNameWidth),
-                    $"${(unlockableNode ? unlockableNode.itemCost : upgrades[unlockable.unlockableName])}",
+                    $"${buyable.Price}",
                     ""
                 );
 
@@ -274,21 +255,20 @@ namespace TerminalFormatter.Nodes
                 table.AddRow($"{new string('-', Settings.dividerLength)}", "", "");
             }
 
-            List<BuyableVehicle> sortedBuyableVehicleList = Variables
+            List<BuyableCar> sortedBuyableVehicleList = ContentManager
                 .Vehicles.OrderBy(x => x.Name)
-                .Select(x => x.Vehicle)
                 .ToList();
 
-            foreach (var vehicle in sortedBuyableVehicleList)
+            foreach (var buyable in sortedBuyableVehicleList)
             {
-                string vehicleName = vehicle.vehicleDisplayName;
+                string vehicleName = buyable.Name;
 
                 if (decor)
                 {
                     vehicleName = $"* {vehicleName}";
                 }
 
-                table.AddRow(vehicleName, $"${vehicle.creditsWorth}", "");
+                table.AddRow(vehicleName, $"${buyable.Price}", "");
 
                 if (ConfigManager.DivideShopPage.Value != 0)
                 {
@@ -323,19 +303,21 @@ namespace TerminalFormatter.Nodes
             }
 
             // [unlockablesSelectionList]
-            List<TerminalNode> DecorSelection = Variables
-                .DecorationsList.OrderBy(x => x.creatureName)
+            List<BuyableDecoration> DecorSelection = ContentManager
+                .Decorations.OrderBy(x => x.Name)
+                .Where(x => x.InRotation)
                 .ToList();
 
             itemCount = 1;
 
-            foreach (var decoration in DecorSelection)
+            foreach (var buyable in DecorSelection)
             {
-                UnlockableItem unlockable = StartOfRound.Instance.unlockablesList.unlockables[
-                    decoration.shipUnlockableID
-                ];
+                UnlockableItem unlockable = buyable.Decoration;
+                // UnlockableItem unlockable = StartOfRound.Instance.unlockablesList.unlockables[
+                //     decoration.shipUnlockableID
+                // ];
 
-                string decorationName = decoration.creatureName;
+                string decorationName = buyable.Name;
 
                 if (decor)
                 {
@@ -355,7 +337,7 @@ namespace TerminalFormatter.Nodes
                     continue;
                 }
 
-                table.AddRow(decorationName, $"${decoration.itemCost}", "");
+                table.AddRow(decorationName, $"${buyable.Price}", "");
 
                 if (ConfigManager.DivideShopPage.Value != 0)
                 {

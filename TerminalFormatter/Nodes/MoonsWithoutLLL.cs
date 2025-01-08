@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
-using HarmonyLib;
+using MrovLib;
 using UnityEngine;
 
 namespace TerminalFormatter.Nodes
@@ -36,7 +35,7 @@ namespace TerminalFormatter.Nodes
 
             bool decor = ConfigManager.ShowDecorations.Value;
 
-            List<TerminalFormatter.Route> routes = Variables
+            List<MrovLib.ItemHelper.Route> routes = ContentManager
                 .Routes.Where(keyval => keyval.Nodes.Node != null)
                 .ToList()
                 // order routes by Settings.MoonsOrderVanilla names
@@ -54,7 +53,7 @@ namespace TerminalFormatter.Nodes
                 table.AddRow("", "", "");
             }
 
-            foreach (TerminalFormatter.Route route in routes)
+            foreach (MrovLib.ItemHelper.Route route in routes)
             {
                 SelectableLevel level = route.Level;
 
