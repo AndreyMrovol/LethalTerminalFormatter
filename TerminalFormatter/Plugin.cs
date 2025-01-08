@@ -6,120 +6,107 @@ using UnityEngine;
 
 namespace TerminalFormatter
 {
-    [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
-    [BepInDependency(
-        "Toskan4134.LethalRegeneration",
-        BepInDependency.DependencyFlags.SoftDependency
-    )]
-    [BepInDependency(
-        "com.potatoepet.AdvancedCompany",
-        BepInDependency.DependencyFlags.SoftDependency
-    )]
-    [BepInDependency(
-        "com.malco.lethalcompany.moreshipupgrades",
-        BepInDependency.DependencyFlags.SoftDependency
-    )]
-    [BepInDependency("WeatherTweaks", BepInDependency.DependencyFlags.SoftDependency)]
-    [BepInDependency("MrovLib", BepInDependency.DependencyFlags.HardDependency)]
-    public class Plugin : BaseUnityPlugin
+  [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
+  [BepInDependency("Toskan4134.LethalRegeneration", BepInDependency.DependencyFlags.SoftDependency)]
+  [BepInDependency("com.potatoepet.AdvancedCompany", BepInDependency.DependencyFlags.SoftDependency)]
+  [BepInDependency("com.malco.lethalcompany.moreshipupgrades", BepInDependency.DependencyFlags.SoftDependency)]
+  [BepInDependency("WeatherTweaks", BepInDependency.DependencyFlags.SoftDependency)]
+  [BepInDependency("MrovLib", BepInDependency.DependencyFlags.HardDependency)]
+  public class Plugin : BaseUnityPlugin
+  {
+    internal static ManualLogSource logger;
+    internal static MrovLib.Logger debugLogger = new(PluginInfo.PLUGIN_GUID);
+    internal static Harmony harmony = new(PluginInfo.PLUGIN_GUID);
+
+    internal static TerminalNode LockedNode;
+
+    internal static bool isACPresent = false;
+    internal static bool isLLibPresent = false;
+    internal static bool isLLLPresent = false;
+    internal static bool isLRegenPresent = false;
+    internal static bool isLGUPresent = false;
+    internal static bool isWTPresent = false;
+    internal static bool isLQPresent = false;
+
+    internal static MrovLib.Compatibility.CompatibilityBase LGUCompat;
+    internal static MrovLib.Compatibility.CompatibilityBase LQCompat;
+
+    private void Awake()
     {
-        internal static ManualLogSource logger;
-        internal static MrovLib.Logger debugLogger = new(PluginInfo.PLUGIN_GUID);
-        internal static Harmony harmony = new(PluginInfo.PLUGIN_GUID);
+      logger = Logger;
+      harmony.PatchAll();
 
-        internal static TerminalNode LockedNode;
+      ConfigManager.Init(Config);
 
-        internal static bool isACPresent = false;
-        internal static bool isLLibPresent = false;
-        internal static bool isLLLPresent = false;
-        internal static bool isLRegenPresent = false;
-        internal static bool isLGUPresent = false;
-        internal static bool isWTPresent = false;
-        internal static bool isLQPresent = false;
+      MrovLib.EventManager.TerminalStart.AddListener((Terminal terminal) => Variables.Terminal = terminal);
 
-        internal static MrovLib.Compatibility.CompatibilityBase LGUCompat;
-        internal static MrovLib.Compatibility.CompatibilityBase LQCompat;
+      if (Chainloader.PluginInfos.ContainsKey("com.potatoepet.AdvancedCompany"))
+      {
+        logger.LogWarning("AC found, setting up compatibility patches");
+        ACCompatibility.Init("com.potatoepet.AdvancedCompany");
+        isACPresent = true;
+      }
 
-        private void Awake()
-        {
-            logger = Logger;
-            harmony.PatchAll();
+      if (Chainloader.PluginInfos.ContainsKey("imabatby.lethallevelloader"))
+      {
+        logger.LogWarning("LLL found, setting up compatibility patches");
 
-            ConfigManager.Init(Config);
+        LLLCompatibility.Init();
+        isLLLPresent = true;
 
-            MrovLib.EventManager.TerminalStart.AddListener(
-                (Terminal terminal) => Variables.Terminal = terminal
-            );
+        new Nodes.Moons();
+        new Nodes.RouteLocked();
+        new Nodes.Simulate();
+      }
+      else
+      {
+        new Nodes.MoonsNoLLL();
+      }
 
-            if (Chainloader.PluginInfos.ContainsKey("com.potatoepet.AdvancedCompany"))
-            {
-                logger.LogWarning("AC found, setting up compatibility patches");
-                ACCompatibility.Init("com.potatoepet.AdvancedCompany");
-                isACPresent = true;
-            }
+      if (Chainloader.PluginInfos.ContainsKey("evaisa.lethallib"))
+      {
+        logger.LogWarning("LethalLib found, setting up compatibility patches");
+        // LLLCompatibility.Init();
+        isLLibPresent = true;
+      }
 
-            if (Chainloader.PluginInfos.ContainsKey("imabatby.lethallevelloader"))
-            {
-                logger.LogWarning("LLL found, setting up compatibility patches");
+      if (Chainloader.PluginInfos.ContainsKey("Toskan4134.LethalRegeneration"))
+      {
+        logger.LogWarning("LethalRegeneration found, setting up compatibility patches");
+        LethalRegenCompatibility.Init();
+        isLRegenPresent = true;
+      }
 
-                LLLCompatibility.Init();
-                isLLLPresent = true;
+      LGUCompat = new LategameUpgradesCompatibility("com.malco.lethalcompany.moreshipupgrades");
 
-                new Nodes.Moons();
-                new Nodes.RouteLocked();
-                new Nodes.Simulate();
-            }
-            else
-            {
-                new Nodes.MoonsNoLLL();
-            }
+      LQCompat = new LethalQuantitiesCompatibility("LethalQuantities");
 
-            if (Chainloader.PluginInfos.ContainsKey("evaisa.lethallib"))
-            {
-                logger.LogWarning("LethalLib found, setting up compatibility patches");
-                // LLLCompatibility.Init();
-                isLLibPresent = true;
-            }
+      if (Chainloader.PluginInfos.ContainsKey("WeatherTweaks"))
+      {
+        logger.LogWarning("WeatherTweaks found, setting up compatibility patches");
+        WeatherTweaksCompatibility.Init();
+        isWTPresent = true;
+      }
 
-            if (Chainloader.PluginInfos.ContainsKey("Toskan4134.LethalRegeneration"))
-            {
-                logger.LogWarning("LethalRegeneration found, setting up compatibility patches");
-                LethalRegenCompatibility.Init();
-                isLRegenPresent = true;
-            }
+      new Nodes.Route();
+      new Nodes.RouteAfter();
 
-            LGUCompat = new LategameUpgradesCompatibility(
-                "com.malco.lethalcompany.moreshipupgrades"
-            );
+      new Nodes.Scan();
+      new Nodes.Store();
 
-            LQCompat = new LethalQuantitiesCompatibility("LethalQuantities");
+      new Nodes.Buy();
+      new Nodes.BuyAfter();
+      new Nodes.CannotAfford();
 
-            if (Chainloader.PluginInfos.ContainsKey("WeatherTweaks"))
-            {
-                logger.LogWarning("WeatherTweaks found, setting up compatibility patches");
-                WeatherTweaksCompatibility.Init();
-                isWTPresent = true;
-            }
+      LockedNode = ScriptableObject.CreateInstance<TerminalNode>();
+      LockedNode.name = "RouteLocked";
+      LockedNode.clearPreviousText = true;
+      LockedNode.acceptAnything = true;
+      LockedNode.displayText = $"You cannot route to the selected moon. The route is locked.";
+      LockedNode.terminalOptions = [];
 
-            new Nodes.Route();
-            new Nodes.RouteAfter();
-
-            new Nodes.Scan();
-            new Nodes.Store();
-
-            new Nodes.Buy();
-            new Nodes.BuyAfter();
-            new Nodes.CannotAfford();
-
-            LockedNode = ScriptableObject.CreateInstance<TerminalNode>();
-            LockedNode.name = "RouteLocked";
-            LockedNode.clearPreviousText = true;
-            LockedNode.acceptAnything = true;
-            LockedNode.displayText = $"You cannot route to the selected moon. The route is locked.";
-            LockedNode.terminalOptions = [];
-
-            // Plugin startup logic
-            Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");
-        }
+      // Plugin startup logic
+      Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");
     }
+  }
 }
