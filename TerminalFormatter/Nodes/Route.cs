@@ -9,14 +9,14 @@ namespace TerminalFormatter.Nodes
     public Route()
       : base("Route", ["route", "Route"]) { }
 
-    public MrovLib.ItemHelper.Route ResolveNodeIntoRoute(TerminalNode node)
+    public MrovLib.ContentType.Route ResolveNodeIntoRoute(TerminalNode node)
     {
       return ContentManager.Routes.Where(x => x.Nodes.Node == node).FirstOrDefault();
     }
 
     public override bool IsNodeValid(TerminalNode node, Terminal terminal)
     {
-      MrovLib.ItemHelper.Route resolvedRoute = ResolveNodeIntoRoute(node);
+      MrovLib.ContentType.Route resolvedRoute = ResolveNodeIntoRoute(node);
 
       return resolvedRoute != null;
     }
@@ -25,7 +25,7 @@ namespace TerminalFormatter.Nodes
     {
       var table = new ConsoleTables.ConsoleTable("Title", "Things");
 
-      MrovLib.ItemHelper.Route resolvedRoute = ResolveNodeIntoRoute(node);
+      MrovLib.ContentType.Route resolvedRoute = ResolveNodeIntoRoute(node);
 
       var header = new Header().CreateHeaderWithoutLines("CONFIRM ROUTE");
       var adjustedTable = new StringBuilder();

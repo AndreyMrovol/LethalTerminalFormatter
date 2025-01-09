@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using MrovLib;
-using MrovLib.ItemHelper;
+using MrovLib.ContentType;
 using UnityEngine;
 
 namespace TerminalFormatter.Nodes

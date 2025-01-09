@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using MrovLib;
-using MrovLib.ItemHelper;
+using MrovLib.ContentType;
 
 namespace TerminalFormatter.Nodes
 {
@@ -31,7 +31,7 @@ namespace TerminalFormatter.Nodes
     public override bool IsNodeValid(TerminalNode node, Terminal terminal)
     {
       // check if that node is registered as Node or NodeConfirm in Buyables
-      MrovLib.ItemHelper.BuyableThing resolvedItem = ResolveNodeIntoBuyable(node);
+      MrovLib.ContentType.BuyableThing resolvedItem = ResolveNodeIntoBuyable(node);
 
       if (resolvedItem != null)
       {

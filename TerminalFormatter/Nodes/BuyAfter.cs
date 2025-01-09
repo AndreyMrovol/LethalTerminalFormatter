@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Text;
 using MrovLib;
-using MrovLib.ItemHelper;
+using MrovLib.ContentType;
 
 namespace TerminalFormatter.Nodes
 {

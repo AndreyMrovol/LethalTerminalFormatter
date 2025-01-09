@@ -34,7 +34,7 @@ namespace TerminalFormatter.Nodes
 
       bool decor = ConfigManager.ShowDecorations.Value;
 
-      List<MrovLib.ItemHelper.Route> routes = ContentManager
+      List<MrovLib.ContentType.Route> routes = ContentManager
         .Routes.Where(keyval => keyval.Nodes.Node != null)
         .ToList()
         // order routes by Settings.MoonsOrderVanilla names
@@ -48,7 +48,7 @@ namespace TerminalFormatter.Nodes
         table.AddRow("", "", "");
       }
 
-      foreach (MrovLib.ItemHelper.Route route in routes)
+      foreach (MrovLib.ContentType.Route route in routes)
       {
         SelectableLevel level = route.Level;
 

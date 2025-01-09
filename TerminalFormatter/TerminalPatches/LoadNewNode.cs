@@ -36,7 +36,7 @@ namespace TerminalFormatter
         return true;
       }
 
-      MrovLib.ItemHelper.Route level = MrovLib.ContentManager.Routes.Where(x => x.Nodes.Node == node).FirstOrDefault();
+      MrovLib.ContentType.Route level = MrovLib.ContentManager.Routes.Where(x => x.Nodes.Node == node).FirstOrDefault();
 
       if (level == null)
       {
