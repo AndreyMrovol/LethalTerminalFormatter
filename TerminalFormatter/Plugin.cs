@@ -98,6 +98,10 @@ namespace TerminalFormatter
       new Nodes.BuyAfter();
       new Nodes.CannotAfford();
 
+      new Nodes.Bestiary();
+
+      new Nodes.Storage();
+
       LockedNode = ScriptableObject.CreateInstance<TerminalNode>();
       LockedNode.name = "RouteLocked";
       LockedNode.clearPreviousText = true;
