@@ -108,7 +108,7 @@ namespace TerminalFormatter.Nodes
 
         table.AddRow(
           itemName,
-          $"${item.creditsWorth * buyable.DiscountPercentage}",
+          $"${(int)(item.creditsWorth * buyable.DiscountPercentage)}",
           $"{(howManyOnShip == 0 ? "" : $"×{howManyOnShip.ToString("D2")}")}"
         // $"{(terminal.itemSalesPercentages[index] != 100 ? 100 - terminal.itemSalesPercentages[index] : "")}"
         );
