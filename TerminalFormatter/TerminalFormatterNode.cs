@@ -10,7 +10,10 @@ namespace TerminalFormatter
     public List<string> terminalNode;
     public ConfigEntry<bool> Enabled;
 
-    public abstract bool IsNodeValid(TerminalNode node, Terminal terminal);
+    public virtual bool IsNodeValid(TerminalNode node, Terminal terminal)
+    {
+      return true;
+    }
 
     public abstract string GetNodeText(TerminalNode node, Terminal terminal);
 
@@ -22,7 +25,7 @@ namespace TerminalFormatter
       this.Enabled = ConfigManager.configFile.Bind("Nodes", name, true, $"Enable node {name}");
 
       Settings.RegisteredNodes.Add(this);
-      Plugin.logger.LogWarning($"Registered node {name}");
+      Plugin.logger.LogInfo($"Registered node {name}");
     }
   }
 }
