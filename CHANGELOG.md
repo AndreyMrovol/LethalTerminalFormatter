@@ -1,3 +1,11 @@
+# 0.2.24
+
+- added bestiary and storage nodes (thanks, `barret_silver`)
+- fixed an issue with store lagging the game (thanks: `lunxara`, `zaggy1024`)
+- fixed an issue with `MapperRestore` mod messing store page (thanks: `narpeh`, `dopadream`)
+- fixed an issue with `Store` node displaying decimal prices (thanks, `dopadream`)
+- fixed warning spam during startup
+
 # 0.2.23
 
 - removed font size changes

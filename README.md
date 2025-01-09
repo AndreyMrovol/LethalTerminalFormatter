@@ -1,10 +1,19 @@
 # TerminalFormatter
 
-changed how terminal displays thingies in store, moons, scan and others
+A quality-of-life mod for improving the visuals of in-game Terminal.
 
 ![Store](https://raw.githubusercontent.com/AndreyMrovol/LethalTerminalFormatter/main/images/store.png)
 
 ![Moons](https://raw.githubusercontent.com/AndreyMrovol/LethalTerminalFormatter/main/images/moons.png)
+
+## Currently changed nodes
+
+- Store
+- Moons
+- Buy
+- Route
+- Bestiary
+- Storage
 
 ## Credits
 
