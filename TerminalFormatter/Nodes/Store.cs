@@ -54,7 +54,7 @@ namespace TerminalFormatter.Nodes
       // every 3 items make a space
 
       // [buyableItemsList]
-      foreach (var buyable in sortedBuyableItemList)
+      foreach (BuyableItem buyable in sortedBuyableItemList)
       {
         Item item = buyable.Item;
 
@@ -90,7 +90,7 @@ namespace TerminalFormatter.Nodes
           }
         }
 
-        string discountPercent = terminal.itemSalesPercentages[index] != 100 ? $" {(decor ? "(" : "")}-{discount}%{(decor ? ")" : "")}" : "";
+        string discountPercent = buyable.Discount != 0 ? $" {(decor ? "(" : "")}-{discount}%{(decor ? ")" : "")}" : "";
 
         // what i want to do:
         // itemName [some spaces] ... [discountPercent]
