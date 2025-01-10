@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text;
 using MrovLib;
 using MrovLib.ContentType;
+using TerminalFormatter.Compatibility;
 using UnityEngine;
 
 namespace TerminalFormatter.Nodes
@@ -304,8 +305,9 @@ namespace TerminalFormatter.Nodes
             }
             else
             {
-              decorationName = $"{decorationName.PadRight(Settings.itemNameWidth - discountPercent.Length)}{discountPercent}"
-                .PadRight(Settings.itemNameWidth);
+              decorationName = $"{decorationName.PadRight(Settings.itemNameWidth - discountPercent.Length)}{discountPercent}".PadRight(
+                Settings.itemNameWidth
+              );
             }
           }
 
@@ -346,8 +348,7 @@ namespace TerminalFormatter.Nodes
         table.AddRow($"{new string('-', Settings.dividerLength)}", "", "");
       }
 
-      List<BuyableSuit> SuitSelection = ContentManager.Suits.OrderBy(x => x.Name)
-        .Where(x => terminal.ShipDecorSelection.Contains(x.Nodes.Node)).ToList(); // TODO: 'InRotation' property for BuyableSuit, or a parent class.
+      List<BuyableSuit> SuitSelection = ContentManager.Suits.OrderBy(x => x.Name).Where(x => x.InRotation).ToList();
 
       foreach (var buyable in SuitSelection)
       {
@@ -359,7 +360,7 @@ namespace TerminalFormatter.Nodes
           suitName = $"* {suitName}";
         }
 
-        if (unlockable.hasBeenUnlockedByPlayer || unlockable.alreadyUnlocked)
+        if (buyable.IsUnlocked)
         {
           continue;
         }
@@ -379,8 +380,9 @@ namespace TerminalFormatter.Nodes
             }
             else
             {
-              suitName = $"{suitName.PadRight(Settings.itemNameWidth - discountPercent.Length)}{discountPercent}"
-                .PadRight(Settings.itemNameWidth);
+              suitName = $"{suitName.PadRight(Settings.itemNameWidth - discountPercent.Length)}{discountPercent}".PadRight(
+                Settings.itemNameWidth
+              );
             }
           }
 
