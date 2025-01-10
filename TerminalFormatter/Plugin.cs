@@ -10,6 +10,7 @@ namespace TerminalFormatter
   [BepInDependency("Toskan4134.LethalRegeneration", BepInDependency.DependencyFlags.SoftDependency)]
   [BepInDependency("com.potatoepet.AdvancedCompany", BepInDependency.DependencyFlags.SoftDependency)]
   [BepInDependency("com.malco.lethalcompany.moreshipupgrades", BepInDependency.DependencyFlags.SoftDependency)]
+  [BepInDependency("pacoito.StoreRotationConfig", BepInDependency.DependencyFlags.SoftDependency)]
   [BepInDependency("WeatherTweaks", BepInDependency.DependencyFlags.SoftDependency)]
   [BepInDependency("MrovLib", BepInDependency.DependencyFlags.HardDependency)]
   public class Plugin : BaseUnityPlugin
@@ -27,9 +28,11 @@ namespace TerminalFormatter
     internal static bool isLGUPresent = false;
     internal static bool isWTPresent = false;
     internal static bool isLQPresent = false;
+    internal static bool isSRCPresent = false;
 
     internal static MrovLib.Compatibility.CompatibilityBase LGUCompat;
     internal static MrovLib.Compatibility.CompatibilityBase LQCompat;
+    internal static MrovLib.Compatibility.CompatibilityBase SRCCompat;
 
     private void Awake()
     {
@@ -80,6 +83,8 @@ namespace TerminalFormatter
       LGUCompat = new LategameUpgradesCompatibility("com.malco.lethalcompany.moreshipupgrades");
 
       LQCompat = new LethalQuantitiesCompatibility("LethalQuantities");
+
+      SRCCompat = new StoreRotationConfigCompatibility("pacoito.StoreRotationConfig");
 
       if (Chainloader.PluginInfos.ContainsKey("WeatherTweaks"))
       {

@@ -1,3 +1,9 @@
+# 0.2.25
+
+- added suit section to the `Store` node
+- fixed compatibility with [StoreRotationConfig](https://thunderstore.io/c/lethal-company/p/pacoito/StoreRotationConfig)
+- in-game changes to `Lines to Scroll` setting should now apply immediately
+
 # 0.2.24
 
 - added bestiary and storage nodes (thanks, `barret_silver`)

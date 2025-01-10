@@ -8,8 +8,6 @@ using UnityEngine.UI;
 
 // https://github.com/pacoito123/LC_StoreRotationConfig/blob/main/StoreRotationConfig/Patches/TerminalScrollMousePatch.cs
 
-// i'm not sure if the original creator forgot to add their own license, that's the one in the repo:
-
 // MIT License
 
 // Copyright (c) 2023 Lethal Company Community
