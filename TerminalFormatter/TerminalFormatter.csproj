@@ -71,6 +71,10 @@
         <Reference Include="LethalQuantities" PrivateAssets="All">
             <HintPath>$(LibraryDirectory)/LethalQuantities.dll</HintPath>
         </Reference>
+
+        <Reference Include="StoreRotationConfig" PrivateAssets="All">
+            <HintPath>$(LibraryDirectory)/StoreRotationConfig.dll</HintPath>
+        </Reference>
         
         <PackageReference Include="MinVer" Version="4.*" PrivateAssets="all" Private="false"/>
     </ItemGroup>

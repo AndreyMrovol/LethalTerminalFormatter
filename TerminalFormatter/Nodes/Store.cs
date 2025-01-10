@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text;
 using MrovLib;
 using MrovLib.ContentType;
+using TerminalFormatter.Compatibility;
 using UnityEngine;
 
 namespace TerminalFormatter.Nodes
@@ -289,7 +290,109 @@ namespace TerminalFormatter.Nodes
           continue;
         }
 
-        table.AddRow(decorationName, $"${buyable.Price}", "");
+        // StoreRotationConfig compatibility.
+        if (Plugin.isSRCPresent)
+        {
+          int price = StoreRotationConfigCompatibility.GetDiscountedPrice(buyable, out int discount);
+
+          if (discount > 0)
+          {
+            string discountPercent = $" {(decor ? '(' : "")}-{discount}%{(decor ? ')' : "")}";
+
+            if (decorationName.Length + discountPercent.Length > Settings.itemNameWidth)
+            {
+              decorationName = decorationName[..(Settings.itemNameWidth - 4 - discountPercent.Length)] + "..." + discountPercent;
+            }
+            else
+            {
+              decorationName = $"{decorationName.PadRight(Settings.itemNameWidth - discountPercent.Length)}{discountPercent}".PadRight(
+                Settings.itemNameWidth
+              );
+            }
+          }
+
+          table.AddRow(decorationName, $"${price}", "");
+        }
+        else
+        {
+          table.AddRow(decorationName, $"${buyable.Price}", "");
+        }
+        // ...
+
+        if (ConfigManager.DivideShopPage.Value != 0)
+        {
+          if (itemCount % ConfigManager.DivideShopPage.Value == 0)
+          {
+            itemCount = 1;
+            if (ConfigManager.ShowGroupDividerLines.Value)
+            {
+              table.AddRow("".PadRight(Settings.itemNameWidth, '-'), "".PadRight(5, '-'), "".PadRight(5, '-'));
+            }
+            else
+            {
+              table.AddRow("", "", "");
+            }
+          }
+          else
+          {
+            itemCount++;
+          }
+        }
+      }
+
+      table.AddRow("", "", "");
+      table.AddRow("[SUITS]", "", "");
+      itemCount = 1;
+      if (decor)
+      {
+        table.AddRow($"{new string('-', Settings.dividerLength)}", "", "");
+      }
+
+      List<BuyableSuit> SuitSelection = ContentManager.Suits.OrderBy(x => x.Name).Where(x => x.InRotation).ToList();
+
+      foreach (var buyable in SuitSelection)
+      {
+        UnlockableItem unlockable = buyable.Suit;
+        string suitName = buyable.Name;
+
+        if (decor)
+        {
+          suitName = $"* {suitName}";
+        }
+
+        if (buyable.IsUnlocked)
+        {
+          continue;
+        }
+
+        // StoreRotationConfig compatibility.
+        if (Plugin.isSRCPresent)
+        {
+          int price = StoreRotationConfigCompatibility.GetDiscountedPrice(buyable, out int discount);
+
+          if (discount > 0)
+          {
+            string discountPercent = $" {(decor ? '(' : "")}-{discount}%{(decor ? ')' : "")}";
+
+            if (suitName.Length + discountPercent.Length > Settings.itemNameWidth)
+            {
+              suitName = suitName[..(Settings.itemNameWidth - 4 - discountPercent.Length)] + "..." + discountPercent;
+            }
+            else
+            {
+              suitName = $"{suitName.PadRight(Settings.itemNameWidth - discountPercent.Length)}{discountPercent}".PadRight(
+                Settings.itemNameWidth
+              );
+            }
+          }
+
+          table.AddRow(suitName, $"${price}", "");
+        }
+        else
+        {
+          table.AddRow(suitName, $"${buyable.Price}", "");
+        }
+        // ...
 
         if (ConfigManager.DivideShopPage.Value != 0)
         {

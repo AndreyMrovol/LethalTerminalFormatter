@@ -1,4 +1,5 @@
 using BepInEx.Configuration;
+using TerminalFormatter.Patches;
 
 namespace TerminalFormatter
 {
@@ -67,6 +68,12 @@ namespace TerminalFormatter
       LastUsedSort = configFile.Bind("Last Used LLL Option", "Last Used Sort", "Price", "Last used sort setting");
 
       LinesToScroll = configFile.Bind("General", "Lines to Scroll", 15, "Number of lines to scroll per mouse wheel tick");
+
+      // Applies in-game changes to scroll amount without having to scroll once on a different page.
+      LinesToScroll.SettingChanged += (_, _) =>
+      {
+        TerminalScrollMousePatch.CurrentText = "";
+      };
     }
   }
 }
