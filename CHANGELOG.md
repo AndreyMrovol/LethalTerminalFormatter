@@ -1,8 +1,10 @@
 # 0.2.25
 
-- added suit section to the `Store` node
-- fixed compatibility with [StoreRotationConfig](https://thunderstore.io/c/lethal-company/p/pacoito/StoreRotationConfig)
-- in-game changes to `Lines to Scroll` setting should now apply immediately
+- Merged [PR #32](https://github.com/AndreyMrovol/LethalTerminalFormatter/pull/32) by [pacoito123](https://github.com/pacoito123):
+  - fixed compatibility with [StoreRotationConfig](https://thunderstore.io/c/lethal-company/p/pacoito/StoreRotationConfig)
+  - added suit section to the `Store` node
+  - in-game changes to `Lines to Scroll` setting should now apply immediately
+- bumped mrovlib version
 
 # 0.2.24
 
@@ -16,7 +18,7 @@
 
 - removed font size changes
 
-# 0.2.22 (i've skipped a version lol)
+# 0.2.22
 
 - fixed an issue where moon numbers were not the same length (thanks, autumnis)
 - added `ShowGroupDividerLines` option (thanks, testaccount666)
