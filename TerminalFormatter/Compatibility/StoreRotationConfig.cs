@@ -3,7 +3,7 @@ using HarmonyLib;
 using MrovLib.ContentType;
 using StoreRotationConfig.Api;
 
-namespace TerminalFormatter
+namespace TerminalFormatter.Compatibility
 {
   internal class StoreRotationConfigCompatibility : MrovLib.Compatibility.CompatibilityBase
   {
@@ -34,8 +34,11 @@ namespace TerminalFormatter
     public static void UnpatchTerminalScroll()
     {
       // Prioritize TerminalFormatter's scrolling settings.
-      Plugin.harmony.Unpatch(AccessTools.Method(typeof(PlayerControllerB), "ScrollMouse_performed"),
-        HarmonyPatchType.Transpiler, "pacoito.StoreRotationConfig");
+      Plugin.harmony.Unpatch(
+        AccessTools.Method(typeof(PlayerControllerB), "ScrollMouse_performed"),
+        HarmonyPatchType.Transpiler,
+        "pacoito.StoreRotationConfig"
+      );
     }
   }
 }

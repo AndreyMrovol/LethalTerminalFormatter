@@ -2,6 +2,7 @@
 using BepInEx.Bootstrap;
 using BepInEx.Logging;
 using HarmonyLib;
+using TerminalFormatter.Compatibility;
 using UnityEngine;
 
 namespace TerminalFormatter
