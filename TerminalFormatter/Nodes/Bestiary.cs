@@ -9,7 +9,10 @@ namespace TerminalFormatter.Nodes
   public class Bestiary : TerminalFormatterNode
   {
     public Bestiary()
-      : base("Bestiary", ["0_Bestiary"]) { }
+      : base("Bestiary", ["0_Bestiary"])
+    {
+      this.AdditionalInfo = " Welcome to the Bestiary! \n Use INFO after creature name to learn more.";
+    }
 
     public override string GetNodeText(TerminalNode node, Terminal terminal)
     {
@@ -17,15 +20,24 @@ namespace TerminalFormatter.Nodes
       var adjustedTable = new StringBuilder();
 
       adjustedTable.Append(header);
-      adjustedTable.Append("\n");
 
       List<int> scannedCreatures = terminal.scannedEnemyIDs;
 
+      if (ConfigManager.ShowHelpText.Value)
+      {
+        adjustedTable.Append(this.AdditionalInfo != null ? $"\n{this.AdditionalInfo}\n\n" : "");
+      }
+      else
+      {
+        adjustedTable.Append("\n");
+      }
+
+      // no scanned creatures yet
       if (terminal.scannedEnemyIDs == null || terminal.scannedEnemyIDs.Count == 0)
       {
-        adjustedTable.Append("NO DATA COLLECTED");
-        adjustedTable.Append("\n");
-        adjustedTable.Append("SCAN CREATURES TO UNLOCK THEIR DATA");
+        adjustedTable.Append(" NO DATA COLLECTED");
+        adjustedTable.Append(" \n");
+        adjustedTable.Append(" Scan creatures to unlock their data.");
         return adjustedTable.ToString();
       }
 
@@ -33,6 +45,15 @@ namespace TerminalFormatter.Nodes
 
       foreach (Creature creature in creatures)
       {
+        if (ConfigManager.ShowDecorations.Value)
+        {
+          adjustedTable.Append(" * ");
+        }
+        else
+        {
+          adjustedTable.Append(" ");
+        }
+
         adjustedTable.Append(creature.Name);
         adjustedTable.Append("\n");
       }
