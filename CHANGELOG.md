@@ -1,3 +1,9 @@
+# 0.2.26
+
+- fixed an issue with `BuyableDecoration`s not being able to register (thanks, `readek`!)
+- fixed `Bestiary` and `Storage` node not resetting correctly (thanks, `barret_silver`!)
+- fixed `Store` node displaying empty section headers (thanks, `moroxide`!)
+
 # 0.2.25
 
 - Merged [PR #32](https://github.com/AndreyMrovol/LethalTerminalFormatter/pull/32) by [pacoito123](https://github.com/pacoito123):
