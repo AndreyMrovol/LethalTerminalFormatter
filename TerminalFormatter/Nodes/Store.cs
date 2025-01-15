@@ -43,6 +43,7 @@ namespace TerminalFormatter.Nodes
         adjustedTable.Append(this.AdditionalInfo != null ? $"\n{this.AdditionalInfo}\n\n" : "");
       }
 
+      #region Items
       table.AddRow("[ITEMS]", "", "");
       if (decor)
       {
@@ -134,16 +135,20 @@ namespace TerminalFormatter.Nodes
           }
         }
       }
+      #endregion
 
-      table.AddRow("", "", "");
-      table.AddRow("[UPGRADES]", "", "");
-      itemCount = 1;
-      if (decor)
-      {
-        table.AddRow($"{new string('-', Settings.dividerLength)}", "", "");
-      }
-
+      #region Upgrades
       List<BuyableUnlockable> unlockablesList = ContentManager.Unlockables.OrderBy(x => x.Unlockable.unlockableName).ToList();
+      if (unlockablesList.Count > 0)
+      {
+        table.AddRow("", "", "");
+        table.AddRow("[UPGRADES]", "", "");
+        itemCount = 1;
+        if (decor)
+        {
+          table.AddRow($"{new string('-', Settings.dividerLength)}", "", "");
+        }
+      }
 
       foreach (var buyable in unlockablesList)
       {
@@ -194,6 +199,10 @@ namespace TerminalFormatter.Nodes
         }
       }
 
+      #endregion
+
+      #region Regeneration
+
       if (Plugin.isLRegenPresent)
       {
         if (!LethalRegenCompatibility.IsUpgradeBought() && LethalRegenCompatibility.IsUpgradeInStore)
@@ -208,6 +217,10 @@ namespace TerminalFormatter.Nodes
           table.AddRow("Natural Regeneration", $"${LethalRegenCompatibility.GetCost()}", "");
         }
       }
+
+      #endregion
+
+      #region Vehicles
 
       table.AddRow("", "", "");
       table.AddRow("[VEHICLES]", "", "");
@@ -251,15 +264,21 @@ namespace TerminalFormatter.Nodes
         }
       }
 
-      table.AddRow("", "", "");
-      table.AddRow("[DECORATIONS]", "", "");
-      if (decor)
-      {
-        table.AddRow($"{new string('-', Settings.dividerLength)}", "", "");
-      }
+      #endregion
 
-      // [unlockablesSelectionList]
+      #region Decorations
       List<BuyableDecoration> DecorSelection = ContentManager.Decorations.OrderBy(x => x.Name).Where(x => x.InRotation).ToList();
+      // [unlockablesSelectionList]
+
+      if (DecorSelection.Count > 0)
+      {
+        table.AddRow("", "", "");
+        table.AddRow("[DECORATIONS]", "", "");
+        if (decor)
+        {
+          table.AddRow($"{new string('-', Settings.dividerLength)}", "", "");
+        }
+      }
 
       itemCount = 1;
 
@@ -340,15 +359,21 @@ namespace TerminalFormatter.Nodes
         }
       }
 
-      table.AddRow("", "", "");
-      table.AddRow("[SUITS]", "", "");
-      itemCount = 1;
-      if (decor)
-      {
-        table.AddRow($"{new string('-', Settings.dividerLength)}", "", "");
-      }
+      #endregion
 
+      #region Suits
       List<BuyableSuit> SuitSelection = ContentManager.Suits.OrderBy(x => x.Name).Where(x => x.InRotation).ToList();
+
+      if (SuitSelection.Count > 0)
+      {
+        table.AddRow("", "", "");
+        table.AddRow("[SUITS]", "", "");
+        itemCount = 1;
+        if (decor)
+        {
+          table.AddRow($"{new string('-', Settings.dividerLength)}", "", "");
+        }
+      }
 
       foreach (var buyable in SuitSelection)
       {
@@ -414,6 +439,8 @@ namespace TerminalFormatter.Nodes
           }
         }
       }
+
+      #endregion
 
       table.AddRow("", "", "");
 
