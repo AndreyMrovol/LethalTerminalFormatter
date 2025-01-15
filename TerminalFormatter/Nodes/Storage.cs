@@ -9,7 +9,10 @@ namespace TerminalFormatter.Nodes
   public class Storage : TerminalFormatterNode
   {
     public Storage()
-      : base("Storage", ["ItemsInStorage"]) { }
+      : base("Storage", ["ItemsInStorage"])
+    {
+      this.AdditionalInfo = " Welcome to the Storage! \n Type item's name to retrieve it. \n To store items, use [X] while moving the object.";
+    }
 
     public override string GetNodeText(TerminalNode node, Terminal terminal)
     {
@@ -17,20 +20,38 @@ namespace TerminalFormatter.Nodes
       var adjustedTable = new StringBuilder();
 
       adjustedTable.Append(header);
-      adjustedTable.Append("\n");
 
-      List<BuyableUnlockable> unlockablesInStorage = ContentManager.Unlockables.Where(unlockable => unlockable.IsInStorage).ToList();
+      if (ConfigManager.ShowHelpText.Value)
+      {
+        adjustedTable.Append(this.AdditionalInfo != null ? $"\n{this.AdditionalInfo}\n\n" : "");
+      }
+      else
+      {
+        adjustedTable.Append("\n");
+      }
+
+      List<UnlockableItem> unlockablesInStorage = StartOfRound
+        .Instance.unlockablesList.unlockables.Where(unlockable => unlockable.inStorage)
+        .ToList();
 
       if (unlockablesInStorage.Count == 0)
       {
         adjustedTable.Append("No items stored.\n");
-        adjustedTable.Append("To store items, use [X] while moving the object.");
         return adjustedTable.ToString();
       }
 
-      foreach (BuyableUnlockable unlockable in unlockablesInStorage)
+      foreach (UnlockableItem unlockable in unlockablesInStorage)
       {
-        adjustedTable.Append(unlockable.Name);
+        if (ConfigManager.ShowDecorations.Value)
+        {
+          adjustedTable.Append(" * ");
+        }
+        else
+        {
+          adjustedTable.Append(" ");
+        }
+
+        adjustedTable.Append(unlockable.unlockableName);
         adjustedTable.Append("\n");
       }
 
