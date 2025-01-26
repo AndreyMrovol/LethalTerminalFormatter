@@ -362,7 +362,7 @@ namespace TerminalFormatter.Nodes
       #endregion
 
       #region Suits
-      List<BuyableSuit> SuitSelection = ContentManager.Suits.OrderBy(x => x.Name).Where(x => x.InRotation).ToList();
+      List<BuyableSuit> SuitSelection = ContentManager.Suits.OrderBy(x => x.Name).Where(x => x.InRotation && !x.IsUnlocked).ToList();
 
       if (SuitSelection.Count > 0)
       {
