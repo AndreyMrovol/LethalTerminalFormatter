@@ -1,3 +1,8 @@
+# 0.2.27
+
+- fixed suits section displaying when no suits were available to buy (thanks: `barret_silver`, `purpletheproto`, `lunxara`!)
+- fixed an issue with some items displaying wrong `Buy` and `BuyAfter` nodes (thanks, `narpeh`!)
+
 # 0.2.26
 
 - fixed an issue with `BuyableDecoration`s not being able to register (thanks, `readek`!)
