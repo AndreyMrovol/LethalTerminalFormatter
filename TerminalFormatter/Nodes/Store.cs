@@ -138,7 +138,11 @@ namespace TerminalFormatter.Nodes
       #endregion
 
       #region Upgrades
-      List<BuyableUnlockable> unlockablesList = ContentManager.Unlockables.OrderBy(x => x.Unlockable.unlockableName).ToList();
+      List<BuyableUnlockable> unlockablesList = ContentManager
+        .Unlockables.OrderBy(x => x.Unlockable.unlockableName)
+        .Where(x => !x.IsUnlocked)
+        .ToList();
+
       if (unlockablesList.Count > 0)
       {
         table.AddRow("", "", "");
@@ -267,7 +271,10 @@ namespace TerminalFormatter.Nodes
       #endregion
 
       #region Decorations
-      List<BuyableDecoration> DecorSelection = ContentManager.Decorations.OrderBy(x => x.Name).Where(x => x.InRotation).ToList();
+      List<BuyableDecoration> DecorSelection = ContentManager
+        .Decorations.OrderBy(x => x.Name)
+        .Where(x => x.InRotation && !x.IsUnlocked)
+        .ToList();
       // [unlockablesSelectionList]
 
       if (DecorSelection.Count > 0)
