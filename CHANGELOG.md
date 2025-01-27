@@ -1,3 +1,8 @@
+# 0.2.28
+
+- fixed an issue with displaying correct store rotation when multiple nodes with the same name exists (thanks, `purpletheproto`!)
+- fixed an issue with `Decorations` and `Upgrades` sections displaying empty (thanks, `barret_silver`!)
+
 # 0.2.27
 
 - fixed suits section displaying when no suits were available to buy (thanks: `barret_silver`, `purpletheproto`, `lunxara`!)
