@@ -24,7 +24,6 @@ namespace TerminalFormatter.Nodes
     public override string GetNodeText(TerminalNode node, Terminal terminal)
     {
       var table = new ConsoleTables.ConsoleTable("Name", "Price", "Owned");
-      var adjustedTable = new StringBuilder();
 
       var ACServerConfiguration = Variables.IsACActive ? ACCompatibility.ServerConfiguration.GetValue(null) : null;
 
@@ -36,11 +35,11 @@ namespace TerminalFormatter.Nodes
       string headerName = "COMPANY STORE";
       string storeHeader = new Header().CreateHeaderWithoutLines(headerName);
 
-      adjustedTable.Append(storeHeader);
+      stringBuilder = new StringBuilder().Append(storeHeader);
 
       if (ConfigManager.ShowHelpText.Value)
       {
-        adjustedTable.Append(this.AdditionalInfo != null ? $"\n{this.AdditionalInfo}\n\n" : "");
+        stringBuilder.Append(this.AdditionalInfo != null ? $"\n{this.AdditionalInfo}\n\n" : "");
       }
 
       #region Items
@@ -110,7 +109,7 @@ namespace TerminalFormatter.Nodes
 
         table.AddRow(
           itemName,
-          $"${(int)(item.creditsWorth * buyable.DiscountPercentage)}",
+          $"${(int)(buyable.Price * buyable.DiscountPercentage)}",
           $"{(howManyOnShip == 0 ? "" : $"×{howManyOnShip.ToString("D2")}")}"
         // $"{(terminal.itemSalesPercentages[index] != 100 ? 100 - terminal.itemSalesPercentages[index] : "")}"
         );
@@ -464,9 +463,9 @@ namespace TerminalFormatter.Nodes
       // string modifiedTableString = middleLineReplace.Replace(tableString, "   ");
       // modifiedTableString = pipeReplace.Replace(modifiedTableString, "").Replace("-", " ");
 
-      adjustedTable.Append(tableString);
+      stringBuilder.Append(tableString);
 
-      string finalString = adjustedTable.ToString().TrimEnd();
+      string finalString = stringBuilder.ToString().TrimEnd();
       return finalString;
     }
   }
