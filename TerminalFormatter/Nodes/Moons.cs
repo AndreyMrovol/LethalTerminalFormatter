@@ -152,7 +152,7 @@ namespace TerminalFormatter.Nodes
           planetName = $"{planetName}".PadRight(planetWidth);
         }
 
-        int difficultyWidth = showDifficulty ? 4 : 0;
+        int difficultyWidth = showDifficulty ? ConfigManager.DifficultyStringLength.Value : 0;
 
         // if longer than 3, trim
         var difficultyString = SharedMethods.GetLevelRiskLevel(extendedLevel.SelectableLevel);

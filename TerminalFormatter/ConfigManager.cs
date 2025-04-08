@@ -21,6 +21,8 @@ namespace TerminalFormatter
     public static ConfigEntry<int> DivideShopPage { get; private set; }
 
     public static ConfigEntry<bool> UseShortenedWeathers { get; private set; }
+    public static ConfigEntry<int> DifficultyStringLength { get; private set; }
+
     public static ConfigEntry<bool> AlwaysDisplayHiddenMoons { get; private set; }
     public static ConfigEntry<bool> ShowNumberedPlanetNames { get; private set; }
 
@@ -43,6 +45,13 @@ namespace TerminalFormatter
       DetailedScanPage = configFile.Bind("General", "Detailed Scan Page", true, "Enable detailed scan page");
 
       UseShortenedWeathers = configFile.Bind("Moons", "Use Shortened Weathers", false, "Use shortened weathers in moons catalogue");
+
+      DifficultyStringLength = configFile.Bind(
+        "Moons",
+        "Difficulty String Length",
+        4,
+        new ConfigDescription("Multiplier for the amount of scrap spawned", new AcceptableValueRange<int>(1, 8))
+      );
 
       ShowNumberedPlanetNames = configFile.Bind("General", "Show Numbered Planet Names", false, "Show numbered planet names in terminal");
 
