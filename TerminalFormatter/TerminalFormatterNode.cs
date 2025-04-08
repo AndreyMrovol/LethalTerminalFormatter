@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text;
 using BepInEx.Configuration;
 
 namespace TerminalFormatter
@@ -9,6 +10,8 @@ namespace TerminalFormatter
     public string AdditionalInfo = null;
     public List<string> terminalNode;
     public ConfigEntry<bool> Enabled;
+
+    public StringBuilder stringBuilder = new();
 
     public virtual bool IsNodeValid(TerminalNode node, Terminal terminal)
     {
