@@ -1,3 +1,8 @@
+# 0.2.29
+
+- fixed an issue with `ItemWeights` displaying wrong cruiser prices (thanks: `narpeh`!)
+- added a config for difficulty string length (thanks: `satoru_satou0121`, `bobixaboxa`!)
+
 # 0.2.28
 
 - fixed an issue with displaying correct store rotation when multiple nodes with the same name exists (thanks, `purpletheproto`!)
