@@ -25,8 +25,6 @@ namespace TerminalFormatter.Nodes
     {
       var table = new ConsoleTables.ConsoleTable("Name", "Price", "Owned");
 
-      var ACServerConfiguration = Variables.IsACActive ? ACCompatibility.ServerConfiguration.GetValue(null) : null;
-
       GameObject ship = GameObject.Find("/Environment/HangarShip");
       var ItemsOnShip = ship.GetComponentsInChildren<GrabbableObject>().ToList();
 
@@ -78,15 +76,6 @@ namespace TerminalFormatter.Nodes
         {
           if (LethalLibCompatibility.IsLLItemDisabled(item))
           {
-            continue;
-          }
-        }
-
-        if (ACCompatibility.Items.ContainsKey(itemName))
-        {
-          if (!(bool)ACCompatibility.Items[itemName])
-          {
-            Plugin.logger.LogDebug($"Item {itemName} is disabled");
             continue;
           }
         }

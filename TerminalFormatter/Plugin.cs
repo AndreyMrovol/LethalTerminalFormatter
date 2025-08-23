@@ -9,7 +9,6 @@ namespace TerminalFormatter
 {
   [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
   [BepInDependency("Toskan4134.LethalRegeneration", BepInDependency.DependencyFlags.SoftDependency)]
-  [BepInDependency("com.potatoepet.AdvancedCompany", BepInDependency.DependencyFlags.SoftDependency)]
   [BepInDependency("com.malco.lethalcompany.moreshipupgrades", BepInDependency.DependencyFlags.SoftDependency)]
   [BepInDependency("pacoito.StoreRotationConfig", BepInDependency.DependencyFlags.SoftDependency)]
   [BepInDependency("WeatherTweaks", BepInDependency.DependencyFlags.SoftDependency)]
@@ -22,7 +21,6 @@ namespace TerminalFormatter
 
     internal static TerminalNode LockedNode;
 
-    internal static bool isACPresent = false;
     internal static bool isLLibPresent = false;
     internal static bool isLLLPresent = false;
     internal static bool isLRegenPresent = false;
@@ -43,13 +41,6 @@ namespace TerminalFormatter
       ConfigManager.Init(Config);
 
       MrovLib.EventManager.TerminalStart.AddListener((Terminal terminal) => Variables.Terminal = terminal);
-
-      if (Chainloader.PluginInfos.ContainsKey("com.potatoepet.AdvancedCompany"))
-      {
-        logger.LogWarning("AC found, setting up compatibility patches");
-        ACCompatibility.Init("com.potatoepet.AdvancedCompany");
-        isACPresent = true;
-      }
 
       if (Chainloader.PluginInfos.ContainsKey("imabatby.lethallevelloader"))
       {

@@ -19,7 +19,3 @@ url = "https://thunderstore.io/package/download/BananaPuncher714/LethalQuantitie
 [[library]]
 name = "StoreRotationConfig"
 url = "https://thunderstore.io/package/download/pacoito/StoreRotationConfig/2.5.1/"
-
-[[library]]
-name = "AdvancedCompany"
-url = "https://cdn.potatoepet.de/package/download/PotatoePet/AdvancedCompany/1.1.29/Archive.zip"
