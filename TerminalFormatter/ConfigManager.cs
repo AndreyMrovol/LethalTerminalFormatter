@@ -1,4 +1,5 @@
 using BepInEx.Configuration;
+using MrovLib;
 using TerminalFormatter.Patches;
 
 namespace TerminalFormatter
@@ -13,6 +14,8 @@ namespace TerminalFormatter
     }
 
     internal static ConfigFile configFile;
+
+    public static ConfigEntry<LoggingType> LoggingLevels { get; private set; }
 
     public static ConfigEntry<bool> ShowDifficultyInAll { get; private set; }
 
@@ -39,6 +42,8 @@ namespace TerminalFormatter
     private ConfigManager(ConfigFile config)
     {
       configFile = config;
+
+      LoggingLevels = configFile.Bind("Debug", "Logging Levels", LoggingType.Basic, "Set the logging level for the mod");
 
       ShowDifficultyInAll = configFile.Bind("General", "Show Difficulty in All", false, "Show difficulty in `preview all` setting");
 

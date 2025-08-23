@@ -88,5 +88,15 @@ namespace TerminalFormatter
 
       return null;
     }
+
+    public static bool IsLevelLocked(SelectableLevel level)
+    {
+      return MrovLib.SharedMethods.IsMoonLockedLLL(level);
+    }
+
+    public static bool IsLevelHidden(SelectableLevel level)
+    {
+      return MrovLib.SharedMethods.IsMoonHiddenLLL(level);
+    }
   }
 }
