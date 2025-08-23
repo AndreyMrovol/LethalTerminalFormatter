@@ -28,7 +28,7 @@ namespace TerminalFormatter
       this.Enabled = ConfigManager.configFile.Bind("Nodes", name, true, $"Enable node {name}");
 
       Settings.RegisteredNodes.Add(this);
-      Plugin.logger.LogInfo($"Registered node {name}");
+      Plugin.debugLogger.LogInfo($"Registered node {name}");
     }
   }
 }

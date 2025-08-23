@@ -16,7 +16,7 @@ namespace TerminalFormatter.Nodes
 
     public BuyableThing ResolveNodeIntoBuyable(TerminalNode node)
     {
-      Plugin.logger.LogDebug($"Resolving node {node.name} into Buyable");
+      Plugin.debugLogger.LogDebug($"Resolving node {node.name} into Buyable");
 
       return ContentManager
         .Buyables.Where(x => x.Nodes != null && x.Nodes.NodeConfirm != null)

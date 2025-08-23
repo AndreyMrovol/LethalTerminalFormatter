@@ -24,7 +24,7 @@ namespace TerminalFormatter
 
         if (GetPlanetCurrentWeather != null)
         {
-          Plugin.logger.LogInfo($"Method {GetPlanetCurrentWeather} found - BetaWeatherTweaks");
+          Plugin.debugLogger.LogInfo($"Method {GetPlanetCurrentWeather} found - BetaWeatherTweaks");
         }
         else
         {
@@ -37,7 +37,7 @@ namespace TerminalFormatter
 
           if (GetPlanetCurrentWeather != null)
           {
-            Plugin.logger.LogInfo($"Method {GetPlanetCurrentWeather} found");
+            Plugin.debugLogger.LogInfo($"Method {GetPlanetCurrentWeather} found");
           }
           else
           {

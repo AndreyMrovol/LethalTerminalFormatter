@@ -34,7 +34,7 @@ namespace TerminalFormatter
 
       if (efficientEnginesType == null)
       {
-        Plugin.logger.LogWarning($"Could not find {typeName} type");
+        Plugin.debugLogger.LogWarning($"Could not find {typeName} type");
         return price;
       }
 
@@ -43,7 +43,7 @@ namespace TerminalFormatter
 
       if (getDiscountedMoonPrice == null)
       {
-        Plugin.logger.LogWarning("Could not find GetDiscountedMoonPrice method in EfficientEngines");
+        Plugin.debugLogger.LogWarning("Could not find GetDiscountedMoonPrice method in EfficientEngines");
         return price;
       }
 
