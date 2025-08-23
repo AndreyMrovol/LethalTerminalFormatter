@@ -1,3 +1,7 @@
+# 0.2.30
+
+- fixed logger logging every single thing
+
 # 0.2.29
 
 - fixed an issue with `ItemWeights` displaying wrong cruiser prices (thanks: `narpeh`!)
