@@ -1,4 +1,5 @@
-﻿using BepInEx;
+﻿using System.Collections.Generic;
+using BepInEx;
 using BepInEx.Bootstrap;
 using BepInEx.Logging;
 using HarmonyLib;
@@ -21,7 +22,10 @@ namespace TerminalFormatter
     internal static TerminalNode LockedNode;
 
     internal static bool isLLibPresent = false;
-    internal static bool isLLLPresent = false;
+    internal static bool isLLLPresent
+    {
+      get { return LLLCompat.IsModPresent; }
+    }
     internal static bool isLRegenPresent = false;
 
     internal static bool isLGUPresent
@@ -41,6 +45,7 @@ namespace TerminalFormatter
     internal static MrovLib.Compatibility.CompatibilityBase LGUCompat;
     internal static MrovLib.Compatibility.CompatibilityBase LQCompat;
     internal static MrovLib.Compatibility.CompatibilityBase SRCCompat;
+    internal static LLLCompatibility LLLCompat;
 
     private void Awake()
     {
@@ -51,12 +56,15 @@ namespace TerminalFormatter
 
       MrovLib.EventManager.TerminalStart.AddListener((Terminal terminal) => Variables.Terminal = terminal);
 
-      if (Chainloader.PluginInfos.ContainsKey("imabatby.lethallevelloader"))
+      MrovLib.EventManager.MainMenuLoaded.AddListener(() =>
       {
-        logger.LogWarning("LLL found, setting up compatibility patches");
+        MainMenuInit();
+      });
 
-        LLLCompatibility.Init();
-        isLLLPresent = true;
+      LLLCompat = new LLLCompatibility("imabatby.lethallevelloader");
+      if (LLLCompat.IsModPresent)
+      {
+        Plugin.LLLCompat.Init();
 
         new Nodes.Moons();
         new Nodes.RouteLocked();
@@ -93,11 +101,6 @@ namespace TerminalFormatter
         WeatherTweaksCompatibility.Init();
         isWTPresent = true;
       }
-
-      MrovLib.EventManager.MainMenuLoaded.AddListener(() =>
-      {
-        MainMenuInit();
-      });
 
       new Nodes.Route();
       new Nodes.RouteAfter();
