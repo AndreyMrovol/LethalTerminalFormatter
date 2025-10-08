@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using HarmonyLib;
-using LethalLevelLoader;
+using TerminalFormatter.Patches;
 
 namespace TerminalFormatter.Nodes
 {
@@ -16,41 +17,48 @@ namespace TerminalFormatter.Nodes
       return true;
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
     public override string GetNodeText(TerminalNode node, Terminal terminal)
     {
-      var table = new ConsoleTables.ConsoleTable(
-        "Interior", // Name
-        "Weight", // Price
-        "Chance" // Weather
-      );
+      var table = new ConsoleTables.ConsoleTable("Interior", "Weight", "Chance");
 
-      List<ExtendedLevel> levels = LethalLevelLoader.PatchedContent.ExtendedLevels;
+      List<SelectableLevel> levels = MrovLib.LevelHelper.Levels;
 
-      ExtendedLevel currentLevel = levels
+      SelectableLevel currentLevel = levels
         .Where(level =>
-          node.terminalEvent.ToString().ToLower().Sanitized().Contains(level.NumberlessPlanetName.ToLower().Sanitized().Replace("-", ""))
-        )
+        {
+          string sanitizedNodeEvent = node.terminalEvent.ToString().Sanitized().ToLower();
+          string sanitizedPlanetName = MrovLib.SharedMethods.GetNumberlessPlanetName(level).ToLower().Sanitized().Replace("-", "");
+          return sanitizedNodeEvent.Contains(sanitizedPlanetName);
+        })
         .FirstOrDefault();
 
-      Dictionary<int, string> headerInfo = new() { { 1, $"PLANET: {currentLevel.NumberlessPlanetName}" }, };
+      Dictionary<int, string> headerInfo = new() { { 1, $"PLANET: {MrovLib.SharedMethods.GetNumberlessPlanetName(currentLevel)}" }, };
       var header = new Header().CreateNumberedHeader("SIMULATING ARRIVAL", 2, headerInfo);
 
-      List<ExtendedDungeonFlowWithRarity> currentPlanetDungeonFlows = LethalLevelLoader.DungeonManager.GetValidExtendedDungeonFlows(
-        currentLevel,
-        false
-      );
+      LethalLevelLoader.PatchedContent.ExtendedLevelDictionary.TryGetValue(currentLevel, out var currentExtendedLevel);
 
-      currentPlanetDungeonFlows.OrderBy(o => -(o.rarity)).ToList();
+      List<LethalLevelLoader.ExtendedDungeonFlowWithRarity> currentPlanetDungeonFlows =
+        LethalLevelLoader.DungeonManager.GetValidExtendedDungeonFlows(currentExtendedLevel, false);
+
+      Dictionary<string, int> dungeonFlowRarities = [];
 
       int totalRarityPool = 0;
-      currentPlanetDungeonFlows.Do(dungeonFlow => totalRarityPool += dungeonFlow.rarity);
+      currentPlanetDungeonFlows.Do(dungeonFlow =>
+      {
+        totalRarityPool += dungeonFlow.rarity;
 
-      foreach (var dungeonFlow in currentPlanetDungeonFlows)
+        dungeonFlowRarities.Add(dungeonFlow.extendedDungeonFlow.DungeonName, dungeonFlow.rarity);
+      });
+
+      dungeonFlowRarities = dungeonFlowRarities.OrderBy(o => -(o.Value)).ToDictionary(k => k.Key, v => v.Value);
+
+      foreach ((string dungeonName, int dungeonRarity) in dungeonFlowRarities)
       {
         table.AddRow(
-          dungeonFlow.extendedDungeonFlow.DungeonName.PadRight(Settings.planetNameWidth),
-          dungeonFlow.rarity,
-          $"{((float)dungeonFlow.rarity / (float)totalRarityPool * 100).ToString("F2")}%".PadLeft(4)
+          dungeonName.PadRight(Settings.planetNameWidth),
+          dungeonRarity,
+          $"{((float)dungeonRarity / (float)totalRarityPool * 100).ToString("F2")}%".PadLeft(4)
         );
       }
 
@@ -62,7 +70,7 @@ namespace TerminalFormatter.Nodes
       adjustedTable.Append(header);
 
       // don't simulate for fucking March
-      if (currentLevel.NumberlessPlanetName == "March")
+      if (currentExtendedLevel.NumberlessPlanetName == "March")
       {
         adjustedTable.AppendLine("\nData for March will always be innacurate\n");
       }
