@@ -18,12 +18,7 @@ namespace TerminalFormatter
       }
     }
 
-    public static void Init()
-    {
-      Harmony harmony = new("TerminalFormatter LQ");
-
-      Plugin.isLQPresent = true;
-    }
+    public static void Init() { }
 
     public static string GetLevelRiskLevel(SelectableLevel level)
     {

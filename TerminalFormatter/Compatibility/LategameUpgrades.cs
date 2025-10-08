@@ -20,8 +20,6 @@ namespace TerminalFormatter
     public static void Init()
     {
       LGUAssembly = Chainloader.PluginInfos["com.malco.lethalcompany.moreshipupgrades"].Instance.GetType().Assembly;
-
-      Plugin.isLGUPresent = true;
     }
 
     internal static int GetMoonPrice(int price)

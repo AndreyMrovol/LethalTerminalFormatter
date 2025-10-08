@@ -9,7 +9,6 @@ namespace TerminalFormatter
 {
   [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
   [BepInDependency("Toskan4134.LethalRegeneration", BepInDependency.DependencyFlags.SoftDependency)]
-  [BepInDependency("com.malco.lethalcompany.moreshipupgrades", BepInDependency.DependencyFlags.SoftDependency)]
   [BepInDependency("pacoito.StoreRotationConfig", BepInDependency.DependencyFlags.SoftDependency)]
   [BepInDependency("WeatherTweaks", BepInDependency.DependencyFlags.SoftDependency)]
   [BepInDependency("MrovLib", BepInDependency.DependencyFlags.HardDependency)]
@@ -24,10 +23,20 @@ namespace TerminalFormatter
     internal static bool isLLibPresent = false;
     internal static bool isLLLPresent = false;
     internal static bool isLRegenPresent = false;
-    internal static bool isLGUPresent = false;
+
+    internal static bool isLGUPresent
+    {
+      get { return LGUCompat.IsModPresent; }
+    }
     internal static bool isWTPresent = false;
-    internal static bool isLQPresent = false;
-    internal static bool isSRCPresent = false;
+    internal static bool isLQPresent
+    {
+      get { return LQCompat.IsModPresent; }
+    }
+    internal static bool isSRCPresent
+    {
+      get { return SRCCompat.IsModPresent; }
+    }
 
     internal static MrovLib.Compatibility.CompatibilityBase LGUCompat;
     internal static MrovLib.Compatibility.CompatibilityBase LQCompat;
@@ -85,6 +94,11 @@ namespace TerminalFormatter
         isWTPresent = true;
       }
 
+      MrovLib.EventManager.MainMenuLoaded.AddListener(() =>
+      {
+        MainMenuInit();
+      });
+
       new Nodes.Route();
       new Nodes.RouteAfter();
 
@@ -108,6 +122,11 @@ namespace TerminalFormatter
 
       // Plugin startup logic
       Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");
+    }
+
+    private void MainMenuInit()
+    {
+      LGUCompat = new LategameUpgradesCompatibility("com.malco.lethalcompany.moreshipupgrades");
     }
   }
 }

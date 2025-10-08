@@ -1,3 +1,7 @@
+# 0.2.31
+
+- fixed cyclic dependency with Dawnlib and LGU
+
 # 0.2.30
 
 - fixed logger logging every single thing

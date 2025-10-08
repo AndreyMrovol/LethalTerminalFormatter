@@ -22,8 +22,6 @@ namespace TerminalFormatter.Compatibility
       {
         UnpatchTerminalScroll();
       }
-
-      Plugin.isSRCPresent = true;
     }
 
     public static int GetDiscountedPrice(BuyableThing buyable, out int discount)
