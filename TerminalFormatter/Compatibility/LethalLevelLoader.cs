@@ -1,14 +1,21 @@
 using System;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using HarmonyLib;
 using LethalLevelLoader;
 
 namespace TerminalFormatter
 {
-  internal class LLLCompatibility
+  internal class LLLCompatibility(string guid, string version = null) : MrovLib.Compatibility.CompatibilityBase(guid, version)
   {
-    public static void Init()
+    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+    public void Init()
     {
+      if (!this.IsModPresent)
+      {
+        return;
+      }
+
       Plugin.harmony.Patch(
         AccessTools.Method(typeof(LethalLevelLoader.Patches), "TerminalLoadNewNode_Postfix"),
         prefix: new HarmonyMethod(typeof(LLLCompatibility), nameof(LLLLoadNodePatch))
