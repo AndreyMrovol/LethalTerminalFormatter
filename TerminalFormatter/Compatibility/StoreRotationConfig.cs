@@ -18,10 +18,7 @@ namespace TerminalFormatter.Compatibility
 
     public static void Init()
     {
-      if (!Plugin.isSRCPresent) // In case anything calls `Init()` again for some reason...
-      {
-        UnpatchTerminalScroll();
-      }
+      UnpatchTerminalScroll();
     }
 
     public static int GetDiscountedPrice(BuyableThing buyable, out int discount)
