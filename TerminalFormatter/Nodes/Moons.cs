@@ -110,6 +110,11 @@ namespace TerminalFormatter.Nodes
             continue;
           }
 
+          if (extendedLevelsList.Contains(extendedLevel))
+          {
+            continue;
+          }
+
           extendedLevelsList.Add(extendedLevel);
         }
       }
