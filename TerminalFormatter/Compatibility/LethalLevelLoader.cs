@@ -21,6 +21,14 @@ namespace TerminalFormatter
         prefix: new HarmonyMethod(typeof(LLLCompatibility), nameof(LLLLoadNodePatch))
       );
 
+      if (Plugin.DawnLibCompat.IsModPresent)
+      {
+        Plugin.harmony.Patch(
+          AccessTools.Method(typeof(LethalLevelLoader.TerminalManager), "SwapRouteNodeToLockedNode"),
+          prefix: new HarmonyMethod(typeof(LLLCompatibility), nameof(SwapRouteNodeToLockedNode))
+        );
+      }
+
       GetLLLSettings();
     }
 
@@ -49,8 +57,6 @@ namespace TerminalFormatter
         LethalLevelLoader.Settings.levelPreviewSortType = resultSort;
         // Plugin.logger.LogInfo($"LLL sort type set to {resultSort}");
       }
-
-      Variables.ISLLLActive = true;
     }
 
     public static bool LLLLoadNodePatch(Terminal __0, ref TerminalNode __1)
@@ -94,6 +100,11 @@ namespace TerminalFormatter
       }
 
       return null;
+    }
+
+    public static bool SwapRouteNodeToLockedNode()
+    {
+      return false;
     }
 
     public static bool IsLevelLocked(SelectableLevel level)

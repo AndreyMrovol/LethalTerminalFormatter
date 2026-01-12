@@ -1,5 +1,6 @@
 using System.Linq;
 using HarmonyLib;
+using MrovLib.ContentType;
 
 namespace TerminalFormatter
 {
@@ -20,7 +21,7 @@ namespace TerminalFormatter
 
       lastNode = node;
 
-      if (!MrovLib.Plugin.LLL.IsModPresent)
+      if (!MrovLib.Plugin.LLL.IsModPresent && !Plugin.DawnLibCompat.IsModPresent)
       {
         return true;
       }
@@ -36,8 +37,7 @@ namespace TerminalFormatter
         return true;
       }
 
-      MrovLib.ContentType.Route level = MrovLib.ContentManager.Routes.Where(x => x.Nodes.Node == node).FirstOrDefault();
-
+      Route level = MrovLib.ContentManager.Routes.FirstOrDefault(x => x.Nodes.Node == node);
       if (level == null)
       {
         Plugin.debugLogger.LogDebug("Level is null");
@@ -49,20 +49,31 @@ namespace TerminalFormatter
         return true;
       }
 
-      bool isLocked = MrovLib.SharedMethods.IsMoonLockedLLL(level.Level);
+      if (node.displayText.ToLower().Contains("route locked!"))
+      {
+        if (Plugin.DawnLibCompat.IsModPresent)
+        {
+          if (Plugin.DawnLibCompat.GetLevelStatus(level.Level).locked)
+          {
+            Plugin.debugLogger.LogInfo("Node is locked by DawnLib!!");
+            __instance.LoadNewNode(Plugin.LockedNode);
+            return false;
+          }
+          else
+          {
+            return true;
+          }
+        }
+      }
 
-      if (isLocked)
+      if (MrovLib.SharedMethods.IsMoonLockedLLL(level.Level))
       {
         Plugin.debugLogger.LogInfo("Node is locked!!");
-
         __instance.LoadNewNode(Plugin.LockedNode);
-
         return false;
       }
-      else
-      {
-        return true;
-      }
+
+      return true;
     }
   }
 }

@@ -42,6 +42,7 @@
         <PackageReference Include="Xilophor.LethalNetworkAPI" Version="2.1.0" />
 
         <PackageReference Include="Evaisa.LethalLib" Version="0.16.0" />
+        <PackageReference Include="TeamXiaolan.DawnLib" Version="*-*" PrivateAssets="all"/>
 
         <!-- <PackageReference Include="mrov.WeatherRegistry" Version="*" /> -->
         <PackageReference Include="mrov.MrovLib" Version="*-*" >

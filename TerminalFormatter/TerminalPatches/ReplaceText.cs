@@ -11,7 +11,7 @@ namespace TerminalFormatter
     [HarmonyPrefix]
     [HarmonyPatch("LoadNewNode")]
     [HarmonyPriority(Priority.Last)]
-    [HarmonyAfter("imabatby.lethallevelloader")]
+    [HarmonyAfter("imabatby.lethallevelloader", "com.github.teamxiaolan.dawnlib")]
     public static bool LoadNewTerminalFormatterNode(Terminal __instance, TerminalNode node)
     {
       __instance.modifyingText = true;

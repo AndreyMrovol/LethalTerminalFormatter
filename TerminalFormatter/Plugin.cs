@@ -45,6 +45,7 @@ namespace TerminalFormatter
     internal static MrovLib.Compatibility.CompatibilityBase LGUCompat;
     internal static MrovLib.Compatibility.CompatibilityBase LQCompat;
     internal static MrovLib.Compatibility.CompatibilityBase SRCCompat;
+    internal static DawnLibCompatibility DawnLibCompat;
     internal static LLLCompatibility LLLCompat;
 
     private void Awake()
@@ -60,20 +61,6 @@ namespace TerminalFormatter
       {
         MainMenuInit();
       });
-
-      LLLCompat = new LLLCompatibility("imabatby.lethallevelloader");
-      if (LLLCompat.IsModPresent)
-      {
-        Plugin.LLLCompat.Init();
-
-        new Nodes.Moons();
-        new Nodes.RouteLocked();
-        new Nodes.Simulate();
-      }
-      else
-      {
-        new Nodes.MoonsNoLLL();
-      }
 
       if (Chainloader.PluginInfos.ContainsKey("evaisa.lethallib"))
       {
@@ -129,6 +116,27 @@ namespace TerminalFormatter
 
     private void MainMenuInit()
     {
+      DawnLibCompat = new DawnLibCompatibility("com.github.teamxiaolan.dawnlib");
+      if (DawnLibCompat.IsModPresent)
+      {
+        logger.LogWarning("DawnLib found, setting up compatibility patches");
+        DawnLibCompat.Init();
+      }
+
+      LLLCompat = new LLLCompatibility("imabatby.lethallevelloader");
+      if (LLLCompat.IsModPresent)
+      {
+        Plugin.LLLCompat.Init();
+
+        new Nodes.Moons();
+        new Nodes.RouteLocked();
+        new Nodes.Simulate();
+      }
+      else
+      {
+        new Nodes.MoonsNoLLL();
+      }
+
       LGUCompat = new LategameUpgradesCompatibility("com.malco.lethalcompany.moreshipupgrades");
     }
   }

@@ -105,17 +105,22 @@ namespace TerminalFormatter.Nodes
       {
         foreach (LethalLevelLoader.ExtendedLevel extendedLevel in extendedLevelGroup.extendedLevelsList)
         {
-          if (MrovLib.SharedMethods.IsMoonHiddenLLL(extendedLevel.SelectableLevel) && !ConfigManager.AlwaysDisplayHiddenMoons.Value)
+          bool isLocked = false;
+
+          if (Plugin.DawnLibCompat.IsModPresent)
           {
-            continue;
+            (bool locked, bool hidden) = Plugin.DawnLibCompat.GetLevelStatus(extendedLevel.SelectableLevel);
+            isLocked = locked || hidden;
+          }
+          else
+          {
+            isLocked = MrovLib.SharedMethods.IsMoonHiddenLLL(extendedLevel.SelectableLevel) && !ConfigManager.AlwaysDisplayHiddenMoons.Value;
           }
 
-          if (extendedLevelsList.Contains(extendedLevel))
+          if (!isLocked && !extendedLevelsList.Contains(extendedLevel))
           {
-            continue;
+            extendedLevelsList.Add(extendedLevel);
           }
-
-          extendedLevelsList.Add(extendedLevel);
         }
       }
 
