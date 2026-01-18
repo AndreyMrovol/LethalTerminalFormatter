@@ -55,6 +55,8 @@
 
         <Reference Include="LethalLevelLoader" PrivateAssets="All">
             <HintPath>$(LibraryDirectory)/LethalLevelLoader.dll</HintPath>
+        </Reference>
+
         <Reference Include="MMHOOK_Assembly-CSharp">
             <HintPath>$(LibraryDirectory)/MMHOOK_Assembly-CSharp.dll</HintPath>
         </Reference>
