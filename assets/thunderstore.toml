@@ -14,6 +14,7 @@ containsNsfwContent = false
 [package.dependencies]
 BepInEx-BepInExPack = "5.4.2100"
 mrov-MrovLib = "0.2.25"
+Hamunii-AutoHookGenPatcher = "1.0.9"
 
 [build]
 icon = "../icon.png"
