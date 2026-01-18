@@ -1,3 +1,7 @@
+# 0.2.33
+
+- (hopefully) fixed issues relating to incompatibilities with DawnLib and LLl being present together
+
 # 0.2.31
 
 - fixed cyclic dependency with Dawnlib and LGU
