@@ -3,6 +3,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using HarmonyLib;
+using MrovLib;
 using TerminalFormatter.Patches;
 
 namespace TerminalFormatter.Nodes
@@ -22,16 +23,8 @@ namespace TerminalFormatter.Nodes
     {
       var table = new ConsoleTables.ConsoleTable("Interior", "Weight", "Chance");
 
-      List<SelectableLevel> levels = MrovLib.LevelHelper.Levels;
-
-      SelectableLevel currentLevel = levels
-        .Where(level =>
-        {
-          string sanitizedNodeEvent = node.terminalEvent.ToString().Sanitized().ToLower();
-          string sanitizedPlanetName = MrovLib.SharedMethods.GetNumberlessPlanetName(level).ToLower().Sanitized().Replace("-", "");
-          return sanitizedNodeEvent.Contains(sanitizedPlanetName);
-        })
-        .FirstOrDefault();
+      SelectableLevel currentLevel = GetTheFuckingLevelFromSimulateNode(node);
+      Plugin.logger.LogInfo($"Simulating for level: {currentLevel.PlanetName}");
 
       Dictionary<int, string> headerInfo = new() { { 1, $"PLANET: {MrovLib.SharedMethods.GetNumberlessPlanetName(currentLevel)}" }, };
       var header = new Header().CreateNumberedHeader("SIMULATING ARRIVAL", 2, headerInfo);
@@ -79,6 +72,21 @@ namespace TerminalFormatter.Nodes
       adjustedTable.Append(table.ToStringCustomDecoration(header: true));
 
       return adjustedTable.ToString();
+    }
+
+    // this is fucking stupid
+    public SelectableLevel GetTheFuckingLevelFromSimulateNode(TerminalNode node)
+    {
+      List<SelectableLevel> levels = MrovLib.LevelHelper.Levels;
+      List<TerminalNode> allSimulateNodes = ContentManager
+        .Verbs.FirstOrDefault(verb => verb.name.ToLower() == "simulatekeyword")
+        .compatibleNouns.ToList()
+        .Select(n => n.result)
+        .ToList();
+
+      int terminalNodeIndex = allSimulateNodes.IndexOf(node);
+
+      return levels[terminalNodeIndex];
     }
   }
 }

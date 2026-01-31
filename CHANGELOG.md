@@ -1,3 +1,7 @@
+# 0.2.34
+
+- fixed an issue with `Simulate` node not working with levels ending with a number (thanks, `sonicx8000`!)
+
 # 0.2.33
 
 - (hopefully) fixed issues relating to incompatibilities with DawnLib and LLl being present together
