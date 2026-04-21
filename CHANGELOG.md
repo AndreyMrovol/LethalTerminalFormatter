@@ -1,3 +1,10 @@
+# 0.2.35
+
+- updated the mod to work with v80 of Lethal Company
+- removed compatibility with LethalQuantities
+- removed compatibility with AdvancedCompany
+- updated soft-compatibility modules for parity between them
+
 # 0.2.34
 
 - fixed an issue with `Simulate` node not working with levels ending with a number (thanks, `sonicx8000`!)
@@ -8,7 +15,7 @@
 
 # 0.2.31
 
-- fixed cyclic dependency with Dawnlib and LGU
+- fixed cyclic dependency with DawnLib and LGU
 
 # 0.2.30
 
