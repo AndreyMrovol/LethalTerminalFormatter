@@ -40,23 +40,11 @@ jobs:
         run: |
           dotnet pack -c Release
 
-      - name: Upload CurseForge artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: curseforge-build
-          path: ${{ env.ZIP_PATH }}
-
       - name: Upload Thunderstore artifact
         uses: actions/upload-artifact@v4
         with:
           name: thunderstore-build
           path: ./*/dist/*.zip
-
-      - name: Upload nupkg artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: nupkg-build
-          path: ./*/bin/Release/*.nupkg
 
       - name: Upload Versions artifact
         uses: actions/upload-artifact@v4
