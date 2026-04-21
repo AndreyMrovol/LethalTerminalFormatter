@@ -21,30 +21,11 @@ namespace TerminalFormatter
 
     internal static TerminalNode LockedNode;
 
-    internal static bool isLLibPresent = false;
-    internal static bool isLLLPresent
-    {
-      get { return LLLCompat.IsModPresent; }
-    }
-    internal static bool isLRegenPresent = false;
+    internal static LethalLibCompatibility LethalLibCompat;
+    internal static LategameUpgradesCompatibility LGUCompat;
+    internal static StoreRotationConfigCompatibility SRCCompat;
+    internal static LethalRegenCompatibility LethalRegenCompat;
 
-    internal static bool isLGUPresent
-    {
-      get { return LGUCompat.IsModPresent; }
-    }
-    internal static bool isWTPresent = false;
-    internal static bool isLQPresent
-    {
-      get { return LQCompat.IsModPresent; }
-    }
-    internal static bool isSRCPresent
-    {
-      get { return SRCCompat.IsModPresent; }
-    }
-
-    internal static MrovLib.Compatibility.CompatibilityBase LGUCompat;
-    internal static MrovLib.Compatibility.CompatibilityBase LQCompat;
-    internal static MrovLib.Compatibility.CompatibilityBase SRCCompat;
     internal static DawnLibCompatibility DawnLibCompat;
     internal static LLLCompatibility LLLCompat;
 
@@ -77,17 +58,8 @@ namespace TerminalFormatter
       }
 
       LGUCompat = new LategameUpgradesCompatibility("com.malco.lethalcompany.moreshipupgrades");
-
-      LQCompat = new LethalQuantitiesCompatibility("LethalQuantities");
-
       SRCCompat = new StoreRotationConfigCompatibility("pacoito.StoreRotationConfig");
 
-      if (Chainloader.PluginInfos.ContainsKey("WeatherTweaks"))
-      {
-        logger.LogWarning("WeatherTweaks found, setting up compatibility patches");
-        WeatherTweaksCompatibility.Init();
-        isWTPresent = true;
-      }
 
       new Nodes.Route();
       new Nodes.RouteAfter();

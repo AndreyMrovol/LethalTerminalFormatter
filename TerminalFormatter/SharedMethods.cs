@@ -69,15 +69,7 @@ namespace TerminalFormatter
 
     public static string GetLevelRiskLevel(SelectableLevel level)
     {
-      if (Plugin.LQCompat.IsModPresent)
-      {
-        string LQRiskLevel = LethalQuantitiesCompatibility.GetLevelRiskLevel(level);
-        return LQRiskLevel == null ? level.riskLevel : LQRiskLevel;
-      }
-      else
-      {
-        return level.riskLevel;
-      }
+      return level.riskLevel;
     }
   }
 }
