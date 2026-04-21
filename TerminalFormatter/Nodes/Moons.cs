@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using LethalLevelLoader;
+using TerminalFormatter.Compatibility;
 using UnityEngine;
 
 namespace TerminalFormatter.Nodes
