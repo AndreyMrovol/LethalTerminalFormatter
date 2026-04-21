@@ -1,11 +1,19 @@
-namespace TerminalFormatter
+namespace TerminalFormatter.Compatibility
 {
-  internal class LethalRegenCompatibility
+  internal class LethalRegenCompatibility : MrovLib.CompatibilityHandler
   {
     internal static bool IsUpgradeInStore = false;
 
-    public static void Init()
+    public LethalRegenCompatibility(string guid, string version = null)
+      : base(guid, version) { }
+
+    public override void Init()
     {
+      if (!this.IsModPresent)
+      {
+        return;
+      }
+
       IsUpgradeInStore = LethalRegeneration.config.Configuration.Instance.HealingUpgradeEnabled;
     }
 

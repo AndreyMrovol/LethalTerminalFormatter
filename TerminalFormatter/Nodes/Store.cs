@@ -72,7 +72,7 @@ namespace TerminalFormatter.Nodes
           itemName = $"* {itemName}";
         }
 
-        if (Plugin.isLLibPresent)
+        if (Plugin.LethalLibCompat.IsModPresent)
         {
           if (LethalLibCompatibility.IsLLItemDisabled(item))
           {
@@ -155,7 +155,7 @@ namespace TerminalFormatter.Nodes
           unlockableName = $"* {unlockableName}";
         }
 
-        if (Plugin.isLLibPresent)
+        if (Plugin.LethalLibCompat.IsModPresent)
         {
           if (LethalLibCompatibility.IsLLUpgradeDisabled(unlockable))
           {
@@ -195,7 +195,7 @@ namespace TerminalFormatter.Nodes
 
       #region Regeneration
 
-      if (Plugin.isLRegenPresent)
+      if (Plugin.LethalRegenCompat.IsModPresent)
       {
         if (!LethalRegenCompatibility.IsUpgradeBought() && LethalRegenCompatibility.IsUpgradeInStore)
         {
@@ -291,7 +291,7 @@ namespace TerminalFormatter.Nodes
           decorationName = $"* {decorationName}";
         }
 
-        if (Plugin.isLLibPresent)
+        if (Plugin.LethalLibCompat.IsModPresent)
         {
           if (LethalLibCompatibility.IsLLUpgradeDisabled(unlockable))
           {
@@ -305,7 +305,7 @@ namespace TerminalFormatter.Nodes
         }
 
         // StoreRotationConfig compatibility.
-        if (Plugin.isSRCPresent)
+        if (Plugin.SRCCompat.IsModPresent)
         {
           int price = StoreRotationConfigCompatibility.GetDiscountedPrice(buyable, out int discount);
 
@@ -386,7 +386,7 @@ namespace TerminalFormatter.Nodes
         }
 
         // StoreRotationConfig compatibility.
-        if (Plugin.isSRCPresent)
+        if (Plugin.SRCCompat.IsModPresent)
         {
           int price = StoreRotationConfigCompatibility.GetDiscountedPrice(buyable, out int discount);
 

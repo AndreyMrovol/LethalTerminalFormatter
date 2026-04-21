@@ -5,15 +5,20 @@ using Dawn;
 using Dawn.Internal;
 using HarmonyLib;
 
-namespace TerminalFormatter
+namespace TerminalFormatter.Compatibility
 {
-  internal class DawnLibCompatibility : MrovLib.Compatibility.CompatibilityBase
+  internal class DawnLibCompatibility : MrovLib.CompatibilityHandler
   {
     public DawnLibCompatibility(string guid, string version = null)
       : base(guid, version) { }
 
-    public void Init()
+    public override void Init()
     {
+      if (!this.IsModPresent)
+      {
+        return;
+      }
+
       Type dawnTerminalType = AccessTools.TypeByName("Dawn.MoonRegistrationHandler");
       Plugin.harmony.Patch(
         AccessTools.Method(dawnTerminalType, "DynamicMoonCatalogue"),

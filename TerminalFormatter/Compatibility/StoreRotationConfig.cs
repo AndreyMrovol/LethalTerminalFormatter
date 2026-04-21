@@ -5,19 +5,18 @@ using StoreRotationConfig.Api;
 
 namespace TerminalFormatter.Compatibility
 {
-  internal class StoreRotationConfigCompatibility : MrovLib.Compatibility.CompatibilityBase
+  internal class StoreRotationConfigCompatibility : MrovLib.CompatibilityHandler
   {
     public StoreRotationConfigCompatibility(string guid, string version = null)
-      : base(guid, version)
-    {
-      if (IsModPresent)
-      {
-        Init();
-      }
-    }
+      : base(guid, version) { }
 
-    public static void Init()
+    public override void Init()
     {
+      if (!this.IsModPresent)
+      {
+        return;
+      }
+
       UnpatchTerminalScroll();
     }
 

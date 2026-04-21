@@ -1,8 +1,9 @@
-namespace TerminalFormatter
+namespace TerminalFormatter.Compatibility
 {
-  internal class LethalLibCompatibility
+  internal class LethalLibCompatibility : MrovLib.CompatibilityHandler
   {
-    public static void Init() { }
+    public LethalLibCompatibility(string guid, string version = null)
+      : base(guid, version) { }
 
     public static bool IsLLItemDisabled(Item item)
     {
@@ -30,9 +31,5 @@ namespace TerminalFormatter
 
       return registeredUnlockable.disabled;
     }
-
-    // public static bool IsLLDecorDisabled(){
-
-    // }
   }
 }

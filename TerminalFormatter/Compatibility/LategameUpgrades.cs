@@ -2,25 +2,12 @@ using System;
 using System.Reflection;
 using BepInEx.Bootstrap;
 
-namespace TerminalFormatter
+namespace TerminalFormatter.Compatibility
 {
-  internal class LategameUpgradesCompatibility : MrovLib.Compatibility.CompatibilityBase
+  internal class LategameUpgradesCompatibility : MrovLib.CompatibilityHandler
   {
-    internal static Assembly LGUAssembly;
-
     public LategameUpgradesCompatibility(string guid, string version = null)
-      : base(guid, version)
-    {
-      if (this.IsModPresent)
-      {
-        Init();
-      }
-    }
-
-    public static void Init()
-    {
-      LGUAssembly = Chainloader.PluginInfos["com.malco.lethalcompany.moreshipupgrades"].Instance.GetType().Assembly;
-    }
+      : base(guid, version) { }
 
     internal static int GetMoonPrice(int price)
     {

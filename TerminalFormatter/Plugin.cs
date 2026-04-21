@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using BepInEx;
 using BepInEx.Bootstrap;
 using BepInEx.Logging;
@@ -8,16 +9,13 @@ using UnityEngine;
 
 namespace TerminalFormatter
 {
-  [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
-  [BepInDependency("Toskan4134.LethalRegeneration", BepInDependency.DependencyFlags.SoftDependency)]
-  [BepInDependency("pacoito.StoreRotationConfig", BepInDependency.DependencyFlags.SoftDependency)]
-  [BepInDependency("WeatherTweaks", BepInDependency.DependencyFlags.SoftDependency)]
+  [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
   [BepInDependency("MrovLib", BepInDependency.DependencyFlags.HardDependency)]
   public class Plugin : BaseUnityPlugin
   {
     internal static ManualLogSource logger;
     internal static Logger debugLogger = new("Debug", MrovLib.LoggingType.Developer);
-    internal static Harmony harmony = new(PluginInfo.PLUGIN_GUID);
+    internal static Harmony harmony = new(MyPluginInfo.PLUGIN_GUID);
 
     internal static TerminalNode LockedNode;
 
@@ -43,23 +41,16 @@ namespace TerminalFormatter
         MainMenuInit();
       });
 
-      if (Chainloader.PluginInfos.ContainsKey("evaisa.lethallib"))
-      {
-        logger.LogWarning("LethalLib found, setting up compatibility patches");
-        // LLLCompatibility.Init();
-        isLLibPresent = true;
-      }
+      LethalLibCompat = new("evaisa.lethallib");
 
-      if (Chainloader.PluginInfos.ContainsKey("Toskan4134.LethalRegeneration"))
-      {
-        logger.LogWarning("LethalRegeneration found, setting up compatibility patches");
-        LethalRegenCompatibility.Init();
-        isLRegenPresent = true;
-      }
+      LethalRegenCompat = new LethalRegenCompatibility("Toskan4134.LethalRegeneration");
 
       LGUCompat = new LategameUpgradesCompatibility("com.malco.lethalcompany.moreshipupgrades");
       SRCCompat = new StoreRotationConfigCompatibility("pacoito.StoreRotationConfig");
 
+      DawnLibCompat = new DawnLibCompatibility("com.github.teamxiaolan.dawnlib");
+
+      LLLCompat = new LLLCompatibility("imabatby.lethallevelloader");
 
       new Nodes.Route();
       new Nodes.RouteAfter();
@@ -83,23 +74,13 @@ namespace TerminalFormatter
       LockedNode.terminalOptions = [];
 
       // Plugin startup logic
-      Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");
+      Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} is loaded!");
     }
 
     private void MainMenuInit()
     {
-      DawnLibCompat = new DawnLibCompatibility("com.github.teamxiaolan.dawnlib");
-      if (DawnLibCompat.IsModPresent)
-      {
-        logger.LogWarning("DawnLib found, setting up compatibility patches");
-        DawnLibCompat.Init();
-      }
-
-      LLLCompat = new LLLCompatibility("imabatby.lethallevelloader");
       if (LLLCompat.IsModPresent)
       {
-        Plugin.LLLCompat.Init();
-
         new Nodes.Moons();
         new Nodes.RouteLocked();
         new Nodes.Simulate();
@@ -108,8 +89,6 @@ namespace TerminalFormatter
       {
         new Nodes.MoonsNoLLL();
       }
-
-      LGUCompat = new LategameUpgradesCompatibility("com.malco.lethalcompany.moreshipupgrades");
     }
   }
 }

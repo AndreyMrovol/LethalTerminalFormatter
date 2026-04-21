@@ -4,12 +4,15 @@ using System.Runtime.CompilerServices;
 using HarmonyLib;
 using LethalLevelLoader;
 
-namespace TerminalFormatter
+namespace TerminalFormatter.Compatibility
 {
-  internal class LLLCompatibility(string guid, string version = null) : MrovLib.Compatibility.CompatibilityBase(guid, version)
+  internal class LLLCompatibility : MrovLib.CompatibilityHandler
   {
+    public LLLCompatibility(string guid, string version = null)
+      : base(guid, version) { }
+
     [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-    public void Init()
+    public override void Init()
     {
       if (!this.IsModPresent)
       {

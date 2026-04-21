@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using HarmonyLib;
+using TerminalFormatter.Compatibility;
 
 namespace TerminalFormatter
 {
@@ -12,7 +13,7 @@ namespace TerminalFormatter
       int weatherLength = Settings.planetWeatherWidth - 1;
       bool showDifficulty = false;
 
-      if (Plugin.isLLLPresent)
+      if (Plugin.LLLCompat.IsModPresent)
       {
         showDifficulty = ShouldShowDifficulty(level);
       }
@@ -49,7 +50,7 @@ namespace TerminalFormatter
 
     public static int GetPrice(int beforeDiscountPrice)
     {
-      if (Plugin.isLGUPresent)
+      if (Plugin.LGUCompat.IsModPresent)
       {
         return LategameUpgradesCompatibility.GetMoonPrice(beforeDiscountPrice);
       }
