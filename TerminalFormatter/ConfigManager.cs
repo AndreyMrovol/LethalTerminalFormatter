@@ -17,8 +17,6 @@ namespace TerminalFormatter
 
     public static ConfigEntry<LoggingType> LoggingLevels { get; private set; }
 
-    public static ConfigEntry<bool> ShowDifficultyInAll { get; private set; }
-
     public static ConfigEntry<bool> DetailedScanPage { get; private set; }
 
     public static ConfigEntry<int> DivideShopPage { get; private set; }
@@ -44,8 +42,6 @@ namespace TerminalFormatter
       configFile = config;
 
       LoggingLevels = configFile.Bind("Debug", "Logging Levels", LoggingType.Basic, "Set the logging level for the mod");
-
-      ShowDifficultyInAll = configFile.Bind("General", "Show Difficulty in All", false, "Show difficulty in `preview all` setting");
 
       DetailedScanPage = configFile.Bind("General", "Detailed Scan Page", true, "Enable detailed scan page");
 

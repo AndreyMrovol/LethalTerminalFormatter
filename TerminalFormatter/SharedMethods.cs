@@ -11,17 +11,6 @@ namespace TerminalFormatter
     {
       string weather = MrovLib.SharedMethods.GetWeather(level);
       int weatherLength = Settings.planetWeatherWidth - 1;
-      bool showDifficulty = false;
-
-      if (Plugin.LLLCompat.IsModPresent)
-      {
-        showDifficulty = ShouldShowDifficulty(level);
-      }
-
-      if (showDifficulty)
-      {
-        weatherLength -= 7;
-      }
 
       if (weather.Length >= weatherLength || ConfigManager.UseShortenedWeathers.Value)
       {
@@ -59,14 +48,6 @@ namespace TerminalFormatter
       {
         return beforeDiscountPrice;
       }
-    }
-
-    public static bool ShouldShowDifficulty(SelectableLevel level)
-    {
-      return (
-          ConfigManager.ShowDifficultyInAll.Value && LethalLevelLoader.Settings.levelPreviewInfoType == LethalLevelLoader.PreviewInfoType.All
-        )
-        || LethalLevelLoader.Settings.levelPreviewInfoType == LethalLevelLoader.PreviewInfoType.Difficulty;
     }
 
     public static string GetLevelRiskLevel(SelectableLevel level)
