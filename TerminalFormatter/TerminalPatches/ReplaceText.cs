@@ -12,6 +12,7 @@ namespace TerminalFormatter
     [HarmonyPatch("LoadNewNode")]
     [HarmonyPriority(Priority.Last)]
     [HarmonyAfter("imabatby.lethallevelloader", "com.github.teamxiaolan.dawnlib")]
+    [HarmonyBefore(TerminalUtils.MyPluginInfo.PLUGIN_GUID)]
     public static bool LoadNewTerminalFormatterNode(Terminal __instance, TerminalNode node)
     {
       __instance.modifyingText = true;
@@ -19,11 +20,13 @@ namespace TerminalFormatter
       __instance.screenText.interactable = true;
       string newDisplayText = null;
 
+      Variables.CurrentNode = node;
       Variables.LastReplacedNode = null;
 
       // check if node.name contains any of TerminalFormatterNode.terminalNode strings
       List<TerminalFormatterNode> possibleNodes = Settings
-        .RegisteredNodes.Where(formatterNode => formatterNode.terminalNode.Any(y => node.name.Contains(y)))
+        .RegisteredNodes.Where(formatterNode => formatterNode.NodeNamesToMatch.Count > 0)
+        .Where(formatterNode => formatterNode.NodeNamesToMatch.Any(y => node.name.Contains(y)))
         .ToList();
 
       if (possibleNodes != null)
@@ -41,22 +44,22 @@ namespace TerminalFormatter
 
         if (currentNode != null)
         {
-          Plugin.debugLogger.LogDebug($"Checking if node {currentNode.name} is valid...");
-          bool shouldRun = currentNode.IsNodeValid(node, __instance);
+          Plugin.debugLogger.LogDebug($"Checking if node {currentNode.Name} is valid...");
+          bool shouldRun = currentNode.IsNodeValid(node);
           if (!shouldRun)
           {
-            Plugin.debugLogger.LogDebug($"Node {currentNode.name} is not valid");
+            Plugin.debugLogger.LogDebug($"Node {currentNode.Name} is not valid");
             continue;
           }
 
           if (!currentNode.Enabled.Value)
           {
-            Plugin.debugLogger.LogDebug($"Node {currentNode.name} is not enabled");
+            Plugin.debugLogger.LogDebug($"Node {currentNode.Name} is not enabled");
             continue;
           }
 
-          Plugin.debugLogger.LogDebug($"Using node {currentNode.name}");
-          newDisplayText = currentNode.GetNodeText(node, __instance);
+          Plugin.debugLogger.LogDebug($"Using node {currentNode.Name}");
+          newDisplayText = currentNode.GetNodeText(node);
           break;
         }
         else
@@ -100,6 +103,7 @@ namespace TerminalFormatter
         Settings.firstUse = false;
         Variables.LastReplacedNode = node;
 
+        TerminalUtils.NodeReplacementManager.ReplaceNode = false;
         return false;
       }
 
