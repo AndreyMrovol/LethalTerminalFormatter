@@ -1,32 +1,27 @@
+using System;
 using System.Collections.Generic;
 using System.Text;
 using BepInEx.Configuration;
+using TerminalUtils;
 
 namespace TerminalFormatter
 {
-  public abstract class TerminalFormatterNode
+  public abstract class TerminalFormatterNode : TerminalUtils.Definitions.TerminalNodeReplacement
   {
-    public string name;
-    public string AdditionalInfo = null;
-    public List<string> terminalNode;
-    public ConfigEntry<bool> Enabled;
+    public List<string> NodeNamesToMatch { get; internal set; } = [];
 
-    public StringBuilder stringBuilder = new();
-
-    public virtual bool IsNodeValid(TerminalNode node, Terminal terminal)
+    // constructors
+    public TerminalFormatterNode(string name, List<string> nodeNames)
+      : base(name, null, ConfigManager.configFile.Bind("Nodes", name, true, $"Enable node {name}"))
     {
-      return true;
+      this.NodeNamesToMatch = nodeNames;
+      Settings.RegisteredNodes.Add(this);
+      Plugin.debugLogger.LogInfo($"Registered node {name}");
     }
 
-    public abstract string GetNodeText(TerminalNode node, Terminal terminal);
-
-    // constructor
-    public TerminalFormatterNode(string name, List<string> terminalNode)
+    public TerminalFormatterNode(string name, TerminalNode terminalNode)
+      : base(name, terminalNode, ConfigManager.configFile.Bind("Nodes", name, true, $"Enable node {name}"))
     {
-      this.name = name;
-      this.terminalNode = terminalNode;
-      this.Enabled = ConfigManager.configFile.Bind("Nodes", name, true, $"Enable node {name}");
-
       Settings.RegisteredNodes.Add(this);
       Plugin.debugLogger.LogInfo($"Registered node {name}");
     }

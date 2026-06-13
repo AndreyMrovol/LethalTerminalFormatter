@@ -65,6 +65,8 @@
 
         <PackageReference Include="Evaisa.LethalLib" Version="*-*" />
         <PackageReference Include="TeamXiaolan-DawnLib" Version="*-*" PrivateAssets="all"/>
+
+        <PackageReference Include="mrov-WeatherRegistry" Version="*-*" Publicize="true" PrivateAssets="all"/>
     </ItemGroup>
     
     <ItemGroup>
@@ -82,10 +84,15 @@
         <Reference Include="MrovLib" Publicize="true">
             <HintPath>$(DebugLibraryDirectory)/MrovLib.dll</HintPath>
         </Reference>
+
+        <Reference Include="TerminalUtils" Publicize="true">
+            <HintPath>$(DebugLibraryDirectory)/TerminalUtils.dll</HintPath>
+        </Reference>
     </ItemGroup>
     
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="mrov.MrovLib" Version="*-*" Publicize="true" PrivateAssets="all"/>
+        <PackageReference Include="mrov-MrovLib" Version="*-*" Publicize="true" PrivateAssets="all"/>
+        <PackageReference Include="mrov-TerminalUtils" Version="*-*" Publicize="true" PrivateAssets="all"/>
     </ItemGroup>
 
     <PropertyGroup>
