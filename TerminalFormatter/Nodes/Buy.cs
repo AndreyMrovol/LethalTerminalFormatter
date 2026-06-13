@@ -28,7 +28,7 @@ namespace TerminalFormatter.Nodes
         .FirstOrDefault();
     }
 
-    public override bool IsNodeValid(TerminalNode node, Terminal terminal)
+    public override bool IsNodeValid(TerminalNode node)
     {
       // check if that node is registered as Node or NodeConfirm in Buyables
       MrovLib.ContentType.BuyableThing resolvedItem = ResolveNodeIntoBuyable(node);
@@ -41,9 +41,10 @@ namespace TerminalFormatter.Nodes
       return resolvedItem != null;
     }
 
-    public override string GetNodeText(TerminalNode node, Terminal terminal)
+    public override string GetNodeText(TerminalNode node)
     {
       var table = new ConsoleTables.ConsoleTable("Title", "Things");
+      var terminal = Variables.Terminal;
 
       BuyableThing resolvedThing = ResolveNodeIntoBuyable(node);
       LastResolvedBuyable = resolvedThing;

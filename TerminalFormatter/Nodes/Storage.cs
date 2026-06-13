@@ -11,10 +11,10 @@ namespace TerminalFormatter.Nodes
     public Storage()
       : base("Storage", ["ItemsInStorage"])
     {
-      this.AdditionalInfo = " Welcome to the Storage! \n Type item's name to retrieve it. \n To store items, use [X] while moving the object.";
+      this.HelpText = " Welcome to the Storage! \n Type item's name to retrieve it. \n To store items, use [X] while moving the object.";
     }
 
-    public override string GetNodeText(TerminalNode node, Terminal terminal)
+    public override string GetNodeText(TerminalNode node)
     {
       var header = new Header().CreateHeaderWithoutLines("STORAGE");
       var adjustedTable = new StringBuilder();
@@ -23,7 +23,7 @@ namespace TerminalFormatter.Nodes
 
       if (ConfigManager.ShowHelpText.Value)
       {
-        adjustedTable.Append(this.AdditionalInfo != null ? $"\n{this.AdditionalInfo}\n\n" : "");
+        adjustedTable.Append(this.HelpText != null ? $"\n{this.HelpText}\n\n" : "");
       }
       else
       {

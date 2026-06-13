@@ -7,21 +7,21 @@ namespace TerminalFormatter.Nodes
     public CannotAfford()
       : base("CannotAfford", ["CannotAfford"]) { }
 
-    public override bool IsNodeValid(TerminalNode node, Terminal terminal)
+    public override bool IsNodeValid(TerminalNode node)
     {
       node.clearPreviousText = true;
       return true;
     }
 
-    public override string GetNodeText(TerminalNode node, Terminal terminal)
+    public override string GetNodeText(TerminalNode node)
     {
       var table = new ConsoleTables.ConsoleTable("Title", "Things");
 
       var header = new Header().CreateHeaderWithoutLines("COMPANY STORE");
       var adjustedTable = new StringBuilder();
 
-      table.AddRow("YOUR CREDITS:", $"${terminal.groupCredits}");
-      table.AddRow("TOTAL:", $"${terminal.totalCostOfItems}");
+      table.AddRow("YOUR CREDITS:", $"${Variables.Terminal.groupCredits}");
+      table.AddRow("TOTAL:", $"${Variables.Terminal.totalCostOfItems}");
 
       adjustedTable.Append(header);
       adjustedTable.Append("\n\n");

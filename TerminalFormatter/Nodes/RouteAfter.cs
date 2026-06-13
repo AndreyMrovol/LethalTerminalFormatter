@@ -13,14 +13,14 @@ namespace TerminalFormatter.Nodes
       return MrovLib.ContentManager.Routes.Where(x => x.Nodes.NodeConfirm == node).FirstOrDefault();
     }
 
-    public override bool IsNodeValid(TerminalNode node, Terminal terminal)
+    public override bool IsNodeValid(TerminalNode node)
     {
       MrovLib.ContentType.Route resolvedRoute = ResolveNodeIntoRoute(node);
 
       return resolvedRoute != null;
     }
 
-    public override string GetNodeText(TerminalNode node, Terminal terminal)
+    public override string GetNodeText(TerminalNode node)
     {
       var table = new ConsoleTables.ConsoleTable("Title", "Things");
 
