@@ -10,7 +10,8 @@ using UnityEngine;
 namespace TerminalFormatter
 {
   [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
-  [BepInDependency("MrovLib", BepInDependency.DependencyFlags.HardDependency)]
+  [BepInDependency(MrovLib.MyPluginInfo.PLUGIN_GUID, BepInDependency.DependencyFlags.HardDependency)]
+  [BepInDependency(TerminalUtils.MyPluginInfo.PLUGIN_GUID, BepInDependency.DependencyFlags.HardDependency)]
   public class Plugin : BaseUnityPlugin
   {
     internal static ManualLogSource logger;
@@ -26,6 +27,7 @@ namespace TerminalFormatter
 
     internal static DawnLibCompatibility DawnLibCompat;
     internal static LLLCompatibility LLLCompat;
+    internal static WeatherRegistryCompatibility WeatherRegistryCompat;
 
     private void Awake()
     {
@@ -33,8 +35,6 @@ namespace TerminalFormatter
       harmony.PatchAll();
 
       ConfigManager.Init(Config);
-
-      MrovLib.EventManager.TerminalStart.AddListener((Terminal terminal) => Variables.Terminal = terminal);
 
       MrovLib.EventManager.MainMenuLoaded.AddListener(() =>
       {
@@ -51,20 +51,28 @@ namespace TerminalFormatter
       DawnLibCompat = new DawnLibCompatibility("com.github.teamxiaolan.dawnlib");
 
       LLLCompat = new LLLCompatibility("imabatby.lethallevelloader");
+      WeatherRegistryCompat = new WeatherRegistryCompatibility("mrov.weatherregistry");
 
-      new Nodes.Route();
-      new Nodes.RouteAfter();
+      MrovLib.EventManager.ContentManagerReady.AddListener(() =>
+      {
+        new Nodes.Moons();
 
-      new Nodes.Scan();
-      new Nodes.Store();
+        new Nodes.Route();
+        new Nodes.RouteAfter();
+        new Nodes.RouteLocked();
 
-      new Nodes.Buy();
-      new Nodes.BuyAfter();
-      new Nodes.CannotAfford();
+        new Nodes.Scan();
 
-      new Nodes.Bestiary();
+        new Nodes.Store();
 
-      new Nodes.Storage();
+        new Nodes.Buy();
+        new Nodes.BuyAfter();
+        new Nodes.CannotAfford();
+
+        new Nodes.Bestiary();
+
+        new Nodes.Storage();
+      });
 
       LockedNode = ScriptableObject.CreateInstance<TerminalNode>();
       LockedNode.name = "RouteLocked";
@@ -81,13 +89,8 @@ namespace TerminalFormatter
     {
       if (LLLCompat.IsModPresent)
       {
-        new Nodes.Moons();
-        new Nodes.RouteLocked();
-        new Nodes.Simulate();
-      }
-      else
-      {
-        new Nodes.MoonsNoLLL();
+        // new Nodes.RouteLocked();
+        // new Nodes.Simulate();
       }
     }
   }
