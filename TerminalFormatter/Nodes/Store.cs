@@ -13,15 +13,15 @@ namespace TerminalFormatter.Nodes
     public Store()
       : base("Store", ["0_StoreHub"])
     {
-      this.AdditionalInfo = " Welcome to the Company store. \n Use words BUY and INFO on any item. \n Order items in bulk by typing a number.";
+      this.HelpText = " Welcome to the Company store. \n Use words BUY and INFO on any item. \n Order items in bulk by typing a number.";
     }
 
-    public override bool IsNodeValid(TerminalNode node, Terminal terminal)
+    public override bool IsNodeValid(TerminalNode node)
     {
       return true;
     }
 
-    public override string GetNodeText(TerminalNode node, Terminal terminal)
+    public override string GetNodeText(TerminalNode node)
     {
       var table = new ConsoleTables.ConsoleTable("Name", "Price", "Owned");
 
@@ -37,7 +37,7 @@ namespace TerminalFormatter.Nodes
 
       if (ConfigManager.ShowHelpText.Value)
       {
-        stringBuilder.Append(this.AdditionalInfo != null ? $"\n{this.AdditionalInfo}\n\n" : "");
+        stringBuilder.Append(this.HelpText != null ? $"\n{this.HelpText}\n\n" : "");
       }
 
       #region Items

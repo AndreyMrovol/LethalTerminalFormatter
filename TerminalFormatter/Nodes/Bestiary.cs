@@ -11,21 +11,21 @@ namespace TerminalFormatter.Nodes
     public Bestiary()
       : base("Bestiary", ["0_Bestiary"])
     {
-      this.AdditionalInfo = " Welcome to the Bestiary! \n Use INFO after creature name to learn more.";
+      this.HelpText = " Welcome to the Bestiary! \n Use INFO after creature name to learn more.";
     }
 
-    public override string GetNodeText(TerminalNode node, Terminal terminal)
+    public override string GetNodeText(TerminalNode node)
     {
       var header = new Header().CreateHeaderWithoutLines("BESTIARY");
       var adjustedTable = new StringBuilder();
 
       adjustedTable.Append(header);
 
-      List<int> scannedCreatures = terminal.scannedEnemyIDs;
+      List<int> scannedCreatures = Variables.Terminal.scannedEnemyIDs;
 
       if (ConfigManager.ShowHelpText.Value)
       {
-        adjustedTable.Append(this.AdditionalInfo != null ? $"\n{this.AdditionalInfo}\n\n" : "");
+        adjustedTable.Append(this.HelpText != null ? $"\n{this.HelpText}\n\n" : "");
       }
       else
       {
@@ -33,7 +33,7 @@ namespace TerminalFormatter.Nodes
       }
 
       // no scanned creatures yet
-      if (terminal.scannedEnemyIDs == null || terminal.scannedEnemyIDs.Count == 0)
+      if (Variables.Terminal.scannedEnemyIDs == null || Variables.Terminal.scannedEnemyIDs.Count == 0)
       {
         adjustedTable.Append(" NO DATA COLLECTED");
         adjustedTable.Append(" \n");

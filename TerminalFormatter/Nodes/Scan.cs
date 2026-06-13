@@ -10,12 +10,12 @@ namespace TerminalFormatter.Nodes
     public Scan()
       : base("Scan", ["ScanInfo"]) { }
 
-    public override bool IsNodeValid(TerminalNode node, Terminal terminal)
+    public override bool IsNodeValid(TerminalNode node)
     {
       return true;
     }
 
-    public override string GetNodeText(TerminalNode node, Terminal terminal)
+    public override string GetNodeText(TerminalNode node)
     {
       var adjustedTable = new StringBuilder();
       bool isShip = StartOfRound.Instance.inShipPhase;

@@ -11,17 +11,17 @@ namespace TerminalFormatter.Nodes
 
     public MrovLib.ContentType.Route ResolveNodeIntoRoute(TerminalNode node)
     {
-      return ContentManager.Routes.Where(x => x.Nodes.Node == node).FirstOrDefault();
+      return ContentManager.Routes.FirstOrDefault(x => x.Nodes.Node == node);
     }
 
-    public override bool IsNodeValid(TerminalNode node, Terminal terminal)
+    public override bool IsNodeValid(TerminalNode node)
     {
       MrovLib.ContentType.Route resolvedRoute = ResolveNodeIntoRoute(node);
 
       return resolvedRoute != null;
     }
 
-    public override string GetNodeText(TerminalNode node, Terminal terminal)
+    public override string GetNodeText(TerminalNode node)
     {
       var table = new ConsoleTables.ConsoleTable("Title", "Things");
 
@@ -36,7 +36,7 @@ namespace TerminalFormatter.Nodes
       int price = SharedMethods.GetPrice(node.itemCost);
 
       table.AddRow("PLANET:", SharedMethods.GetNumberlessPlanetName(currentLevel));
-      table.AddRow("PRICE:", $"${price} (${terminal.groupCredits - price} after routing)");
+      table.AddRow("PRICE:", $"${price} (${Variables.Terminal.groupCredits - price} after routing)");
       table.AddRow("WEATHER:", currentWeather == "" ? "Clear" : currentWeather);
 
       // table.AddRow("", "");
