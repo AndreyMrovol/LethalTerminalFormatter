@@ -25,14 +25,15 @@ namespace TerminalFormatter
 
       if (weather.Length >= weatherLength || ConfigManager.UseShortenedWeathers.Value)
       {
-        // weatherCondition =
-        //     $"{weatherCondition.Substring(0, Settings.planetWeatherWidth - 2)}..";
-
-        Settings.WeathersShortened.Do(pair =>
+        if (Plugin.WeatherRegistryCompat.IsModPresent)
         {
-          weather = Regex.Replace(weather, pair.Key, pair.Value);
-          weather = weather.Replace(" ", "");
-        });
+          return Plugin.WeatherRegistryCompat.GetShortenedWeather(level.currentWeather);
+        }
+        else
+        {
+          // display first 3 characters
+          return Regex.Replace(weather, @"\s+", "").Substring(0, weatherLength);
+        }
       }
 
       return weather;
