@@ -255,6 +255,7 @@ namespace TerminalFormatter.Nodes
           }
         }
       }
+      table.AddRow("", "", "");
 
       #endregion
 
