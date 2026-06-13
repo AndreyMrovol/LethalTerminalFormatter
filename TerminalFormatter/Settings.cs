@@ -17,17 +17,17 @@ namespace TerminalFormatter
 
     internal static readonly int dividerLength = 17;
 
-    internal static Dictionary<string, string> WeathersShortened =
-      new()
-      {
-        { "None", "Non" },
-        { "DustClouds", "Dust" },
-        { "Foggy", "Fog" },
-        { "Rainy", "Rny" },
-        { "Flooded", "Fld" },
-        { "Stormy", "Strm" },
-        { "Eclipsed", "Eclps" }
-      };
+    // internal static Dictionary<string, string> WeathersShortened =
+    //   new()
+    //   {
+    //     { "None", "Non" },
+    //     { "DustClouds", "Dust" },
+    //     { "Foggy", "Fog" },
+    //     { "Rainy", "Rny" },
+    //     { "Flooded", "Fld" },
+    //     { "Stormy", "Strm" },
+    //     { "Eclipsed", "Eclps" }
+    //   };
 
     internal static List<string> MoonsToIgnore = ["71 Gordion", "44 Liquidation",];
 
