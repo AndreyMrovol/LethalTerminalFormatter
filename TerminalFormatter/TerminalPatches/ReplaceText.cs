@@ -79,6 +79,7 @@ namespace TerminalFormatter
 
         builder.Append("\n\n");
         builder.Append(newDisplayText);
+        builder.AppendLine();
         builder.Append($"\n{new string('-', Settings.dividerLength)}\n");
 
         Plugin.debugLogger.LogMessage("New display text:\n" + newDisplayText);
