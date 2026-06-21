@@ -1,9 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using MrovLib;
 using MrovLib.ContentType;
-using TerminalFormatter.Compatibility;
+using TerminalUtils.Definitions;
 using UnityEngine;
 
 namespace TerminalFormatter.Nodes
@@ -14,11 +15,6 @@ namespace TerminalFormatter.Nodes
       : base("Store", ["0_StoreHub"])
     {
       this.HelpText = " Welcome to the Company store. \n Use words BUY and INFO on any item. \n Order items in bulk by typing a number.";
-    }
-
-    public override bool IsNodeValid(TerminalNode node)
-    {
-      return true;
     }
 
     public override string GetNodeText(TerminalNode node)
@@ -32,431 +28,135 @@ namespace TerminalFormatter.Nodes
 
       string headerName = "COMPANY STORE";
       string storeHeader = new Header().CreateHeaderWithoutLines(headerName);
-
-      stringBuilder = new StringBuilder().Append(storeHeader);
+      StringBuilder stringBuilder = new StringBuilder().Append(storeHeader);
 
       if (ConfigManager.ShowHelpText.Value)
       {
-        stringBuilder.Append(this.HelpText != null ? $"\n{this.HelpText}\n\n" : "");
+        stringBuilder.Append(this.HelpText != null ? $"\n{this.HelpText}\n" : "");
       }
 
-      #region Items
-      table.AddRow("[ITEMS]", "", "");
-      if (decor)
-      {
-        table.AddRow($"{new string('-', Settings.dividerLength)}", "", "");
-      }
+      PurchaseType[] desiredOrder =
+      [
+        PurchaseType.Item,
+        PurchaseType.Vehicle,
+        PurchaseType.Unlockable,
+        PurchaseType.Decoration,
+        PurchaseType.Suit
+      ];
 
-      List<BuyableItem> sortedBuyableItemList = ContentManager.Items.OrderBy(x => x.Item.itemName).ToList();
-
-      int itemCount = 1;
-      // every 3 items make a space
-
-      // [buyableItemsList]
-      foreach (BuyableItem buyable in sortedBuyableItemList)
-      {
-        Item item = buyable.Item;
-
-        var index = buyable.Nodes.Node.buyItemIndex;
-        var itemName = item.itemName;
-        int howManyOnShip = ItemsOnShip.FindAll(x => x.itemProperties.itemName == item.itemName).Count;
-        int discount = buyable.Discount;
-
-        if (index == -1)
+      Dictionary<PurchaseType, List<BuyableThing>> groupedThings = TerminalUtils
+        .TerminalManager.GetCurrentStoreItems()
+        .GroupBy(thing => thing.Type)
+        .OrderBy(group =>
         {
-          continue;
-        }
-
-        if (decor)
-        {
-          itemName = $"* {itemName}";
-        }
-
-        if (Plugin.LethalLibCompat.IsModPresent)
-        {
-          if (LethalLibCompatibility.IsLLItemDisabled(item))
-          {
-            continue;
-          }
-        }
-
-        string discountPercent = buyable.Discount != 0 ? $" {(decor ? "(" : "")}-{discount}%{(decor ? ")" : "")}" : "";
-
-        // what i want to do:
-        // itemName [some spaces] ... [discountPercent]
-        // so the discountPercent is padded to the right
-
-        // make itemName length = itemNameWidth
-        if (itemName.Length + discountPercent.Length > Settings.itemNameWidth)
-        {
-          itemName = itemName.Substring(0, Settings.itemNameWidth - 4 - discountPercent.Length) + "... " + discountPercent;
-        }
-        else
-        {
-          itemName = $"{itemName.PadRight(Settings.itemNameWidth - discountPercent.Length)}{discountPercent}".PadRight(Settings.itemNameWidth);
-        }
-
-        table.AddRow(
-          itemName,
-          $"${(int)(buyable.Price * buyable.DiscountPercentage)}",
-          $"{(howManyOnShip == 0 ? "" : $"×{howManyOnShip.ToString("D2")}")}"
-        // $"{(terminal.itemSalesPercentages[index] != 100 ? 100 - terminal.itemSalesPercentages[index] : "")}"
+          int idx = Array.IndexOf(desiredOrder, group.Key);
+          return idx == -1 ? int.MaxValue : idx;
+        })
+        .ToDictionary(
+          group => group.Key,
+          group =>
+            group
+              .Where(item =>
+              {
+                switch (item.Type)
+                {
+                  case PurchaseType.Unlockable:
+                    BuyableUnlockable unlockable = (BuyableUnlockable)item;
+                    return !unlockable.IsUnlocked;
+                  case PurchaseType.Decoration:
+                    BuyableDecoration decoration = (BuyableDecoration)item;
+                    return !decoration.IsUnlocked;
+                  case PurchaseType.Suit:
+                    BuyableSuit suit = (BuyableSuit)item;
+                    return !suit.IsUnlocked;
+                  default:
+                    return true;
+                }
+              })
+              .ToList()
         );
 
-        if (ConfigManager.DivideShopPage.Value != 0)
-        {
-          if (itemCount % ConfigManager.DivideShopPage.Value == 0)
-          {
-            itemCount = 1;
-            if (ConfigManager.ShowGroupDividerLines.Value)
-            {
-              table.AddRow("".PadRight(Settings.itemNameWidth, '-'), "".PadRight(5, '-'), "".PadRight(5, '-'));
-            }
-            else
-            {
-              table.AddRow("", "", "");
-            }
-          }
-          else
-          {
-            itemCount++;
-          }
-        }
-      }
-      #endregion
-
-      #region Upgrades
-      List<BuyableUnlockable> unlockablesList = ContentManager
-        .Unlockables.OrderBy(x => x.Unlockable.unlockableName)
-        .Where(x => !x.IsUnlocked)
-        .ToList();
-
-      if (unlockablesList.Count > 0)
+      foreach (var group in groupedThings)
       {
-        table.AddRow("", "", "");
-        table.AddRow("[UPGRADES]", "", "");
-        itemCount = 1;
-        if (decor)
-        {
-          table.AddRow($"{new string('-', Settings.dividerLength)}", "", "");
-        }
-      }
-
-      foreach (var buyable in unlockablesList)
-      {
-        UnlockableItem unlockable = buyable.Unlockable;
-        bool isUnlocked = unlockable.hasBeenUnlockedByPlayer || unlockable.alreadyUnlocked;
-        TerminalNode unlockableNode = buyable.Nodes.Node;
-
-        string unlockableName = unlockable.unlockableName;
-
-        if (decor)
-        {
-          unlockableName = $"* {unlockableName}";
-        }
-
-        if (Plugin.LethalLibCompat.IsModPresent)
-        {
-          if (LethalLibCompatibility.IsLLUpgradeDisabled(unlockable))
-          {
-            continue;
-          }
-        }
-
-        if (isUnlocked)
+        if (group.Value.Count == 0)
         {
           continue;
         }
 
-        table.AddRow(unlockableName.PadRight(Settings.itemNameWidth), $"${buyable.Price}", "");
+        int itemCount = 1;
 
-        if (ConfigManager.DivideShopPage.Value != 0)
+        table.AddRow("", "", "");
+        table.AddRow($"[{group.Key.ToString().ToUpperInvariant()}S]", "", "");
+        if (decor)
         {
-          if (itemCount % ConfigManager.DivideShopPage.Value == 0)
-          {
-            itemCount = 1;
-            if (ConfigManager.ShowGroupDividerLines.Value)
-            {
-              table.AddRow("".PadRight(Settings.itemNameWidth, '-'), "".PadRight(5, '-'), "".PadRight(5, '-'));
-            }
-            else
-            {
-              table.AddRow("", "", "");
-            }
-          }
-          else
-          {
-            itemCount++;
-          }
+          table.AddRow($"{new string('-', Settings.dividerLength)}", "", "");
         }
-      }
 
-      #endregion
-
-      #region Regeneration
-
-      if (Plugin.LethalRegenCompat.IsModPresent)
-      {
-        if (!LethalRegenCompatibility.IsUpgradeBought() && LethalRegenCompatibility.IsUpgradeInStore)
+        for (int i = 0; i < group.Value.Count; i++)
         {
-          table.AddRow("", "", "");
-          table.AddRow("[REGENERATION]", "", "");
+          var thing = group.Value[i];
+          string name = thing.Name;
+          string priceWithDiscount = $"${thing.Price}";
+          string howManyOnShip = "";
+
           if (decor)
           {
-            table.AddRow($"{new string('-', Settings.dividerLength)}", "", "");
+            name = $"* {name}";
           }
 
-          table.AddRow("Natural Regeneration", $"${LethalRegenCompatibility.GetCost()}", "");
-        }
-      }
-
-      #endregion
-
-      #region Vehicles
-
-      table.AddRow("", "", "");
-      table.AddRow("[VEHICLES]", "", "");
-      itemCount = 1;
-      if (decor)
-      {
-        table.AddRow($"{new string('-', Settings.dividerLength)}", "", "");
-      }
-
-      List<BuyableCar> sortedBuyableVehicleList = ContentManager.Vehicles.OrderBy(x => x.Name).ToList();
-
-      foreach (var buyable in sortedBuyableVehicleList)
-      {
-        string vehicleName = buyable.Name;
-
-        if (decor)
-        {
-          vehicleName = $"* {vehicleName}";
-        }
-
-        table.AddRow(vehicleName, $"${buyable.Price}", "");
-
-        if (ConfigManager.DivideShopPage.Value != 0)
-        {
-          if (itemCount % ConfigManager.DivideShopPage.Value == 0)
+          if (thing.Type == PurchaseType.Item)
           {
-            itemCount = 1;
-            if (ConfigManager.ShowGroupDividerLines.Value)
+            BuyableItem item = (BuyableItem)thing;
+            if (item.Discount != 0)
             {
-              table.AddRow("".PadRight(Settings.itemNameWidth, '-'), "".PadRight(5, '-'), "".PadRight(5, '-'));
+              int discount = item.Discount;
+              string discountPercent = item.Discount != 0 ? $" {(decor ? "(" : "")}-{discount}%{(decor ? ")" : "")}" : "";
+
+              if (name.Length + discountPercent.Length > Settings.itemNameWidth)
+              {
+                name = name.Substring(0, Settings.itemNameWidth - 4 - discountPercent.Length) + "... " + discountPercent;
+              }
+              else
+              {
+                name = $"{name.PadRight(Settings.itemNameWidth - discountPercent.Length)}{discountPercent}".PadRight(Settings.itemNameWidth);
+              }
+            }
+
+            howManyOnShip = ItemsOnShip.FindAll(x => x.itemProperties.itemName == item.Item.itemName).Count.ToString("D2");
+          }
+
+          table.AddRow(
+            $"{name.PadRight(Settings.itemNameWidth)}",
+            $"{priceWithDiscount}",
+            $"{((howManyOnShip == "" || howManyOnShip == "00") ? "" : $"×{howManyOnShip}")}"
+          );
+
+          if (ConfigManager.DivideShopPage.Value != 0 && i != group.Value.Count - 1)
+          {
+            if (itemCount % ConfigManager.DivideShopPage.Value == 0)
+            {
+              itemCount = 1;
+
+              if (ConfigManager.ShowGroupDividerLines.Value)
+              {
+                table.AddRow("".PadRight(Settings.itemNameWidth, '-'), "".PadRight(5, '-'), "".PadRight(5, '-'));
+              }
+              else
+              {
+                table.AddRow("", "", "");
+              }
             }
             else
             {
-              table.AddRow("", "", "");
+              itemCount++;
             }
-          }
-          else
-          {
-            itemCount++;
-          }
-        }
-      }
-      table.AddRow("", "", "");
-
-      #endregion
-
-      #region Decorations
-      List<BuyableDecoration> DecorSelection = ContentManager
-        .Decorations.OrderBy(x => x.Name)
-        .Where(x => x.InRotation && !x.IsUnlocked)
-        .ToList();
-      // [unlockablesSelectionList]
-
-      if (DecorSelection.Count > 0)
-      {
-        table.AddRow("", "", "");
-        table.AddRow("[DECORATIONS]", "", "");
-        if (decor)
-        {
-          table.AddRow($"{new string('-', Settings.dividerLength)}", "", "");
-        }
-      }
-
-      itemCount = 1;
-
-      foreach (var buyable in DecorSelection)
-      {
-        UnlockableItem unlockable = buyable.Decoration;
-        // UnlockableItem unlockable = StartOfRound.Instance.unlockablesList.unlockables[
-        //     decoration.shipUnlockableID
-        // ];
-
-        string decorationName = buyable.Name;
-
-        if (decor)
-        {
-          decorationName = $"* {decorationName}";
-        }
-
-        if (Plugin.LethalLibCompat.IsModPresent)
-        {
-          if (LethalLibCompatibility.IsLLUpgradeDisabled(unlockable))
-          {
-            continue;
-          }
-        }
-
-        if (unlockable.hasBeenUnlockedByPlayer || unlockable.alreadyUnlocked)
-        {
-          continue;
-        }
-
-        // StoreRotationConfig compatibility.
-        if (Plugin.SRCCompat.IsModPresent)
-        {
-          int price = StoreRotationConfigCompatibility.GetDiscountedPrice(buyable, out int discount);
-
-          if (discount > 0)
-          {
-            string discountPercent = $" {(decor ? '(' : "")}-{discount}%{(decor ? ')' : "")}";
-
-            if (decorationName.Length + discountPercent.Length > Settings.itemNameWidth)
-            {
-              decorationName = decorationName[..(Settings.itemNameWidth - 4 - discountPercent.Length)] + "..." + discountPercent;
-            }
-            else
-            {
-              decorationName = $"{decorationName.PadRight(Settings.itemNameWidth - discountPercent.Length)}{discountPercent}".PadRight(
-                Settings.itemNameWidth
-              );
-            }
-          }
-
-          table.AddRow(decorationName, $"${price}", "");
-        }
-        else
-        {
-          table.AddRow(decorationName, $"${buyable.Price}", "");
-        }
-        // ...
-
-        if (ConfigManager.DivideShopPage.Value != 0)
-        {
-          if (itemCount % ConfigManager.DivideShopPage.Value == 0)
-          {
-            itemCount = 1;
-            if (ConfigManager.ShowGroupDividerLines.Value)
-            {
-              table.AddRow("".PadRight(Settings.itemNameWidth, '-'), "".PadRight(5, '-'), "".PadRight(5, '-'));
-            }
-            else
-            {
-              table.AddRow("", "", "");
-            }
-          }
-          else
-          {
-            itemCount++;
           }
         }
       }
 
-      #endregion
-
-      #region Suits
-      List<BuyableSuit> SuitSelection = ContentManager.Suits.OrderBy(x => x.Name).Where(x => x.InRotation && !x.IsUnlocked).ToList();
-
-      if (SuitSelection.Count > 0)
-      {
-        table.AddRow("", "", "");
-        table.AddRow("[SUITS]", "", "");
-        itemCount = 1;
-        if (decor)
-        {
-          table.AddRow($"{new string('-', Settings.dividerLength)}", "", "");
-        }
-      }
-
-      foreach (var buyable in SuitSelection)
-      {
-        UnlockableItem unlockable = buyable.Suit;
-        string suitName = buyable.Name;
-
-        if (decor)
-        {
-          suitName = $"* {suitName}";
-        }
-
-        if (buyable.IsUnlocked)
-        {
-          continue;
-        }
-
-        // StoreRotationConfig compatibility.
-        if (Plugin.SRCCompat.IsModPresent)
-        {
-          int price = StoreRotationConfigCompatibility.GetDiscountedPrice(buyable, out int discount);
-
-          if (discount > 0)
-          {
-            string discountPercent = $" {(decor ? '(' : "")}-{discount}%{(decor ? ')' : "")}";
-
-            if (suitName.Length + discountPercent.Length > Settings.itemNameWidth)
-            {
-              suitName = suitName[..(Settings.itemNameWidth - 4 - discountPercent.Length)] + "..." + discountPercent;
-            }
-            else
-            {
-              suitName = $"{suitName.PadRight(Settings.itemNameWidth - discountPercent.Length)}{discountPercent}".PadRight(
-                Settings.itemNameWidth
-              );
-            }
-          }
-
-          table.AddRow(suitName, $"${price}", "");
-        }
-        else
-        {
-          table.AddRow(suitName, $"${buyable.Price}", "");
-        }
-        // ...
-
-        if (ConfigManager.DivideShopPage.Value != 0)
-        {
-          if (itemCount % ConfigManager.DivideShopPage.Value == 0)
-          {
-            itemCount = 1;
-            if (ConfigManager.ShowGroupDividerLines.Value)
-            {
-              table.AddRow("".PadRight(Settings.itemNameWidth, '-'), "".PadRight(5, '-'), "".PadRight(5, '-'));
-            }
-            else
-            {
-              table.AddRow("", "", "");
-            }
-          }
-          else
-          {
-            itemCount++;
-          }
-        }
-      }
-
-      #endregion
-
-      table.AddRow("", "", "");
-
-      //
-
-      string tableString = table.ToStringCustomDecoration(header: true, divider: true);
-
-      // Regex replaceHorizontal = new(@"^\|-+\|-+\|-+\|\n");
-      // Regex middleLineReplace = new(@"(?:\ |\-)\|(?:\ |\-)");
-      // Regex pipeReplace = new(@"\|");
-
-      // replaceHorizontal.Replace(tableString, "");
-
-      // string modifiedTableString = middleLineReplace.Replace(tableString, "   ");
-      // modifiedTableString = pipeReplace.Replace(modifiedTableString, "").Replace("-", " ");
-
+      string tableString = table.ToStringCustomDecoration(header: true, divider: true).TrimEnd();
       stringBuilder.Append(tableString);
-
-      string finalString = stringBuilder.ToString().TrimEnd();
-      return finalString;
+      return stringBuilder.ToString().TrimEnd();
     }
   }
 }
