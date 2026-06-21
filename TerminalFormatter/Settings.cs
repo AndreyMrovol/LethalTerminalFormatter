@@ -16,36 +16,5 @@ namespace TerminalFormatter
     internal static readonly int itemNameWidth = terminalWidth - 9 - 10;
 
     internal static readonly int dividerLength = 17;
-
-    // internal static Dictionary<string, string> WeathersShortened =
-    //   new()
-    //   {
-    //     { "None", "Non" },
-    //     { "DustClouds", "Dust" },
-    //     { "Foggy", "Fog" },
-    //     { "Rainy", "Rny" },
-    //     { "Flooded", "Fld" },
-    //     { "Stormy", "Strm" },
-    //     { "Eclipsed", "Eclps" }
-    //   };
-
-    internal static List<string> MoonsToIgnore = ["71 Gordion", "44 Liquidation",];
-
-    internal static List<string> HiddenMoons = ["5 Embrion", "68 Artifice"];
-
-    internal static List<string> MoonsOrderVanilla =
-    [
-      "Experimentation",
-      "Assurance",
-      "Vow",
-      "March",
-      "Offense",
-      "Adamance",
-      "Rend",
-      "Dine",
-      "Titan"
-    ];
-
-    internal static readonly ManualLogSource logger = Plugin.logger;
   }
 }

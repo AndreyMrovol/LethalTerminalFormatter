@@ -36,11 +36,6 @@ namespace TerminalFormatter
 
       ConfigManager.Init(Config);
 
-      MrovLib.EventManager.MainMenuLoaded.AddListener(() =>
-      {
-        MainMenuInit();
-      });
-
       LethalLibCompat = new("evaisa.lethallib");
 
       LethalRegenCompat = new LethalRegenCompatibility("Toskan4134.LethalRegeneration");
@@ -83,15 +78,6 @@ namespace TerminalFormatter
 
       // Plugin startup logic
       Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} is loaded!");
-    }
-
-    private void MainMenuInit()
-    {
-      if (LLLCompat.IsModPresent)
-      {
-        // new Nodes.RouteLocked();
-        // new Nodes.Simulate();
-      }
     }
   }
 }
