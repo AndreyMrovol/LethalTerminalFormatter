@@ -49,10 +49,5 @@ namespace TerminalFormatter
         return beforeDiscountPrice;
       }
     }
-
-    public static string GetLevelRiskLevel(SelectableLevel level)
-    {
-      return level.riskLevel;
-    }
   }
 }
