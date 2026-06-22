@@ -45,9 +45,3 @@ jobs:
         with:
           name: thunderstore-build
           path: ./*/dist/*.zip
-
-      - name: Upload Versions artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: versions
-          path: ./*/dist/*.txt
