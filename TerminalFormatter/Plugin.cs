@@ -67,6 +67,8 @@ namespace TerminalFormatter
         new Nodes.Bestiary();
 
         new Nodes.Storage();
+
+        Variables.ShipCache = null;
       });
 
       LockedNode = ScriptableObject.CreateInstance<TerminalNode>();
