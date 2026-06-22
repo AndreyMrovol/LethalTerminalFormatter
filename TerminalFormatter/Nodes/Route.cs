@@ -18,7 +18,19 @@ namespace TerminalFormatter.Nodes
     {
       MrovLib.ContentType.Route resolvedRoute = ResolveNodeIntoRoute(node);
 
-      return resolvedRoute != null;
+      if (resolvedRoute == null)
+      {
+        return false;
+      }
+
+      Plugin.debugLogger.LogDebug($"Resolved Route: {resolvedRoute?.Name}({resolvedRoute?.Level?.PlanetName})");
+
+      if (LevelHelper.IsLocked(resolvedRoute.Level))
+      {
+        return false;
+      }
+
+      return true;
     }
 
     public override string GetNodeText(TerminalNode node)
