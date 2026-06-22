@@ -46,7 +46,7 @@ namespace TerminalFormatter
       DawnLibCompat = new DawnLibCompatibility("com.github.teamxiaolan.dawnlib");
 
       LLLCompat = new LLLCompatibility("imabatby.lethallevelloader");
-      WeatherRegistryCompat = new WeatherRegistryCompatibility("mrov.weatherregistry");
+      WeatherRegistryCompat = new WeatherRegistryCompatibility("mrov.WeatherRegistry");
 
       MrovLib.EventManager.ContentManagerReady.AddListener(() =>
       {
