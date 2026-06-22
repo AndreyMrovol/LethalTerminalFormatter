@@ -2,6 +2,7 @@
 using BepInEx.Logging;
 using HarmonyLib;
 using TerminalFormatter.Compatibility;
+using TerminalUtils.InfoTypes.Moons;
 using UnityEngine;
 
 namespace TerminalFormatter
@@ -66,6 +67,8 @@ namespace TerminalFormatter
         new Nodes.Storage();
 
         Variables.ShipCache = null;
+
+        TerminalUtils.TerminalManager.PreviewInfoTypes.Add("NumberedName", new PreviewNameNumbered());
       });
 
       LockedNode = ScriptableObject.CreateInstance<TerminalNode>();
