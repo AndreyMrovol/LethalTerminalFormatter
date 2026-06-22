@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using BepInEx.Logging;
 
 namespace TerminalFormatter
 {

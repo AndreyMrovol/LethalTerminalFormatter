@@ -1,8 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Text;
-using BepInEx.Configuration;
-using TerminalUtils;
 
 namespace TerminalFormatter
 {

@@ -1,6 +1,5 @@
 using System;
 using System.Reflection;
-using BepInEx.Bootstrap;
 
 namespace TerminalFormatter.Compatibility
 {
