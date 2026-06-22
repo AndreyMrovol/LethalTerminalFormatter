@@ -1,3 +1,15 @@
+# 0.3.0
+
+## Please re-generate your config!
+
+- this mod is now dependent on [TerminalUtils](https://thunderstore.io/c/lethal-company/p/mrov/TerminalUtils/)
+- filter/sort/preview settings are now using TerminalUtils' system instead of relying on LLL/Dawn
+- store page can now be sorted using `store <none/name/price>` command
+- `WeatherShortened` is now relying on WeatherRegistry's `ShortName` field instead of being hardcoded
+- removed Dawn-specific patches (moved upstream)
+- removed scrollbar patches (moved upstream to TerminalUtils)
+- cleaned the codebase **a lot**
+
 # 0.2.35
 
 - updated the mod to work with v80 of Lethal Company
