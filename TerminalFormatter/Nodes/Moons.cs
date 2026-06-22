@@ -66,6 +66,12 @@ namespace TerminalFormatter.Nodes
 
       foreach (SelectableLevel level in levelsToDisplay)
       {
+        if (MrovLib.Defaults.IgnoreLevels.Contains(SharedMethods.GetNumberlessPlanetName(level)))
+        {
+          Plugin.debugLogger.LogInfo($"Skipping hidden level {level.name} because it's in the ignore list.");
+          continue;
+        }
+
         if (LevelHelper.IsHidden(level) && !ConfigManager.AlwaysDisplayHiddenMoons.Value)
         {
           continue;
