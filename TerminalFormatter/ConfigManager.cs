@@ -1,6 +1,5 @@
 using BepInEx.Configuration;
 using MrovLib;
-using TerminalFormatter.Patches;
 
 namespace TerminalFormatter
 {

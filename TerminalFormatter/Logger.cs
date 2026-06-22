@@ -1,4 +1,3 @@
-using BepInEx.Logging;
 using MrovLib;
 
 namespace TerminalFormatter
