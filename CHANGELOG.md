@@ -1,3 +1,8 @@
+# 0.3.1
+
+- fixed an issue where all decorations were being displayed in the store page regardless of their availability (thanks, `leubesgames`!)
+- fixed an issue where Liquidation was being displayed in the moon catalogue (thanks, `leubesgames`!)
+
 # 0.3.0
 
 ## Please re-generate your config!
