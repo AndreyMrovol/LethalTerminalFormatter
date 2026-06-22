@@ -63,10 +63,10 @@ namespace TerminalFormatter.Nodes
                     return !unlockable.IsUnlocked;
                   case PurchaseType.Decoration:
                     BuyableDecoration decoration = (BuyableDecoration)item;
-                    return !decoration.IsUnlocked;
+                    return decoration.InRotation && !decoration.IsUnlocked;
                   case PurchaseType.Suit:
                     BuyableSuit suit = (BuyableSuit)item;
-                    return !suit.IsUnlocked;
+                    return suit.InRotation && !suit.IsUnlocked;
                   default:
                     return true;
                 }
