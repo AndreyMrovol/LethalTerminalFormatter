@@ -12,6 +12,8 @@ namespace TerminalFormatter
       string weather = MrovLib.SharedMethods.GetWeather(level);
       int weatherLength = Settings.planetWeatherWidth - 1;
 
+      Plugin.debugLogger.LogDebug($"Length : {weather.Length}|{weatherLength}");
+
       if (weather.Length >= weatherLength || ConfigManager.UseShortenedWeathers.Value)
       {
         if (Plugin.WeatherRegistryCompat.IsModPresent)
