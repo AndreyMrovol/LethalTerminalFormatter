@@ -1,3 +1,7 @@
+# 0.3.2
+
+- fixed an issue with the mod breaking during second (and subsequent) lobby loads (thanks, `explodingturtles456`!)
+
 # 0.3.1
 
 - fixed an issue where all decorations were being displayed in the store page regardless of their availability (thanks, `leubesgames`!)
