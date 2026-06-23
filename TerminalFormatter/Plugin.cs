@@ -46,6 +46,11 @@ namespace TerminalFormatter
       LLLCompat = new LLLCompatibility("imabatby.lethallevelloader");
       WeatherRegistryCompat = new WeatherRegistryCompatibility("mrov.WeatherRegistry");
 
+      MrovLib.EventManager.MainMenuLoaded.AddListener(() =>
+      {
+        TerminalUtils.TerminalManager.PreviewInfoTypes.Add("NumberedName", new PreviewNameNumbered());
+      });
+
       MrovLib.EventManager.ContentManagerReady.AddListener(() =>
       {
         new Nodes.Moons();
@@ -67,8 +72,6 @@ namespace TerminalFormatter
         new Nodes.Storage();
 
         Variables.ShipCache = null;
-
-        TerminalUtils.TerminalManager.PreviewInfoTypes.Add("NumberedName", new PreviewNameNumbered());
       });
 
       LockedNode = ScriptableObject.CreateInstance<TerminalNode>();
