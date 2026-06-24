@@ -1,3 +1,7 @@
+# 0.3.3
+
+- fixed an issue with the mod breaking the main menu (thanks: `generic_gmd`, `leubesgames`!)
+
 # 0.3.2
 
 - fixed an issue with the mod breaking during second (and subsequent) lobby loads (thanks, `explodingturtles456`!)
