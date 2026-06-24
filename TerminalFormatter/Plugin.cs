@@ -46,11 +46,6 @@ namespace TerminalFormatter
       LLLCompat = new LLLCompatibility("imabatby.lethallevelloader");
       WeatherRegistryCompat = new WeatherRegistryCompatibility("mrov.WeatherRegistry");
 
-      MrovLib.EventManager.MainMenuLoaded.AddListener(() =>
-      {
-        TerminalUtils.TerminalManager.PreviewInfoTypes.Add("NumberedName", new PreviewNameNumbered());
-      });
-
       MrovLib.EventManager.ContentManagerReady.AddListener(() =>
       {
         new Nodes.Moons();
