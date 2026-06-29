@@ -1,6 +1,10 @@
+# 0.3.4
+
+- fixed an issue with store catalogue displaying disabled items (thanks, `homicidal_lemon`!)
+
 # 0.3.3
 
-- fixed an issue with the mod breaking the main menu (thanks: `generic_gmd`, `leubesgames`!)
+- fixed an issue with the mod breaking the main menu [[#43](https://github.com/AndreyMrovol/LethalTerminalFormatter/issues/43)] (thanks: `generic_gmd`, `leubesgames`!)
 
 # 0.3.2
 
