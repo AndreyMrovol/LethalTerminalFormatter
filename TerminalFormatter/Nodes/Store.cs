@@ -120,6 +120,16 @@ namespace TerminalFormatter.Nodes
               }
             }
 
+            if (Plugin.DawnLibCompat.IsModPresent)
+            {
+              if (!TerminalUtils.Plugin.DawnCompatibility.IsItemInStore(item.Item))
+              {
+                continue;
+              }
+
+              name = TerminalUtils.Plugin.DawnCompatibility.GetStoreItemNameOverride(item.Item);
+            }
+
             howManyOnShip = ItemsOnShip.FindAll(x => x.itemProperties.itemName == item.Item.itemName).Count.ToString("D2");
           }
 
