@@ -18,11 +18,6 @@ namespace TerminalFormatter
 
     internal static TerminalNode LockedNode;
 
-    internal static LethalLibCompatibility LethalLibCompat;
-    internal static LategameUpgradesCompatibility LGUCompat;
-    internal static StoreRotationConfigCompatibility SRCCompat;
-    internal static LethalRegenCompatibility LethalRegenCompat;
-
     internal static DawnLibCompatibility DawnLibCompat;
     internal static LLLCompatibility LLLCompat;
     internal static WeatherRegistryCompatibility WeatherRegistryCompat;
@@ -33,13 +28,6 @@ namespace TerminalFormatter
       harmony.PatchAll();
 
       ConfigManager.Init(Config);
-
-      LethalLibCompat = new("evaisa.lethallib");
-
-      LethalRegenCompat = new LethalRegenCompatibility("Toskan4134.LethalRegeneration");
-
-      LGUCompat = new LategameUpgradesCompatibility("com.malco.lethalcompany.moreshipupgrades");
-      SRCCompat = new StoreRotationConfigCompatibility("pacoito.StoreRotationConfig");
 
       DawnLibCompat = new DawnLibCompatibility("com.github.teamxiaolan.dawnlib");
 
