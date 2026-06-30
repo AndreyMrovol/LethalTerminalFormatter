@@ -41,9 +41,9 @@ namespace TerminalFormatter
 
     public static int GetPrice(int beforeDiscountPrice)
     {
-      if (Plugin.LGUCompat.IsModPresent)
+      if (TerminalUtils.Plugin.LGUCompat.IsModPresent)
       {
-        return LategameUpgradesCompatibility.GetMoonPrice(beforeDiscountPrice);
+        return TerminalUtils.Plugin.LGUCompat.GetMoonPrice(beforeDiscountPrice);
       }
       else
       {
