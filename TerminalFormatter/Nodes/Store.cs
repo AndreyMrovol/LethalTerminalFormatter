@@ -93,32 +93,18 @@ namespace TerminalFormatter.Nodes
         for (int i = 0; i < group.Value.Count; i++)
         {
           var thing = group.Value[i];
-          string name = thing.Name;
-          string priceWithDiscount = $"${thing.Price}";
+          string nameWithDiscount = thing.Name;
+          string price = $"${thing.Price}";
           string howManyOnShip = "";
 
           if (decor)
           {
-            name = $"* {name}";
+            nameWithDiscount = $"* {nameWithDiscount}";
           }
 
           if (thing.Type == PurchaseType.Item)
           {
             BuyableItem item = (BuyableItem)thing;
-            if (item.Discount != 0)
-            {
-              int discount = item.Discount;
-              string discountPercent = item.Discount != 0 ? $" {(decor ? "(" : "")}-{discount}%{(decor ? ")" : "")}" : "";
-
-              if (name.Length + discountPercent.Length > Settings.itemNameWidth)
-              {
-                name = name.Substring(0, Settings.itemNameWidth - 4 - discountPercent.Length) + "... " + discountPercent;
-              }
-              else
-              {
-                name = $"{name.PadRight(Settings.itemNameWidth - discountPercent.Length)}{discountPercent}".PadRight(Settings.itemNameWidth);
-              }
-            }
 
             if (Plugin.DawnLibCompat.IsModPresent)
             {
@@ -127,15 +113,35 @@ namespace TerminalFormatter.Nodes
                 continue;
               }
 
-              name = TerminalUtils.Plugin.DawnCompatibility.GetStoreItemNameOverride(item.Item);
+              nameWithDiscount = TerminalUtils.Plugin.DawnCompatibility.GetStoreItemNameOverride(item.Item);
+            }
+
+            if (item.Discount != 0)
+            {
+              string discountPercent = item.Discount != 0 ? $" {(decor ? "(" : "")}-{item.Discount}%{(decor ? ")" : "")}" : "";
+
+              if (nameWithDiscount.Length + discountPercent.Length > Settings.itemNameWidth)
+              {
+                nameWithDiscount = $"{nameWithDiscount.Substring(0, Settings.itemNameWidth - 4 - discountPercent.Length)}... {discountPercent}";
+              }
+              else
+              {
+                nameWithDiscount = $"{nameWithDiscount.PadRight(Settings.itemNameWidth - discountPercent.Length)}{discountPercent}".PadRight(
+                  Settings.itemNameWidth
+                );
+              }
+
+              decimal discounted = Convert.ToDecimal(item.Price) * Convert.ToDecimal(item.DiscountPercentage);
+              int finalPrice = (int)Math.Floor(discounted);
+              price = $"${finalPrice}";
             }
 
             howManyOnShip = ItemsOnShip.FindAll(x => x.itemProperties.itemName == item.Item.itemName).Count.ToString("D2");
           }
 
           table.AddRow(
-            $"{name.PadRight(Settings.itemNameWidth)}",
-            $"{priceWithDiscount}",
+            $"{nameWithDiscount.PadRight(Settings.itemNameWidth)}",
+            $"{price}",
             $"{((howManyOnShip == "" || howManyOnShip == "00") ? "" : $"×{howManyOnShip}")}"
           );
 
