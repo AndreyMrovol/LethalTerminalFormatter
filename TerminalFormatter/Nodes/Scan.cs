@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using MrovLib;
 using UnityEngine;
 
 namespace TerminalFormatter.Nodes
@@ -20,7 +21,7 @@ namespace TerminalFormatter.Nodes
       var adjustedTable = new StringBuilder();
       bool isShip = StartOfRound.Instance.inShipPhase;
 
-      if (StartOfRound.Instance.currentLevel.PlanetName.Contains("Gordion"))
+      if (LevelHelper.CompanyMoons.Contains(StartOfRound.Instance.currentLevel))
       {
         isShip = true;
       }
