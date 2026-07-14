@@ -1,3 +1,8 @@
+# 0.3.5
+
+- fixed an issue with discounts not appearing in the store page (thanks, `autuminnal`!)
+- added a check for Company levels to Scan command (instead of just Gordion)
+
 # 0.3.4
 
 - fixed an issue with store catalogue displaying disabled items (thanks, `homicidal_lemon`!)
