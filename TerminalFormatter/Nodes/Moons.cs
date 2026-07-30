@@ -18,7 +18,6 @@ namespace TerminalFormatter.Nodes
 
     public override string GetNodeText(TerminalNode node)
     {
-      // TODO: change this to TerminalManager.GetCurrentLevels() after the update upstream
       List<SelectableLevel> levelsToDisplay = TerminalManager.GetCurrentLevels();
       List<PreviewInfoType<SelectableLevel>> currentPreviewTypes = TerminalManager.CurrentPreviewInfoType;
 

@@ -1,3 +1,7 @@
+# 0.3.6
+
+- fixed an issue with the `Scan` command [#41](https://github.com/AndreyMrovol/LethalTerminalFormatter/issues/41) (thanks, `leubesgames`!)
+
 # 0.3.5
 
 - fixed an issue with discounts not appearing in the store page (thanks, `autuminnal`!)

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using LethalLevelLoader;
 using MrovLib;
 using UnityEngine;
 
@@ -18,49 +19,20 @@ namespace TerminalFormatter.Nodes
 
     public override string GetNodeText(TerminalNode node)
     {
-      var adjustedTable = new StringBuilder();
+      TerminalUtils.Nodes.Scan utilsScanNode = (TerminalUtils.Nodes.Scan)
+        TerminalUtils.TerminalManager.NodeReplacements[TerminalUtils.TerminalManager.ScanPage];
+
+      bool detailedScan = ConfigManager.DetailedScanPage.Value;
+
       bool isShip = StartOfRound.Instance.inShipPhase;
+      bool isCompanyMoon = LevelHelper.CompanyMoons.Contains(StartOfRound.Instance.currentLevel);
 
-      if (LevelHelper.CompanyMoons.Contains(StartOfRound.Instance.currentLevel))
-      {
-        isShip = true;
-      }
+      var adjustedTable = new StringBuilder();
+      adjustedTable.Append("\n");
 
-      int items = 0;
-      int value = 0;
-
-      List<GrabbableObject> objectsToScan;
-
-      if (isShip)
-      {
-        objectsToScan = Object
-          .FindObjectsOfType<GrabbableObject>()
-          .Where(item => item.itemProperties.isScrap && (item.isInElevator || item.isInShipRoom))
-          .ToList();
-      }
-      else
-      {
-        objectsToScan = Object
-          .FindObjectsOfType<GrabbableObject>()
-          .Where(item => item.itemProperties.isScrap && !item.isInShipRoom && !item.isInElevator)
-          .ToList();
-      }
-
-      objectsToScan = objectsToScan.OrderBy(x => x.scrapValue).ToList();
-
-      var table = new ConsoleTables.ConsoleTable("Name", "Price", "Two-handed?");
-
-      foreach (var item in objectsToScan)
-      {
-        table.AddRow(
-          item.itemProperties.itemName.PadRight(Settings.itemNameWidth),
-          $"${item.scrapValue}",
-          item.itemProperties.twoHanded ? "●" : "○"
-        );
-
-        items++;
-        value += item.scrapValue;
-      }
+      List<GrabbableObject> objectsToScan = utilsScanNode.GetObjects();
+      int items = objectsToScan.Count;
+      int value = objectsToScan.Sum(x => x.scrapValue);
 
       string headerName = "SCANNER";
       Dictionary<int, string> headerInfo =
@@ -71,10 +43,16 @@ namespace TerminalFormatter.Nodes
           { 2, $"VALUE: ${value.ToString()}" },
         };
       string moonsHeader = new Header().CreateNumberedHeader(headerName, 2, headerInfo);
-
       adjustedTable.Append(moonsHeader);
 
-      if (ConfigManager.DetailedScanPage.Value || isShip)
+      var table = new ConsoleTables.ConsoleTable("Name", "Price", "Two-handed?");
+
+      foreach (GrabbableObject obj in objectsToScan)
+      {
+        table.AddRow(obj.itemProperties.itemName, $"${obj.scrapValue}", obj.itemProperties.twoHanded ? "●" : "○");
+      }
+
+      if (detailedScan)
       {
         adjustedTable.Append(table.ToStringCustomDecoration(header: true));
       }

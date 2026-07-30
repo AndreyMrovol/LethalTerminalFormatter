@@ -34,11 +34,6 @@ namespace TerminalFormatter
       return MrovLib.SharedMethods.GetNumberlessPlanetName(level);
     }
 
-    public static List<SelectableLevel> GetGameLevels()
-    {
-      return MrovLib.SharedMethods.GetGameLevels();
-    }
-
     public static int GetPrice(int beforeDiscountPrice)
     {
       if (TerminalUtils.Plugin.LGUCompat.IsModPresent)
