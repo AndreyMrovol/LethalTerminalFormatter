@@ -1,5 +1,3 @@
-using Dawn;
-
 namespace TerminalFormatter.Compatibility
 {
   internal class DawnLibCompatibility : MrovLib.CompatibilityHandler
