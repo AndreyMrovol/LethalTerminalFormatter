@@ -1,32 +1,10 @@
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using TerminalFormatter.Compatibility;
-
 namespace TerminalFormatter
 {
   public class SharedMethods
   {
-    public static string GetWeather(SelectableLevel level)
+    public static string GetWeather(SelectableLevel level, bool shortened = false)
     {
-      string weather = MrovLib.SharedMethods.GetWeather(level);
-      int weatherLength = Settings.planetWeatherWidth - 1;
-
-      Plugin.debugLogger.LogDebug($"Length : {weather.Length}|{weatherLength}");
-
-      if (weather.Length >= weatherLength || ConfigManager.UseShortenedWeathers.Value)
-      {
-        if (Plugin.WeatherRegistryCompat.IsModPresent)
-        {
-          return Plugin.WeatherRegistryCompat.GetShortenedWeather(level.currentWeather);
-        }
-        else
-        {
-          // display first 3 characters
-          return Regex.Replace(weather, @"\s+", "").Substring(0, weatherLength);
-        }
-      }
-
-      return weather;
+      return TerminalUtils.Utils.GetWeatherName.GetWeather(level, shortened);
     }
 
     public static string GetNumberlessPlanetName(SelectableLevel level)

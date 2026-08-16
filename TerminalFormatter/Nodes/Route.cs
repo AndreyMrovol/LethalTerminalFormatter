@@ -43,7 +43,7 @@ namespace TerminalFormatter.Nodes
       var adjustedTable = new StringBuilder();
 
       SelectableLevel currentLevel = resolvedRoute.Level;
-      string currentWeather = SharedMethods.GetWeather(currentLevel);
+      string currentWeather = SharedMethods.GetWeather(currentLevel, false);
 
       int price = SharedMethods.GetPrice(node.itemCost);
 

@@ -1,3 +1,7 @@
+# 0.3.7
+
+- fixed an issue with the `Route` nodes displaying shortened weathers
+
 # 0.3.6
 
 - fixed an issue with the `Scan` command [#41](https://github.com/AndreyMrovol/LethalTerminalFormatter/issues/41) (thanks, `leubesgames`!)
