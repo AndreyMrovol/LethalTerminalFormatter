@@ -91,7 +91,7 @@ namespace TerminalFormatter.Nodes
           .ToArray();
         table.AddRow(rowItems);
 
-        if (itemCount % 3 == 0)
+        if (itemCount % TerminalUtils.ConfigManager.DivideMoons.Value == 0)
         {
           itemCount = 1;
 

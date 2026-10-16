@@ -18,10 +18,6 @@ namespace TerminalFormatter
 
     public static ConfigEntry<bool> DetailedScanPage { get; private set; }
 
-    public static ConfigEntry<int> DivideShopPage { get; private set; }
-
-    public static ConfigEntry<bool> UseShortenedWeathers { get; private set; }
-
     public static ConfigEntry<bool> AlwaysDisplayHiddenMoons { get; private set; }
     public static ConfigEntry<bool> ShowNumberedPlanetNames { get; private set; }
 
@@ -37,8 +33,6 @@ namespace TerminalFormatter
 
       DetailedScanPage = configFile.Bind("General", "Detailed Scan Page", true, "Enable detailed scan page");
 
-      UseShortenedWeathers = configFile.Bind("Moons", "Use Shortened Weathers", false, "Use shortened weathers in moons catalogue");
-
       ShowNumberedPlanetNames = configFile.Bind("Moons", "Show Numbered Planet Names", false, "Show numbered planet names in terminal");
 
       AlwaysDisplayHiddenMoons = configFile.Bind(
@@ -53,8 +47,6 @@ namespace TerminalFormatter
       ShowGroupDividerLines = configFile.Bind("General", "Show Group Divider Lines", false, "Show group divider lines in terminal");
 
       ShowHelpText = configFile.Bind("General", "Show Help Text", false, "Show help text in terminal");
-
-      DivideShopPage = configFile.Bind("Store", "Divide shop page into groups", 5, "Number of items per shop section (set to 0 to disable)");
     }
   }
 }

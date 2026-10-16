@@ -145,9 +145,11 @@ namespace TerminalFormatter.Nodes
             $"{((howManyOnShip == "" || howManyOnShip == "00") ? "" : $"×{howManyOnShip}")}"
           );
 
-          if (ConfigManager.DivideShopPage.Value != 0 && i != group.Value.Count - 1)
+          int groupSize = TerminalUtils.ConfigManager.DivideStore.Value;
+
+          if (groupSize != 0 && i != group.Value.Count - 1)
           {
-            if (itemCount % ConfigManager.DivideShopPage.Value == 0)
+            if (itemCount % groupSize == 0)
             {
               itemCount = 1;
 
